@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | ЛК Центра обучения{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/competence_schedule.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block body %}
+    <div class="cover">
+        <div class="cover-background"></div>
+        <div class="cover-text">
+            <h1>ПОГРУЖЕНИЕ В МИР ДЕЯТЕЛЬНОСТИ</h1>
+            <p>Личный кабинет центра обучения:<br><b>{{education_center}}</b></p>
+        </div>
+    </div>
+    <div class="section profile-section">
+        <div class="container-xxl">
+            <div class="h2"><h2>Преподователи</h2></div>
+                <div class="submit-btn">
+                <a href="{% url 'add_trainer' %}">
+                    <button type="submit" class="btn btn-primary">Добавить препода</button>
+                </a>
+                </div>
+                <table class="table table-bordered align-middle">
+                    <tr class="table-dark">
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Отчество</th>
+                        <th >Email</th>
+                        <th class="trainer">Телефон</th>
+                    </tr>
+                    {% for trainer in trainers %}
+                            <tr>   
+                                <td>
+                                    {{trainer.last_name}}
+                                </td>
+                                <td>
+                                    {{trainer.first_name}}
+                                </td>
+                                <td>
+                                    {{trainer.middle_name}}
+                                </td>
+                                <td>
+                                    {{trainer.email}}
+                                </td>
+                                <td>
+                                    {{trainer.phone_number}}
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </table>
+        </div>
+{% endblock %}

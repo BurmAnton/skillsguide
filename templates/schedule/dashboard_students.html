@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Школьный дашбоард{% endblock %}
+
+{% block style %}
+    <link href="{% static 'schedule/css/dashboard_students.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block body %}
+    <div class="stat-table">
+        <div class="text-center">
+            <h1>Статистика по записи</h1>
+        </div>
+        <table class="table table-striped">
+            <tr class="sticky-top"> 
+                <th scope="col">Школа</th>
+                <th scope="col">6 класс</th>
+                <th scope="col">7 класс</th>
+                <th scope="col">8 класс</th>
+                <th scope="col">9 класс</th>
+                <th scope="col">10 класс</th>
+                <th scope="col">11 класс</th>
+                <th scope="col">Всего</th>
+            </tr>
+            {% for school in schools_list %}
+                <tr>
+                    <td scope="row">{{school.0}}</td>
+                    <td scope="row">{{school.1}}</td>
+                    <td scope="row">{{school.2}}</td>
+                    <td scope="row">{{school.3}}</td>
+                    <td scope="row">{{school.4}}</td>
+                    <td scope="row">{{school.5}}</td>
+                    <td scope="row">{{school.6}}</td>
+                    <td scope="row">{{school.7}}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td scope="row">Всего</td>
+                    <td scope="row">{{grades.0}}</td>
+                    <td scope="row">{{grades.1}}</td>
+                    <td scope="row">{{grades.2}}</td>
+                    <td scope="row">{{grades.3}}</td>
+                    <td scope="row">{{grades.4}}</td>
+                    <td scope="row">{{grades.5}}</td>
+                    <td scope="row">{{count_students}}</td>
+                </tr>
+        </table>
+    </div>
+{% endblock %}

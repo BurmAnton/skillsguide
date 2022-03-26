@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | ЛК Центра обучения{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/competencies.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block body %}
+    <div class="cover">
+        <div class="cover-background"></div>
+        <div class="cover-text">
+            <h1>ПОГРУЖЕНИЕ В МИР ДЕЯТЕЛЬНОСТИ</h1>
+            <p>Личный кабинет центра обучения:<br><b>{{ed_center}}</b></p>
+        </div>
+    </div>
+    <div class="section profile-section">
+        <div class="container-xxl">
+            <div class="h2"><h2>Список компетенций в наборе "{{bundle}}"</h2></div>
+                <table class="table table-bordered align-middle">
+                    <tr class="table-dark">
+                        <th>Компетенция</th>
+                        <th>Набор проб</th>
+                        <th>Программ у ЦО</th>
+                        <th>Статус</th>
+                    </tr>
+                    {% for competence in competencies %}
+                        <tr>   
+                            <td> 
+                                <a href="{% url 'competence_schedule' ed_center.id bundle.id competence.0.id %}">{{competence.0}}</a>
+                            </td>
+                            <td>
+                                {{bundle}}
+                            </td>
+                            <td>
+                                {{competence.1}}
+                            </td>
+                            <td>
+                                {{competence.4}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+        </div>
+{% endblock %}

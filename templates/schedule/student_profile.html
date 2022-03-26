@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Личный кабинет{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/student_profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'schedule/js/student_profile.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    
+    <div class="section profile-section">
+        <div class="container-xxl">
+            <div class="row row-cols-3 g-3">
+                <div class="col-12 justify-content-center text-left">
+                    <div class="row row-cols-6 g-5">
+                        <div class="col-5">
+                            <div class="card card-profile border-dark">
+                                <h2 class="card-header border-dark">
+                                    Мой профиль
+                                </h2>
+                                <div class="card-body border-dark">
+                                    <h5>{{user.last_name}} {{user.first_name}} {{user.middle_name}}</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><b>Email:</b> {{user.email}}</li>
+                                        <li class="list-group-item"><b>Номер телефона:</b> {{user.phone_number}}</li>
+                                        <li class="list-group-item"><b>Дата рождения:</b> {{user.birthday}}</li>
+                                        <li class="list-group-item"><b>Школа:</b> {{user.school.name}}</li>
+                                        <li class="list-group-item"><b>Класс:</b> {{user.school_class.grade_number}}{{user.school_class.grade_letter}}</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer text-end border-dark">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button type="button" class="btn border-secondary" id="Change_password" data-bs-toggle="modal" data-bs-target="#ChangePasswordModal">Сменить пароль</button>
+                                        <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
+                                            Изменить личные данные
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <h2> 
+                                Выбранные профориентационные мероприятия
+                            </h2>
+                            <p>На данный момент у Вас нет выбранных мероприятий</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+        <div class="section online-section">
+            <div class="container">
+                <div class="row row-cols-3 g-3">
+                    <div class="col-12 justify-content-center text-center">
+                        <h2>Профессиональны пробы (Цикл #2)</h2>
+                        <p>Ученики школ Самарской области с 6 по 11 класс могут принять участии в мероприятиях, организованных ЦОПП СО и партнёрами. Часть мероприятий будет проходить онлайн, часть на площадках партнёрских центров обучения в вашем городе, длительность одного мероприятия – 90 минут. Профпробы будут объедененны в наборы по 11 проб по различным компетенциям.</p> 
+                    </div>
+    
+                    <div class="zero-alert col-12">
+                        <div class="alert alert-warning " role="alert">
+                            <h4 class="alert-heading">Нет доступных проб!</h4>
+                            <p>В ближайщие несколько дней мы предоставим доступ к форме записи. Сейчас мы согласовываем состав и расписание с нашими партнёрами.</p>
+                            <hr>
+                            <p class="mb-0">Спасибо за терпение, когда запись будет доступна, мы отправим уведомление на Вашу почту!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

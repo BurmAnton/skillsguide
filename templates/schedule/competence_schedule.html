@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | ЛК Центра обучения{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/competence_schedule.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block body %}
+    <div class="cover">
+        <div class="cover-background"></div>
+        <div class="cover-text">
+            <h1>ПОГРУЖЕНИЕ В МИР ДЕЯТЕЛЬНОСТИ</h1>
+            <p>Личный кабинет центра обучения:<br><b>{{edu_center}}</b></p>
+        </div>
+    </div>
+    <div class="section profile-section">
+        <div class="container-xxl">
+            <div class="h2"><h2>Создание расписания</h2></div>
+            <div>  
+                <p>
+                    Компетенция: <b>{{competence}}</b><br>
+                    Набор: <b>{{bundle}}</b>
+                </p>
+            </div>
+            
+            <form action="{% url 'competence_schedule' edu_center.id bundle.id competence.id %}" method="post">
+                <input class="row_count" type="text" name="row_count" value="{{row_count}}">
+                <table class="table table-bordered align-middle">
+                    <tr class="table-dark">
+                        <th>ID</th>
+                        <th>Программа</th>
+                        <th>Дата</th>
+                        <th class="time">Время начала</th>
+                        <th class="trainer">Преподаватель</th>
+                        <th>Мастерская</th>
+                        <th>Статус</th>
+                    </tr>
+                    {% for stream_slots in streams %}
+                        {% if stream_slots.3 == None %}
+                            <tr>   
+                                <td> <input class="id_input" type="text" name="id{{stream_slots.2}}" value="{{stream_slots.0.id}}"></td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="program{{stream_slots.2}}" required>
+                                        {% for program in programs %}
+                                            <option value="{{program.id}}">{{program}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="date{{stream_slots.2}}" required>
+                                        {% for slot in stream_slots.1 %}
+                                            <option value="{{slot.id}}">{{slot.date}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="time" class="form-control" name="start_time{{stream_slots.2}}" placeholder="Время начало" aria-label="Время" min="{{stream_slots.1.0.time}}" max="19:30" value="{{stream_slots.1.0.time}}" required>
+                                </td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="trainer{{stream_slots.2}}" required>
+                                        {% for trainer in trainers %}
+                                            <option value="{{trainer.id}}">{{trainer}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="workshop{{stream_slots.2}}" required>
+                                        <option value="online">онлайн</option>
+                                        {% for workshop in workshops %}
+                                            <option value="{{workshop.id}}">{{workshop}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    Неустановленно
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>   
+                                <td> <input class="id_input" type="text" name="id{{stream_slots.2}}" value="{{stream_slots.0.id}}"></td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="program{{stream_slots.2}}" required>
+                                        <option value="{{stream_slots.3.program.id}}">{{stream_slots.3.program}}</option>
+                                        {% for program in programs %}
+                                            {% if program != stream_slots.3.program %}
+                                                <option value="{{program.id}}">{{program}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="date{{stream_slots.2}}" required>
+                                        <option value="{{stream_slots.3.id}}">{{stream_slots.3.date|date:"m/d/y"}}</option>
+                                        {% for slot in stream_slots.1 %}
+                                            {% if slot.date != stream_slots.3.date %}
+                                                <option value="{{slot.id}}">{{slot.date|date:"m/d/y"}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="time" class="form-control" name="start_time{{stream_slots.2}}" placeholder="Время начало" aria-label="Время" min="{{stream_slots.1.0.time}}" max="19:30" value="{{stream_slots.3.time}}" required>
+                                </td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="trainer{{stream_slots.2}}" required>
+                                        <option value="{{stream_slots.3.trainer.id}}">{{stream_slots.3.trainer}}
+                                        {% for trainer in trainers %}
+                                            {% if trainer != stream_slots.3.trainer %}
+                                                <option value="{{trainer.id}}">{{trainer}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="workshop{{stream_slots.2}}" required>
+                                        
+                                        {% if stream_slots.3.workshop != None %}
+                                            <option value="{{stream_slots.3.workshop.id}}">{{stream_slots.3.workshop}}</option>
+                                            <option value="online">онлайн</option>
+                                        {% else %}
+                                            <option value="online">онлайн</option>
+                                        {% endif %}
+                                        {% for workshop in workshops %}
+                                            {% if workshop != stream_slots.3.workshop %}
+                                                <option value="{{workshop.id}}">{{workshop}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    Установленно
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+                <div class="submit-btn">
+                    <input type="submit" value="Сохранить расписание" class="btn btn-primary">   
+                </div>
+            </form>
+        </div>
+{% endblock %}
