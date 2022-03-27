@@ -51,13 +51,6 @@
   margin-bottom: 2px;
 }
 
-.sign-card .alert-danger {
-  display: none;
-  width: 60%;
-  margin: auto;
-  margin-bottom: 16px;
-}
-
 .sign-card .sign-button {
   background-color: #587490;
   color: white;
@@ -147,6 +140,13 @@
 
 .sign-card .pass-rec-form .alert-recovery .alert p {
   margin: auto;
+}
+
+.alert-danger {
+  display: none;
+  width: 60%;
+  margin: auto;
+  margin-bottom: 16px;
 }
 
 .form-title {

@@ -1,6 +1,8 @@
 import email
+from email import message
 import math
 from datetime import datetime, timedelta
+from zoneinfo import available_timezones
 
 from django.urls import reverse
 from django.shortcuts import render
@@ -12,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 #Models
 from .models import Bundle, Stream, TimeSlot
-from users.models import User, School, SchoolClass
+from users.models import DisabilityType, User, School, SchoolClass
 from education_centers.models import EducationCenter, TrainingProgram, Competence, Workshop
 
 
@@ -112,14 +114,90 @@ def create_cycle(request):
 
 @login_required()
 def student_profile(request, user_id):
-    user = User.objects.get(id=user_id)
+    user = request.user
     school = user.school
+
+    bundles = Bundle.objects.filter(schools=school).exclude(participants=user)
+    available_bundles = []
+    for bundle in bundles:
+        streams = Stream.objects.filter(bundle=bundle)
+        if len(streams) != 0:
+            stream = streams[0]
+            attendance_limit = stream.attendance_limit * len(streams)
+            if len(bundle.participants.all()) < attendance_limit:
+                available_bundles.append(bundle)
 
     return render(request, "schedule/student_profile.html",{
         'page_name': 'Личный кабинет',
         'user': user,
-        'school': school
+        'schools': School.objects.all(),
+        'disability_types': DisabilityType.objects.all(),
+        'choosen_bundles': Bundle.objects.filter(participants=user),
+        'choosen_bundles_len': len(Bundle.objects.filter(participants=user)),
+        'bundles': available_bundles,
+        'bundles_count': len(available_bundles)
     })
+
+@login_required
+@csrf_exempt
+def choose_bundle(request):
+    if request.method == 'POST':
+        bundle = Bundle.objects.filter(id=request.POST["bundle_id"])
+        if len(bundle) != 0:
+            bundle = bundle[0]
+            bundle.participants.add(request.user)
+            bundle.save()
+            message = "Registration successful"
+        else:
+            message = "Bundle doesn't exist"
+    return HttpResponseRedirect(reverse("login")) 
+
+
+@login_required
+@csrf_exempt
+def change_profile_student(request):
+    if request.method == "POST":
+        user = request.user
+
+        user.email = request.POST["email"]
+        user.email = request.POST["email"]
+        user.phone_number = request.POST["phone"]
+        user.first_name = request.POST['name']
+        user.last_name = request.POST['last_name']
+        user.middle_name = request.POST['middle_name']
+        user.birthday = request.POST['birthday']
+        school_id = request.POST['school']
+        school = School.objects.get(id=school_id)
+        user.school = school
+        grade_number = request.POST['school_class']
+        grade_letter = request.POST['school_class_latter']
+        try:
+            disability_check = request.POST['disability-check']
+        except:
+            disability_check = False
+        if disability_check != False:
+            disability_type = request.POST['disability_type']
+            user.disability_type = DisabilityType.objects.get(id=disability_type)
+        else:
+            user.disability_type = None
+        
+        school_class = SchoolClass.objects.filter(
+                school=school,
+                grade_number=grade_number,
+                grade_letter=grade_letter
+        )
+        if len(school_class) != 0:
+            school_class = school_class[0]
+        else:
+            school_class = SchoolClass(
+                school=school,
+                grade_number=int(grade_number),
+                grade_letter=grade_letter.upper()
+            )
+            school_class.save()
+        user.school_class = school_class
+        user.save()
+    return HttpResponseRedirect(reverse("login")) 
 
 
 @login_required

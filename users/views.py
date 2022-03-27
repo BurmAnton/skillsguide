@@ -157,7 +157,7 @@ def registration(request):
         grade_letter = data.get("grade_letter", "")
         school = School.objects.get(id=school_id)
 
-        if disability_type != 'Выберите вид нарушения':
+        if disability_type.isdigit():
             disability_type = DisabilityType.objects.filter(id=disability_type)
             if len(disability_type) != 0:
                 disability_type = disability_type[0]

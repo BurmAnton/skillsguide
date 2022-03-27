@@ -15,6 +15,7 @@ class Bundle(models.Model):
     programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы пробы", related_name="bundles", blank=True)
     edu_centers = models.ManyToManyField(EducationCenter, verbose_name="Центры обучения", related_name="train_cycles", blank=True)
     schools = models.ManyToManyField(School, verbose_name="Школы", related_name="groups")
+    participants = models.ManyToManyField(User, verbose_name="Участники", related_name='bundles', blank=True)
 
     class Meta:
         verbose_name = "Набор проб"

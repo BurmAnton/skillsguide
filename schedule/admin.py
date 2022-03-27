@@ -4,8 +4,6 @@ from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, ChoiceDropdownFilter
 
 from .models import Stream, Bundle, TimeSlot
-from users.models import Group, User
-from education_centers.models import EducationCenter
 
 
 TimeSlotForm = select2_modelform(TimeSlot, attrs={'width': '400px'})
@@ -33,6 +31,7 @@ class Stream(admin.ModelAdmin):
         'bundle',
         'start_date'
     )
+
 
 
 BundleForm = select2_modelform(Bundle, attrs={'width': '400px'})

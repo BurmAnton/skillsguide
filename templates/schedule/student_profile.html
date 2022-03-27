@@ -11,7 +11,87 @@
 {% endblock %}
 
 {% block body %}
-    
+    <div class="modal fade" id="ChangeProfileModal" tabindex="-1" aria-labelledby="ChangeProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Изменить данные профиля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'change_profile_student' %}" method="post">
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="name" id="Name" placeholder="Имя" value="{{user.first_name}}" required>
+                            <label for="Name">Имя</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="middle_name" id="MiddleName" placeholder="Отчество" value="{{user.middle_name}}">
+                            <label for="MiddleName">Отчество</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="last_name" id="LastName" placeholder="Фамилия" value="{{user.last_name}}" required>
+                            <label for="LastName">Фамилия</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" name="birthday" id="Birthday" placeholder="Дата рождения" value="{{user.birthday.isoformat}}" required>
+                            <label for="Birthday">Дата рождения</label>
+                        </div>
+                        <div class="form mb-3">
+                            <select class="selectpicker" data-width="100%" data-live-search="true" name="school" id="School" required>
+                                <option value="{{user.school.id}}">{{user.school.name}}</option>
+                                {% for school in schools %}
+                                    <option value="{{school.id}}">{{school.name}} ({{school.city}})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form mb-3">
+                            <div class="row g-3">
+                                <div class="col">
+                                    <select class="form-control" name="school_class" id="school_class" required>
+                                            <option value="{{user.school_class.grade_number}}">{{user.school_class.grade_number}}</option>
+                                        {% if user.school_class.grade_number != 6 %}
+                                            <option value="6">6</option>
+                                        {% endif %}
+                                        {% if user.school_class.grade_number != 7 %}
+                                            <option value="7">7</option>
+                                        {% endif %}
+                                        {% if user.school_class.grade_number != 8 %}
+                                            <option value="8">8</option>
+                                        {% endif %}
+                                        {% if user.school_class.grade_number != 9 %}
+                                            <option value="9">9</option>
+                                        {% endif %}
+                                        {% if user.school_class.grade_number != 10 %}
+                                            <option value="10">10</option>
+                                        {% endif %}
+                                        {% if user.school_class.grade_number != 11 %}
+                                            <option value="11">11</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <input type="input" class="form-control" name="school_class_latter" id="school_class_latter" placeholder="Буква класса" value="{{user.school_class.grade_letter}}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" name="email" id="Email" placeholder="Email" value="{{user.email}}" required>
+                            <label for="Email">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="phone2numeric" class="form-control" name="phone" id="Phone" placeholder="Номер телефона" value="{{user.phone_number}}" required>
+                            <label for="Phone">Номер телефона</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="section profile-section">
         <div class="container-xxl">
             <div class="row row-cols-3 g-3">
@@ -34,7 +114,6 @@
                                 </div>
                                 <div class="card-footer text-end border-dark">
                                     <div class="d-grid gap-2 d-md-block">
-                                        <button type="button" class="btn border-secondary" id="Change_password" data-bs-toggle="modal" data-bs-target="#ChangePasswordModal">Сменить пароль</button>
                                         <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
                                             Изменить личные данные
                                         </button>
@@ -46,8 +125,28 @@
                             <h2> 
                                 Выбранные профориентационные мероприятия
                             </h2>
-                            <p>На данный момент у Вас нет выбранных мероприятий</p>
-                    </div>
+                            {% if choosen_bundles_len == 0 %}
+                                <p>На данный момент у Вас нет выбранных мероприятий</p>
+                            {% else %}
+                            <div class="row row-cols-2 g-3">
+                                {% for bundle in choosen_bundles %}
+                                        <div class="col-12">
+                                            <div class="card h-100">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Набор "{{bundle.name}}"</h5>
+                                                    <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей.</p>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <div class="d-grid gap-2">
+                                                        <p>Расписание профпроб будет сформированно 1 апреля (пятница) 2022 года. Его вы сможете найти в личном кабинете, также на вашу почту будет высланно письмо с расписанием.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                 </div>
             </div>
         </div>
@@ -60,15 +159,43 @@
                         <h2>Профессиональны пробы (Цикл #2)</h2>
                         <p>Ученики школ Самарской области с 6 по 11 класс могут принять участии в мероприятиях, организованных ЦОПП СО и партнёрами. Часть мероприятий будет проходить онлайн, часть на площадках партнёрских центров обучения в вашем городе, длительность одного мероприятия – 90 минут. Профпробы будут объедененны в наборы по 11 проб по различным компетенциям.</p> 
                     </div>
-    
-                    <div class="zero-alert col-12">
-                        <div class="alert alert-warning " role="alert">
-                            <h4 class="alert-heading">Нет доступных проб!</h4>
-                            <p>В ближайщие несколько дней мы предоставим доступ к форме записи. Сейчас мы согласовываем состав и расписание с нашими партнёрами.</p>
-                            <hr>
-                            <p class="mb-0">Спасибо за терпение, когда запись будет доступна, мы отправим уведомление на Вашу почту!</p>
+                    {% if bundles_count != 0 %}
+                        {% for bundle in bundles %}
+                            <div class="col-6">
+                                <div class="card bundle-card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Набор "{{bundle.name}}"</h5>
+                                        <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей. В набор входя следующие компетенции:</p>
+
+                                        <ul class="list-group list-group-flush">
+                                            {% for competence in bundle.competencies.all %}
+                                                <li class="list-group-item">{{competence}}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="d-grid gap-2">
+                                            <form action="{% url 'choose_bundle' %}" method="post">
+                                                <input type="input" class="form-control" name="bundle_id" value="{{bundle.id}}" style="display: none;">
+                                                <div class="d-grid gap-2">
+                                                        <button type="submit" class="btn btn-primary">Записаться</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="zero-alert col-12">
+                            <div class="alert alert-warning " role="alert">
+                                <h4 class="alert-heading">Нет доступных проб!</h4>
+                                <p>В ближайщие несколько дней мы предоставим доступ к форме записи. Сейчас мы согласовываем состав и расписание с нашими партнёрами.</p>
+                                <hr>
+                                <p class="mb-0">Спасибо за терпение, когда запись будет доступна, мы отправим уведомление на Вашу почту!</p>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

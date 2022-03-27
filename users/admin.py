@@ -20,7 +20,7 @@ class UserAdmin(UserAdmin):
     )
     fieldsets = (
         (None,
-            {'fields': ('email', 'password', 'first_name', 'last_name', 'middle_name', 'phone_number')}),
+            {'fields': ('email', 'password', 'first_name', 'last_name', 'middle_name', 'phone_number', 'disability_types')}),
         ('Права доступа',
             {'fields': ('role', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions')}),
         ('Важные даты', 
