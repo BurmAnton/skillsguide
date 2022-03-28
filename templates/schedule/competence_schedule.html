@@ -94,10 +94,10 @@
                                 </td>
                                 <td>
                                     <select class="selectpicker" data-width="100%" data-live-search="true" name="date{{stream_slots.2}}" required>
-                                        <option value="{{stream_slots.3.id}}">{{stream_slots.3.date|date:"m/d/y"}}</option>
-                                        {% for slot in stream_slots.1 %}
+                                        <option value="{{stream_slots.3.id}}">{{stream_slots.3.date|date:"d/m/y"}}</option>
+                                        {% for slot in stream_slots.1|date:"d/m/y" %}
                                             {% if slot.date != stream_slots.3.date %}
-                                                <option value="{{slot.id}}">{{slot.date|date:"m/d/y"}}</option>
+                                                <option value="{{slot.id}}">{{slot.date|date:"d/m/y"}}</option>
                                             {% endif %}
                                         {% endfor %}
                                     </select>

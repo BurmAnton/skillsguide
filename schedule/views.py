@@ -210,7 +210,16 @@ def competence_schedule(request, ed_center_id, bundle_id, competence_id):
             program = TrainingProgram.objects.get(id=request.POST[f"program{row}"])
             start_time = datetime.strptime(request.POST[f"start_time{row}"], "%H:%M").time()
             trainer = User.objects.get(id=request.POST[f"trainer{row}"])
-
+            previous_slots = TimeSlot.objects.filter(competence=program.competence, stream=stream)
+            for slot in previous_slots:
+                slot.program = None
+                slot.competence = None
+                slot.trainer = None
+                slot.online = False
+                slot.workshop = None
+                slot.education_center = None
+                slot.save()
+                
             slot = TimeSlot.objects.get(id=request.POST[f"date{row}"])
             slot.program = program
             slot.competence = program.competence
