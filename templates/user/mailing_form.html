@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %} ЦОПП СО | Импорт программ{% endblock %}
+{% block style %}
+    <link href="{% static 'education_centers/css/import.css' %}" rel="stylesheet">
+{% endblock %}
+{% block script %}
+    <script src="{% static 'education_centers/js/import.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="card" style="width: 25rem;" id='import_form'>
+        <h2>Создать рассылку</h2>
+        <form enctype="multipart/form-data" action="{% url 'mailing_form' %}" method="post">
+            <div class="form mb-3">
+                <select class="selectpicker" data-width="100%" data-live-search="true" name="bundle" required>
+                    <option value="">Выберите набор проб</option>
+                    {% for bundle in bundles %}
+                        <option value="{{bundle.id}}">{{bundle}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <input type="input" class="form-control" name="subject" placeholder="Тема письма" required>
+            </div>
+            <div class="form-group">
+                <label for="text">Текст письма</label>
+                <textarea class="form-control" name="text" rows="3"></textarea>
+            </div>
+        
+            <div class="submit">
+                <input type="submit" value="Загрузить данные" class="btn btn-primary">   
+            </div>
+        </form>
+
+         {% if message == 'OK' %}
+            <div class="alert alert-success" role="alert">
+                Рассылка совершенна
+            </div>   
+        {% endif %}
+    </div>
+
+{% endblock %}

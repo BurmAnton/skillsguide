@@ -1,6 +1,9 @@
+from email import message
+import re
 import string
 import random
 import json
+import base64
 
 from django.shortcuts import render
 from django.contrib import auth
@@ -12,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 #Models
 from users.models import User, DisabilityType, School, SchoolClass
-from schedule.models import EducationCenter
+from schedule.models import Bundle, EducationCenter
 
 from education_centers.forms import ImportDataForm
 from .imports import students_import
@@ -58,7 +61,7 @@ def login(request):
         'disability_types': DisabilityType.objects.all()
     })
 
-@login_required()
+@login_required
 def logout(request):
     if request.user.is_authenticated:
         auth.logout(request)
@@ -74,6 +77,39 @@ def mailing():
     MEMCACHED_HOST = '127.0.0.1:11211'
     SPApiProxy = PySendPulse(REST_API_ID, REST_API_SECRET, TOKEN_STORAGE, memcached_host=MEMCACHED_HOST)
     return SPApiProxy
+
+
+@login_required
+@csrf_exempt
+def mailing_form(request):
+    message = ""
+    if request.method == "POST":
+        bundle = Bundle.objects.get(id=request.POST['bundle'])
+        users = User.objects.filter(bundles=bundle)
+        for user in users:
+            text = request.POST['text']
+            html = text
+            email = {
+                    'subject': request.POST['subject'],
+                    'html': html,
+                    'text': text,
+                    'from': {'name': 'ЦОПП СО', 'email': 'bvb@copp63.ru'},
+                    'to': [
+                        {
+                            'name': f"{user.first_name} {user.last_name}", 
+                            'email': user.email
+                        }
+                    ],
+                }
+            SPApiProxy = mailing()
+            SPApiProxy.smtp_send_mail(email)
+        message = "OK"
+
+    return render(request, "user/mailing_form.html", {
+        'bundles': Bundle.objects.all(),
+        'message': message
+    })
+
 
 @csrf_exempt
 def password_recovery(request, step):
@@ -223,3 +259,5 @@ def import_students_coordinator(request):
     return render(request, "user/import.html",{
         'form': form
     })
+
+        

@@ -13,5 +13,7 @@ urlpatterns = [
     #pass_recovery
     path('password/recovery/<int:step>/', views.password_recovery, name="password_recovery"),
     #import
-    path('import/students', views.import_students_coordinator, name="import_students_coordinator")
+    path('import/students', views.import_students_coordinator, name="import_students_coordinator"),
+    #mailing
+    path('mailing/form', views.mailing_form, name="mailing_form")
 ]
