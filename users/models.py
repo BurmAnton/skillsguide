@@ -101,7 +101,7 @@ class User(AbstractUser):
 
     REL_STATUS = (
         ('NOT', 'Неперенесённый'),
-        ('NLOG', 'Немавторизовался'),
+        ('NLOG', 'Неавторизовался'),
         ('LOG', 'Авторизовался')
     )
     relocate_status = models.CharField(max_length=4, choices=REL_STATUS, verbose_name='Статус переноса', default="NOT")
@@ -115,7 +115,7 @@ class User(AbstractUser):
 
     def __str__(self):
         if self.first_name is not None and self.middle_name is not None and self.last_name is not None:
-            return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}'
+            return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}.'
         return f'{self.email}'
             
     class Meta:

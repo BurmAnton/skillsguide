@@ -144,7 +144,7 @@
 
 .alert-danger {
   display: none;
-  width: 60%;
+  width: 100%;
   margin: auto;
   margin-bottom: 16px;
 }

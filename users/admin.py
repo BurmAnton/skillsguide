@@ -24,7 +24,7 @@ class UserAdmin(UserAdmin):
         ('Права доступа',
             {'fields': ('role', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions')}),
         ('Важные даты', 
-            {'fields': ('last_login', 'date_joined')}),
+            {'fields': ('relocate_status', 'last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {

@@ -42,6 +42,7 @@ def login(request):
     elif request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]
+
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
