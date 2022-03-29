@@ -1,3 +1,4 @@
+from dataclasses import fields
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
@@ -21,6 +22,8 @@ class UserAdmin(UserAdmin):
     fieldsets = (
         (None,
             {'fields': ('email', 'password', 'first_name', 'last_name', 'middle_name', 'phone_number', 'disability_types')}),
+        ("Школа",
+        {'fields': ('school', 'school_class')}),
         ('Права доступа',
             {'fields': ('role', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions')}),
         ('Важные даты', 

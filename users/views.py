@@ -86,7 +86,9 @@ def mailing_form(request):
     message = ""
     if request.method == "POST":
         bundle = Bundle.objects.get(id=request.POST['bundle'])
-        users = User.objects.filter(bundles=bundle)
+        schools = School.objects.filter(groups=bundle)
+        users = User.objects.filter(school__in=schools)
+        
         for user in users:
             text = request.POST['text']
             html = text
