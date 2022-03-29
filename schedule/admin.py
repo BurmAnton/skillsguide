@@ -12,7 +12,7 @@ class TimeSlotInLine(admin.TabularInline):
     model = TimeSlot
     form = TimeSlotForm
     ordering = ("-id",)
-    fields = ['id', 'date', 'time', 'competence']
+    fields = ['id', 'date', 'time', 'competence', 'week_number']
     def get_extra(self, request, obj=None, **kwargs):
         extra = 0
         if obj:
