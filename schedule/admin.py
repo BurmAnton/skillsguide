@@ -37,7 +37,7 @@ class Stream(admin.ModelAdmin):
 BundleForm = select2_modelform(Bundle, attrs={'width': '400px'})
 
 @admin.register(Bundle)
-class CompBundle(admin.ModelAdmin):
+class Bundle(admin.ModelAdmin):
     form = BundleForm
     list_display = (
         'id',
