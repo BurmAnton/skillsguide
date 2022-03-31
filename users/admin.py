@@ -6,11 +6,9 @@ from django_admin_listfilter_dropdown.filters import  RelatedOnlyDropdownFilter
 from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter
 
-from schedule.models import Bundle
-
-
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import User, Group, School, SchoolClass, TerAdministration, City, DisabilityType
+from schedule.models import Bundle
 
 
 @admin.register(User)
@@ -133,3 +131,5 @@ class SchoolClassesAdmin(admin.ModelAdmin):
         ('grade_number', DropdownFilter), 
         ('grade_letter', DropdownFilter),
     )
+
+

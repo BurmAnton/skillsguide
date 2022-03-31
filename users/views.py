@@ -1,9 +1,6 @@
-from email import message
-import re
 import string
 import random
 import json
-import base64
 
 from django.shortcuts import render
 from django.contrib import auth
@@ -21,6 +18,10 @@ from education_centers.forms import ImportDataForm
 from .imports import students_import
 
 from pysendpulse.pysendpulse import PySendPulse
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
+
 
 # Create your views here.
 @csrf_exempt
@@ -264,3 +265,44 @@ def import_students_coordinator(request):
     })
 
         
+@csrf_exempt
+def students_report(request):
+    users = User.objects.filter(role='ST')
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Cтуденты"
+    column_names = [
+        "ID", "Школа",
+        "Фамилия", "Имя", "Отчество", 
+        "Дата регистрации", "Email", 
+        "Номер телефона", "Дата регистрации",
+    ]
+    active_column = 1
+    for name in column_names:
+        ws.cell(row=1, column=active_column, value=name)
+        active_column += 1
+    
+    active_row = 2
+    for user in users:
+        if len(user.bundles.all()) == 0:
+                cell_values = {
+                    "ID": user.id,
+                    "Школа": user.school.name, 
+                    "Фамилия": user.last_name,
+                    "Имя": user.first_name, 
+                    "Отчество": user.middle_name,
+                    "Email": user.email, 
+                    "Номер телефона": user.phone_number,
+                }
+                active_col = 1
+                for key, value in cell_values.items():
+                    ws.cell(row=active_row, column=active_col, value=value)
+                    active_col += 1
+                active_row += 1
+
+
+    wb.template = False
+    wb.save('students_list.xlsx')
+    response = HttpResponse(content=save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Students_list.xlsx'
+    return response

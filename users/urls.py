@@ -14,6 +14,8 @@ urlpatterns = [
     path('password/recovery/<int:step>/', views.password_recovery, name="password_recovery"),
     #import
     path('import/students', views.import_students_coordinator, name="import_students_coordinator"),
+    #export
+    path('export/students/report', views.students_report, name="students_report"),
     #mailing
     path('mailing/form', views.mailing_form, name="mailing_form")
 ]
