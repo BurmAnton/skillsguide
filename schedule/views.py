@@ -1,11 +1,9 @@
-import email
-from email import message
 import math
 from datetime import datetime, timedelta
-from zoneinfo import available_timezones
+from multiprocessing.dummy import current_process
 
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.db.models import Max
 #Decorators
@@ -111,8 +109,42 @@ def create_cycle(request):
         'bundles': bundles,
     })
 
+@login_required
+def streams_fill(request, bundle_id):
+    if not(request.user.is_staff):
+        return HttpResponseRedirect(reverse("login")) 
 
-@login_required()
+    bundle = get_object_or_404(Bundle, id=bundle_id)
+    schools = School.objects.filter(bundles=bundle)
+    if len(schools) != 0:
+        streams = Stream.objects.filter(bundle=bundle)
+        #Первый цикл – наполняем потоки только цельными классами
+        #Второй цикл – распределяем остальных
+        for cycle in range(1,3):
+            for stream in streams:
+                if len(User.objects.filter(school__in=schools, streams=None)) != 0:
+                    school_number = 0
+                    while stream.attendance_limit != len(stream.participants.all()):
+                        for school_class in schools[school_number].classes.all():
+                            current_limit = stream.attendance_limit - len(stream.participants.all())
+                            if current_limit == 0:
+                                break
+                            class_students = User.objects.filter(school_class=school_class, streams=None)
+                            if len(class_students) <= current_limit:
+                                stream.participants.add(*class_students)
+                            elif cycle == 2:
+                                stream.participants.add(*class_students[0:current_limit-1])
+                            stream.save()
+                        if school_number+1 >= len(schools):
+                            break
+                        else:
+                            school_number += 1
+                else:
+                    break
+            
+    return HttpResponseRedirect(reverse("login")) 
+
+@login_required
 def student_profile(request, user_id):
     user = request.user
     school = user.school

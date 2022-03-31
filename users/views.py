@@ -87,7 +87,7 @@ def mailing_form(request):
     message = ""
     if request.method == "POST":
         bundle = Bundle.objects.get(id=request.POST['bundle'])
-        schools = School.objects.filter(groups=bundle)
+        schools = School.objects.filter(bundles=bundle)
         users = User.objects.filter(school__in=schools)
         
         for user in users:
@@ -284,7 +284,7 @@ def students_report(request):
     
     active_row = 2
     for user in users:
-        if len(user.bundles.all()) == 0 and len(user.school.groups.all())!= 0:
+        if len(user.bundles.all()) == 0 and len(user.school.bundles.all())!= 0:
                 cell_values = {
                     "Школа": user.school.name, 
                     "Фамилия": user.last_name,

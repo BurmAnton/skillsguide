@@ -14,7 +14,7 @@ class Bundle(models.Model):
     competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="bundles", blank=True)
     programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы пробы", related_name="bundles", blank=True)
     edu_centers = models.ManyToManyField(EducationCenter, verbose_name="Центры обучения", related_name="train_cycles", blank=True)
-    schools = models.ManyToManyField(School, verbose_name="Школы", related_name="groups")
+    schools = models.ManyToManyField(School, verbose_name="Школы", related_name="bundles")
     participants = models.ManyToManyField(User, verbose_name="Участники", related_name='bundles', blank=True)
     
     class Meta:
@@ -30,7 +30,7 @@ class Stream(models.Model):
     bundle = models.ForeignKey(Bundle, verbose_name="Набор проб", related_name="streams", on_delete=CASCADE, null=True)
     start_date = models.DateField("Дата начала", null=True)
     attendance_limit = models.IntegerField("Максимальное кол-во участников", default=10)
-    participants = models.ManyToManyField(User, verbose_name="Участники", related_name='training_groups')
+    participants = models.ManyToManyField(User, verbose_name="Участники", related_name='streams', blank=True)
     SCHEDULE_TYPE= (
         ('ADW', 'Любые дни недели'),
         ('SDW', 'Конкретные дни недели')

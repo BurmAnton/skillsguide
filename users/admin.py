@@ -109,8 +109,7 @@ class CitizenInline(admin.TabularInline):
                 "first_name",
                 "last_name",
                 "middle_name",
-                "email",
-                "get_bundles"
+                "email"
             ),
         }),
     )
