@@ -272,8 +272,8 @@ def students_report(request):
     ws = wb.active
     ws.title = "Cтуденты"
     column_names = [
-        "ID", "Школа",
-        "Фамилия", "Имя", "Отчество", 
+        "Школа","Фамилия", 
+        "Имя", "Отчество", 
         "Дата регистрации", "Email", 
         "Номер телефона", "Дата регистрации",
     ]
@@ -284,15 +284,15 @@ def students_report(request):
     
     active_row = 2
     for user in users:
-        if len(user.bundles.all()) == 0:
+        if len(user.bundles.all()) == 0 and len(user.school.groups.all())!= 0:
                 cell_values = {
-                    "ID": user.id,
                     "Школа": user.school.name, 
                     "Фамилия": user.last_name,
                     "Имя": user.first_name, 
                     "Отчество": user.middle_name,
                     "Email": user.email, 
                     "Номер телефона": user.phone_number,
+                    "Дата регистрации": str(user.date_joined),
                 }
                 active_col = 1
                 for key, value in cell_values.items():
@@ -304,5 +304,5 @@ def students_report(request):
     wb.template = False
     wb.save('students_list.xlsx')
     response = HttpResponse(content=save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Students_list.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=students_list.xlsx'
     return response
