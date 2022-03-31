@@ -15,13 +15,12 @@ from schedule.models import Bundle
 class UserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
-    list_display = ('email', 'last_name', 'first_name', 'get_bundles', 'role', 'is_staff')
+    list_display = ('email', 'last_name', 'first_name', 'get_bundles', 'role', 'is_staff', 'date_joined')
     list_filter = (
         ('groups', RelatedOnlyDropdownFilter), 
         'is_staff', 
         'is_active',
-        'bundles',
-        'date_joined'
+        'bundles'
     )
     fieldsets = (
         (None,
