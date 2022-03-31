@@ -20,7 +20,8 @@ class UserAdmin(UserAdmin):
         ('groups', RelatedOnlyDropdownFilter), 
         'is_staff', 
         'is_active',
-        'bundles'
+        'bundles',
+        'date_joined'
     )
     fieldsets = (
         (None,

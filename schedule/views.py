@@ -116,20 +116,24 @@ def streams_fill(request, bundle_id):
 
     bundle = get_object_or_404(Bundle, id=bundle_id)
     schools = School.objects.filter(bundles=bundle)
+    users = User.objects.filter(school__in=schools, role='ST')
+    for user in users:
+        user.bundles.add(bundle)
+        user.save()
     if len(schools) != 0:
         streams = Stream.objects.filter(bundle=bundle)
         #Первый цикл – наполняем потоки только цельными классами
         #Второй цикл – распределяем остальных
         for cycle in range(1,3):
             for stream in streams:
-                if len(User.objects.filter(school__in=schools, streams=None)) != 0:
+                if len(User.objects.filter(school__in=schools, streams=None, role='ST')) != 0:
                     school_number = 0
                     while stream.attendance_limit != len(stream.participants.all()):
                         for school_class in schools[school_number].classes.all():
                             current_limit = stream.attendance_limit - len(stream.participants.all())
                             if current_limit == 0:
                                 break
-                            class_students = User.objects.filter(school_class=school_class, streams=None)
+                            class_students = User.objects.filter(school=schools[school_number], school_class=school_class, streams=None, role='ST')
                             if len(class_students) <= current_limit:
                                 stream.participants.add(*class_students)
                             elif cycle == 2:
