@@ -149,6 +149,19 @@ def streams_fill(request, bundle_id):
     return HttpResponseRedirect(reverse("login")) 
 
 @login_required
+def slots_fill(request, bundle_id):
+    if request.user.is_staff:
+        bundle = get_object_or_404(Bundle, id=bundle_id)
+        streams = Stream.objects.filter(bundle=bundle)
+        
+        for stream in streams: 
+            slots = TimeSlot.objects.filter(stream=stream).exclude(competence=None).distinct()
+            for slot in slots: 
+                slot.participants.add(*stream.participants.all())
+                slot.save()
+    return HttpResponseRedirect(reverse("login")) 
+
+@login_required
 def student_profile(request, user_id):
     user = request.user
     school = user.school

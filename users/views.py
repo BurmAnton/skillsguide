@@ -42,7 +42,7 @@ def login(request):
             if len(edu_center) != 0:
                 return HttpResponseRedirect(reverse("bundles", args=(edu_center[0].id,)))
         elif request.user.is_staff:
-            return HttpResponseRedirect(reverse("create_cycle"))
+            return HttpResponseRedirect(reverse("admin:index"))
     elif request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]

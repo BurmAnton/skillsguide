@@ -74,7 +74,7 @@ class SchoolClass(models.Model):
     school = models.ForeignKey(School, verbose_name="Школа", related_name="classes", on_delete=CASCADE)
     grade_number = models.IntegerField("Номер класса", validators=[MaxValueValidator(11),MinValueValidator(1)])
     grade_letter = models.CharField("Буква класса", max_length=4)
-
+    
     class Meta:
         verbose_name = "Класс"
         verbose_name_plural = "Классы"
