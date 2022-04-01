@@ -13,6 +13,7 @@ class TimeSlotInLine(admin.TabularInline):
     model = TimeSlot
     form = TimeSlotForm
     ordering = ("-id",)
+
     fields = ['id', 'date', 'time', 'competence', 'week_number']
     def get_extra(self, request, obj=None, **kwargs):
         extra = 0
@@ -51,4 +52,10 @@ class Bundle(admin.ModelAdmin):
 
 @admin.register(TimeSlot)
 class TimeSlotAdmin(admin.ModelAdmin):
-    pass
+    list_display = ( 
+        '__str__',
+        'stream',
+        'education_center',
+        'online', 
+        'workshop'
+    )
