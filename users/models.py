@@ -61,6 +61,7 @@ class School(models.Model):
     city = models.ForeignKey(City, verbose_name="Город", related_name="cities_schools", on_delete=DO_NOTHING, null=True, blank=True)
     adress = models.CharField("Адрес", max_length=250, blank=True, null=True)
 
+
     class Meta:
         verbose_name = "Школа"
         verbose_name_plural = "Школы"
@@ -90,6 +91,7 @@ class User(AbstractUser):
     birthday = models.DateField("Дата рождения", blank=True, null=True)
     ROLES = (
         ('ST', 'Школьник'),
+        ('SCH', 'Представитель школы'),
         ('CO', 'Представитель ЦО'),
         ('TCH', 'Преподователь'),
         ('COR', 'Координатор')
@@ -115,10 +117,21 @@ class User(AbstractUser):
 
     def __str__(self):
         if self.first_name is not None and self.middle_name is not None and self.last_name is not None:
-            return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}. ({self.school_class})'
+            return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}.'
         return f'{self.email}'
             
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
+
+class SchoolContactPersone(models.Model):
+    user = models.OneToOneField(User, verbose_name="Контактное лицо", related_name="school_contact", on_delete=DO_NOTHING)
+    school = models.OneToOneField(School, verbose_name="Школа", related_name="school_contact", on_delete=DO_NOTHING)
+
+    def __str__(self):
+        return f'{self.user} ({self.school.name})'
+
+    class Meta:
+        verbose_name = "Представитель школы"
+        verbose_name_plural = "Представители школ"

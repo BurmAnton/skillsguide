@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 #Models
-from users.models import User, DisabilityType, School, SchoolClass
+from users.models import User, DisabilityType, School, SchoolClass, SchoolContactPersone
 from schedule.models import Bundle, EducationCenter
 
 from education_centers.forms import ImportDataForm
@@ -30,6 +30,9 @@ def login(request):
     if request.user.is_authenticated:
         if len(User.objects.filter(role="ST", email=request.user.email)) != 0:
             return HttpResponseRedirect(reverse('student_profile', args=(request.user.id,)))
+        if len(User.objects.filter(role="SCH", email=request.user.email)) != 0:
+            contact = SchoolContactPersone.objects.get(user=request.user)
+            return HttpResponseRedirect(reverse('school_profile', args=(contact.school.id,)))
         elif len(User.objects.filter(role="COR", email=request.user.email)) != 0:
             user = User.objects.filter(email=request.user.email)
             school = School.objects.filter(school_coordinators=user[0].id)

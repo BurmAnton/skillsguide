@@ -56,8 +56,8 @@ class Competence(models.Model):
 
 class EducationCenter(models.Model):
     name = models.CharField("Название организации", max_length=500)
-    contact_person = models.OneToOneField(User, verbose_name="Контактное лицо", related_name="education_centers", on_delete=DO_NOTHING, blank=True, null=True)
-    trainers = models.ManyToManyField(User, verbose_name="Преподователи", blank=True)
+    contact_person = models.OneToOneField(User, verbose_name="Контактное лицо", related_name="education_center", on_delete=DO_NOTHING, blank=True, null=True)
+    trainers = models.ManyToManyField(User, verbose_name="Преподователи", related_name="education_centers", blank=True)
 
     class Meta:
         verbose_name = "Центр обучения"

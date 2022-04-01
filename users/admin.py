@@ -7,7 +7,7 @@ from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User, Group, School, SchoolClass, TerAdministration, City, DisabilityType
+from .models import User, Group, School, SchoolClass, TerAdministration, City, DisabilityType, SchoolContactPersone
 from schedule.models import Bundle
 
 
@@ -64,6 +64,13 @@ class CityAdmin(admin.ModelAdmin):
 @admin.register(TerAdministration)
 class TerAdministrationAdmin(admin.ModelAdmin):
     pass
+
+SchoolContactPersoneAdminForm = select2_modelform(SchoolContactPersone, attrs={'width': '400px'})
+
+@admin.register(SchoolContactPersone)
+class SchoolContactPersoneAdmin(admin.ModelAdmin):
+    form = SchoolContactPersoneAdminForm
+    list_display = ('user', 'school')
 
 SchoolClassForm = select2_modelform(SchoolClass, attrs={'width': '400px'})
 

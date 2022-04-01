@@ -15,5 +15,9 @@ urlpatterns = [
     path('ed_center/<int:ed_center_id>/bundle/<int:bundle_id>/competencies', views.competencies, name="competencies"),
     path('ed_center/<int:ed_center_id>/bundle/<int:bundle_id>/competence/<int:competence_id>', views.competence_schedule, name='competence_schedule'),
 
+    path('school/profile/<int:school_id>/', views.school_profile, name='school_profile'),
+    path('school/student/dismissal/', views.student_dismissal, name='student_dismissal'),
+    path('school/change/', views.change_school, name='change_school'),
+
     path('dashboard/students', views.student_dashboard, name="student_dashboard")
 ]

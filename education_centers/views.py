@@ -2,10 +2,11 @@ import string
 import random
 
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 
 from education_centers.models import Competence, EducationCenter, Workshop
+from schedule.models import TimeSlot
 from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -109,4 +110,13 @@ def add_workshop(request):
         "education_centers": education_centers,
         "competencies": Competence.objects.all(),
         "message": message
+    })
+
+#Преродаватель
+def trainer_profile(request, trainer_id):
+    trainer = get_object_or_404(User, id=trainer_id)
+
+    return render(request, "education_centers/trainer_profile.html",{
+        "trainer": trainer,
+        "slots": trainer.slots.all(),
     })

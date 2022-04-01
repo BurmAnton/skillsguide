@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Добавление преподователя{% endblock %}
+{% block style %}
+    <link href="{% static 'education_centers/css/trainer_profile.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<div class="section profile-section">
+    <div class="container-xxl">
+        <div class="row row-cols-3 g-3">
+            <div class="col-12 justify-content-center text-left">
+                <div class="row row-cols-6 g-5">
+                    <div class="col-5">
+                        <div class="card card-profile border-dark">
+                            <h2 class="card-header border-dark">
+                                Мой профиль
+                                <div class="d-grid gap-2 d-md-block">
+                                    <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
+                                        Изменить
+                                    </button>
+                                </div>
+                            </h2>
+                            <div class="card-body border-dark">
+                                <h5>{{trainer.first_name.0}}.{{trainer.middle_name.0}}. {{trainer.last_name}}</h5>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><b>Центр обучения:</b> {{trainer.education_centers.all.0}}</li>
+                                    <li class="list-group-item"><b>Email:</b> {{trainer.email}}</li>
+                                    <li class="list-group-item"><b>Номер телефона:</b> {{trainer.phone_number}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <h2 class="upcoming-events"> 
+                            Ближайщие профпробы
+                        </h2>
+                        <div class="row row-cols-2 g-3">
+                            {% for bundle in choosen_bundles %}
+                                    <div class="col-12">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Набор "{{bundle.name}}"</h5>
+                                                <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей.</p>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="d-grid gap-2">
+                                                    <p>Расписание профпроб будет сформированно 1 апреля (пятница) 2022 года. Его вы сможете найти в личном кабинете, также на вашу почту будет высланно письмо с расписанием.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container-xxl">
+    </div>
+</div>
+{% endblock %}

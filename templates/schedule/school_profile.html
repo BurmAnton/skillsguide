@@ -1,0 +1,194 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Личный кабинет{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/school_profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'schedule/js/school_profile.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="modal fade" id="ChangeProfileModal" tabindex="-1" aria-labelledby="ChangeProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Изменить данные школы {{school.name}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'change_school' %}" method="post">
+                    <div class="modal-body">
+                        <div class="form-floating mb-3" style="display:none;">
+                            <input type="input" class="form-control" name="school_id" id="School_id" placeholder="ID" value="{{school.id}}">
+                            <label for="Name">ID</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="name" id="Name" placeholder="Название" value="{{school.name}}" required>
+                            <label for="Name">Наименование школы</label>
+                        </div>
+                        
+                        <div class="form mb-3">
+                            <select class="selectpicker" data-width="100%" data-live-search="true" name="city" id="City" required>
+                                <option value="{{user.school.id}}">{{school.city}}</option>
+                                {% for city in cities %}
+                                    <option value="{{city.id}}">{{city.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="adress" id="Adress" placeholder="Адрес" value="{{school.adress}}">
+                            <label for="MiddleName">Адрес</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" name="email" id="Email" placeholder="Email" value="{{contact.user.email}}" required>
+                            <label for="Email">Контактный email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="phone2numeric" class="form-control" name="phone" id="Phone" placeholder="Номер телефона" value="{{contact.user.phone_number}}" required>
+                            <label for="Phone">Номер телефона</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="section profile-section">
+        <div class="container-xxl">
+            <div class="row row-cols-3 g-3">
+                <div class="col-12 justify-content-center text-left">
+                    <div class="row row-cols-6 g-5">
+                        <div class="col-5">
+                            <div class="card card-profile border-dark">
+                                <h2 class="card-header border-dark">
+                                    Личный кабинет школы
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
+                                            Изменить
+                                        </button>
+                                    </div>
+                                </h2>
+                                <div class="card-body border-dark">
+                                    <h5>{{school.name}}</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><b>Город:</b> {{school.city}}</li>
+                                        <li class="list-group-item"><b>Адрес:</b> {{school.adress}}</li>
+                                        <li class="list-group-item"><b>Представитель:</b> {{contact.user}}</li>
+                                        <li class="list-group-item"><b>Контактный телефон:</b> {{contact.user.email}}</li>
+                                        <li class="list-group-item"><b>Контактный телефон:</b> {{contact.user.phone_number}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <h2 class="upcoming-events"> 
+                                Ближайшие профориентационные мероприятия
+                            </h2>
+                            {% if upcoming_slots is None %}
+                                <p>На данный момент у Вас нет выбранных мероприятий</p>
+                            {% else %}
+                            <div class="row row-cols-2 g-3">
+                                {% for slot in upcoming_slots %}
+                                        <div class="col-6">
+                                            <div class="card h-100">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Компетенция "{{slot.competence}}"</h5>
+                                                    <p><b>Центр обучения:</b> {{slot.education_center}}</p>
+                                                    <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
+                                                    {% if slot.online %}
+                                                        {% if slot.zoom_link is not None %}
+                                                            <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                                        {% else %}
+                                                        <p>Ссылка на конференцию будет позже</p>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <p><b>Адрес:</b> {{slot.Workshop.adress}}</p>
+                                                        <p>{{slot.Workshop.description}}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+        <div class="section online-section">
+            <div class="container">
+                <div class="row row-cols-3 g-3">
+                    <div class="col-12 justify-content-center text-center">
+                        <h2>Профессиональны пробы (Цикл #2)</h2>
+                        <p>Ученики школ Самарской области с 6 по 11 класс могут принять участии в мероприятиях, организованных ЦОПП СО и партнёрами. Часть мероприятий будет проходить онлайн, часть на площадках партнёрских центров обучения в вашем городе, длительность одного мероприятия – 90 минут. Профпробы будут объедененны в наборы по 11 проб по различным компетенциям.</p> 
+                    </div>
+                    {% if slots_count != 0 %}
+                        {% for slot in slots %}
+                            <div class="col">
+                                <div class="card h-100 group-card">
+                                    <div class="card-body">
+                                        <div class="card-header">
+                                            <h5 class="card-title">Профпроба по компетенции {{slot.competence}}</h5>
+                                        </div>
+                                        <div class="card-text">
+                                            <p><b>Центр обучения:</b> {{slot.education_center}}</p>
+                                            <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
+                                            {% if slot.online %}
+                                                {% if slot.zoom_link is not None %}
+                                                    <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                                {% else %}
+                                                <p>Ссылка на конференцию будет позже</p>
+                                                {% endif %}
+                                            {% else %}
+                                                <p><b>Адрес:</b> {{slot.Workshop.adress}}</p>
+                                                <p>{{slot.Workshop.description}}</p>
+                                            {% endif %}
+                                            <p><b>Участники от школы:</b></p>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            {% for student in slot.participants.all %}
+                                                {% if student.school == school %}
+                                                    <li class="list-group-item assessment-false">
+                                                        <div class="unsub-form">
+                                                            <div>
+                                                                {{student}}
+                                                            </div>
+                                                            <div>
+                                                                <form action="{% url 'student_dismissal' %}" method="POST">
+                                                                    <input style="display:none;" type="input" name="school_id" value={{school.id}}>
+                                                                    <input style="display:none;" type="input" name="participant_id" value={{student.id}}>
+                                                                    <input style="display:none;" type="input" name="slot_id" value={{slot.id}}>
+                                                                    <button type="submit" class="btn btn-danger">Исключить</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="zero-alert col-12">
+                            <div class="alert alert-warning " role="alert">
+                                <h4 class="alert-heading">Нет доступных проб!</h4>
+                                <p>В ближайщие несколько дней мы предоставим доступ к форме записи. Сейчас мы согласовываем состав и расписание с нашими партнёрами.</p>
+                                <hr>
+                                <p class="mb-0">Спасибо за терпение, когда запись будет доступна, мы отправим уведомление на Вашу почту!</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+{% endblock %}
