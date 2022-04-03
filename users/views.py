@@ -1,6 +1,7 @@
 import string
 import random
 import json
+from xml.dom import UserDataHandler
 
 from django.shortcuts import render
 from django.contrib import auth
@@ -33,10 +34,8 @@ def login(request):
         if len(User.objects.filter(role="SCH", email=request.user.email)) != 0:
             contact = SchoolContactPersone.objects.get(user=request.user)
             return HttpResponseRedirect(reverse('school_profile', args=(contact.school.id,)))
-        elif len(User.objects.filter(role="COR", email=request.user.email)) != 0:
-            user = User.objects.filter(email=request.user.email)
-            school = School.objects.filter(school_coordinators=user[0].id)
-            #return HttpResponseRedirect(reverse("school_dash", args=(school[0].id,)))
+        elif len(User.objects.filter(role="TCH", email=request.user.email)) != 0:
+            return HttpResponseRedirect(reverse('trainer_profile', args=(request.user.id,)))
         elif len(User.objects.filter(role="CO", email=request.user.email)) != 0:
             edu_center = EducationCenter.objects.filter(contact_person=request.user)
             if len(edu_center) != 0:

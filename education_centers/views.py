@@ -115,8 +115,16 @@ def add_workshop(request):
 #Преродаватель
 def trainer_profile(request, trainer_id):
     trainer = get_object_or_404(User, id=trainer_id)
+    slots = TimeSlot.objects.filter(trainer=trainer).exclude(participants=None)
+    if len(slots) >= 2:
+        upcoming_slots = list(slots)[:2]
+    elif len(slots) == 2:
+        upcoming_slots = list(slots)[0]
+    else:
+        upcoming_slots = None
 
     return render(request, "education_centers/trainer_profile.html",{
         "trainer": trainer,
-        "slots": trainer.slots.all(),
+        "slots": slots,
+        'upcoming_slots': upcoming_slots
     })

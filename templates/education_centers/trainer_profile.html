@@ -5,59 +5,134 @@
     <link href="{% static 'education_centers/css/trainer_profile.css' %}" rel="stylesheet">
 {% endblock %}
 {% block body %}
+<div class="modal fade" id="LinkChange" tabindex="-1" aria-labelledby="LinkChangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Данные для подключения</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'admin:index' %}" method="post">
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="input" class="form-control" name="link" id="Link" placeholder="Ссылка" required>
+                        <label for="Name">Ссылка</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="instruction">Инструкция для подключения</label>
+                        <textarea class="form-control" id="instruction" name="instruction" rows="3"></textarea>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="section profile-section">
-    <div class="container-xxl">
-        <div class="row row-cols-3 g-3">
-            <div class="col-12 justify-content-center text-left">
-                <div class="row row-cols-6 g-5">
-                    <div class="col-5">
-                        <div class="card card-profile border-dark">
-                            <h2 class="card-header border-dark">
-                                Мой профиль
-                                <div class="d-grid gap-2 d-md-block">
-                                    <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
-                                        Изменить
-                                    </button>
-                                </div>
-                            </h2>
-                            <div class="card-body border-dark">
-                                <h5>{{trainer.first_name.0}}.{{trainer.middle_name.0}}. {{trainer.last_name}}</h5>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><b>Центр обучения:</b> {{trainer.education_centers.all.0}}</li>
-                                    <li class="list-group-item"><b>Email:</b> {{trainer.email}}</li>
-                                    <li class="list-group-item"><b>Номер телефона:</b> {{trainer.phone_number}}</li>
-                                </ul>
+    <div class="container">
+        <div class="row row-cols-6 g-5">
+            <div class="col-5">
+                <div class="card card-profile border-dark">
+                    <h2 class="card-header border-dark">
+                        Мой профиль
+                        <div class="d-grid gap-2 d-md-block">
+                            <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
+                                Изменить
+                            </button>
+                        </div>
+                    </h2>
+                    <div class="card-body border-dark">
+                        <h5>{{trainer.first_name.0}}.{{trainer.middle_name.0}}. {{trainer.last_name}}</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><b>Центр обучения:</b> {{trainer.education_centers.all.0}}</li>
+                            <li class="list-group-item"><b>Email:</b> {{trainer.email}}</li>
+                            <li class="list-group-item"><b>Номер телефона:</b> {{trainer.phone_number}}</li>
+                            <li class="list-group-item"><b>Роль:</b> Преподователь</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-7">
+                <h2 class="upcoming-events"> 
+                    Ближайщие профпробы
+                </h2>
+                {% for slot in upcoming_slots %}
+                    <div class="col">
+                        <div class="card upcoming-card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Компетенция "{{slot.competence}}"</h5>
+                                <p><b>Центр обучения:</b> {{slot.education_center}}</p>
+                                <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
+                                {% if slot.online %}
+                                    {% if slot.zoom_link is not None %}
+                                        <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                    {% else %}
+                                    <p>Ссылка на конференцию не указана.</p>
+                                    {% endif %}
+                                {% else %}
+                                    <p><b>Адрес:</b> {{slot.workshop.adress}}</p>
+                                    <p>{{slot.Workshop.description}}</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    <div class="col-7">
-                        <h2 class="upcoming-events"> 
-                            Ближайщие профпробы
-                        </h2>
-                        <div class="row row-cols-2 g-3">
-                            {% for bundle in choosen_bundles %}
-                                    <div class="col-12">
-                                        <div class="card h-100">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Набор "{{bundle.name}}"</h5>
-                                                <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей.</p>
-                                            </div>
-                                            <div class="card-footer">
-                                                <div class="d-grid gap-2">
-                                                    <p>Расписание профпроб будет сформированно 1 апреля (пятница) 2022 года. Его вы сможете найти в личном кабинете, также на вашу почту будет высланно письмо с расписанием.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
-<div class="section">
-    <div class="container-xxl">
+<div class="section container-xxl">
+    <div class="row row-cols-3 g-3">
+        <div class="col-12 justify-content-center text-center">
+            <h2>Профессиональны пробы (Цикл #2)</h2>
+            <p>Ученики школ Самарской области с 6 по 11 класс могут принять участии в мероприятиях, организованных ЦОПП СО и партнёрами. Часть мероприятий будет проходить онлайн, часть на площадках партнёрских центров обучения в вашем городе, длительность одного мероприятия – 90 минут. Профпробы будут объедененны в наборы по 11 проб по различным компетенциям.</p> 
+        </div>
+        {% if slots_count != 0 %}
+            {% for slot in slots %}
+                <div class="col">
+                    <div class="card h-100 group-card">
+                        <div class="card-body">
+                            <div class="card-header">
+                                <h5 class="card-title">Профпроба по компетенции "{{slot.competence}}"</h5>
+                            </div>
+                            <div class="card-text">
+                                <p><b>Центр обучения:</b> {{slot.education_center}}</p>
+                                <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
+                                <p><b>Кол-во студентов:</b> {{slot.participants.all|length}}</p>
+                                {% if slot.online %}
+                                    {% if slot.zoom_link is not None %}
+                                        <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                    {% else %}
+                                    <p>Ссылка на конференцию будет позже</p>
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button type="button" class="btn btn-change-link btn-primary" id="Link_change" data-bs-toggle="modal" data-bs-target="#LinkChange">
+                                            Указать данные для подключения
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                {% else %}
+                                    <p><b>Адрес:</b> {{slot.workshop.adress}}</p>
+                                    <p>{{slot.workshop.description}}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="zero-alert col-12">
+                <div class="alert alert-warning " role="alert">
+                    <h4 class="alert-heading">Нет доступных проб!</h4>
+                    <p>В ближайщие несколько дней мы предоставим доступ к форме записи. Сейчас мы согласовываем состав и расписание с нашими партнёрами.</p>
+                    <hr>
+                    <p class="mb-0">Спасибо за терпение, когда запись будет доступна, мы отправим уведомление на Вашу почту!</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

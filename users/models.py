@@ -61,7 +61,6 @@ class School(models.Model):
     city = models.ForeignKey(City, verbose_name="Город", related_name="cities_schools", on_delete=DO_NOTHING, null=True, blank=True)
     adress = models.CharField("Адрес", max_length=250, blank=True, null=True)
 
-
     class Meta:
         verbose_name = "Школа"
         verbose_name_plural = "Школы"

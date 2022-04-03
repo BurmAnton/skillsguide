@@ -61,7 +61,9 @@ class TimeSlot(models.Model):
 
     participants = models.ManyToManyField(User, verbose_name="Участники", related_name='time_slots', blank=True)
     trainer = models.ForeignKey(User, verbose_name="Преподователь", related_name="slots", on_delete=CASCADE, null=True)
-    zoom_link = models.URLField("Ссылка на конференцию (zoom)", max_length=400, blank=True, null=True)
+    
+    zoom_link = models.URLField("Ссылка на конференцию", max_length=400, blank=True, null=True)
+    zoom_instruction = models.TextField("Инструкция по подключения", default="", blank=True, null=True)
 
     is_nonprofit = models.BooleanField("На безвозмездной основе", default=True)
 
