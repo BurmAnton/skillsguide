@@ -159,7 +159,7 @@
                                                     <li class="list-group-item assessment-false">
                                                         <div class="unsub-form">
                                                             <div>
-                                                                {{student}}
+                                                                {{student}} ({{student.school_class.grade_number}}{{student.school_class.grade_letter}})
                                                             </div>
                                                             <div>
                                                                 <form action="{% url 'student_dismissal' %}" method="POST">
