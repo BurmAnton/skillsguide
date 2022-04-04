@@ -126,8 +126,8 @@
                                             <li class="list-group-item assessment-false">
                                                 <div class="unsub-form">
                                                     <div>
-                                                        {{student.first_name}} {{student.last_name.0}}.{{student.middle_name.0}}.
-                                                        {% if student.phone_number != '-' %}
+                                                        {{student}}
+                                                        {% if student.phone_number != '–' %}
                                                             ({{student.phone_number}})
                                                         {% elif student.phone_number is none %}
                                                             ({{student.email}})
