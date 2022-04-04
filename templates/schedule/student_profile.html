@@ -123,27 +123,58 @@
                         </div>
                         <div class="col-7">
                             <h2> 
-                                Выбранные профориентационные мероприятия
+                                Ближайщие профориентационные мероприятия
                             </h2>
                             {% if choosen_bundles_len == 0 %}
                                 <p>На данный момент у Вас нет выбранных мероприятий</p>
                             {% else %}
-                            <div class="row row-cols-2 g-3">
-                                {% for bundle in choosen_bundles %}
-                                        <div class="col-12">
-                                            <div class="card h-100">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Набор "{{bundle.name}}"</h5>
-                                                    <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей.</p>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <div class="d-grid gap-2">
-                                                        <p>Расписание профпроб будет сформированно 1 апреля (пятница) 2022 года. Его вы сможете найти в личном кабинете, также на вашу почту будет высланно письмо с расписанием.</p>
+                                <div class="row row-cols-2 g-3">
+                                    {% if upcoming_slots is not None %}
+                                        {% for slot in upcoming_slots %}
+                                            <div class="col">
+                                                <div class="card upcoming-card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Компетенция "{{slot.competence}}"</h5>
+                                                        <p><b>Центр обучения:</b> {{slot.education_center}}</p>
+                                                        <p><b>Дата и время:</b> {{slot.date|date:"d/m/y"}} {{slot.time}}</p>
+                                                        {% if trainer.role == 'CO' %}
+                                                            <p><b>Преподователь:</b> {{slot.trainer}}</p>
+                                                        {% endif %}
+                                                        {% if slot.online %}
+                                                            {% if slot.zoom_link is not None %}
+                                                                <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                                                <p><b>Инструкция:</b> {{slot.zoom_instruction}}</p>
+                                                            {% else %}
+                                                            <p>Ссылка на конференцию не указана.</p>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <p><b>Адрес:</b> {{slot.workshop.adress}}</p>
+                                                            <p>{{slot.Workshop.description}}</p>
+                                                        {% endif %}
+                                                        <p><b>Преподователь:</b> {{slot.trainer}}</p>
+                                                        <p><b>Контактный email:</b> {{slot.trainer.email}}</p>
+                                                        <p><b>Контактный телефон:</b> {{slot.trainer.phone_number}}</p>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for bundle in choosen_bundles %}
+                                            <div class="col-12">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Набор "{{bundle.name}}"</h5>
+                                                        <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей.</p>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <div class="d-grid gap-2">
+                                                            <p>Расписание профпроб будет сформированно 1 апреля (пятница) 2022 года. Его вы сможете найти в личном кабинете, также на вашу почту будет высланно письмо с расписанием.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             {% endif %}
                         </div>

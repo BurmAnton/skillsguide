@@ -43,7 +43,10 @@
                                             <a class="nav-link active" aria-current="page" href="{% url 'workshops_list' %}">Мастерские</a>
                                         </div>
                                         <div class="nav-link active">
-                                            <a class="nav-link active" aria-current="page" href="{% url 'bundles' request.user.education_centers.id %}">Расписание</a>
+                                            <a class="nav-link active" aria-current="page" href="{% url 'bundles' request.user.education_center.id %}">Формирование расписания</a>
+                                        </div>
+                                        <div class="nav-link active">
+                                            <a class="nav-link active" aria-current="page" href="{% url 'trainer_profile' request.user.id %}">Список проб</a>
                                         </div>
                                     {% endif %}
                                 {% if request.user.is_superuser %}

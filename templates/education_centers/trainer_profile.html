@@ -3,25 +3,27 @@
 {% block title %}ЦОПП СО | Добавление преподователя{% endblock %}
 {% block style %}
     <link href="{% static 'education_centers/css/trainer_profile.css' %}" rel="stylesheet">
+    <script src="{% static 'education_centers/js/trainer_profile.js' %}"></script>
 {% endblock %}
 {% block body %}
-<div class="modal fade" id="LinkChange" tabindex="-1" aria-labelledby="LinkChangeModalLabel" aria-hidden="true">
+<div class="modal fade" id="ChangeZoomModal" tabindex="-1" aria-labelledby="ChangeZoomModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Данные для подключения</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Изменить данные профиля</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{% url 'admin:index' %}" method="post">
+            <form action="{% url 'add_zoom_link' %}" method="post">
                 <div class="modal-body">
+                    <input style="display: none;" type="input" class="form-control slot-input" name="slot_id" value="" required>
                     <div class="form-floating mb-3">
-                        <input type="input" class="form-control" name="link" id="Link" placeholder="Ссылка" required>
+                        <input type="input" class="form-control zoom-input" name="link" id="Link" placeholder="Ссылка" required>
                         <label for="Name">Ссылка</label>
                     </div>
                     <div class="form-group">
                         <label for="instruction">Инструкция для подключения</label>
-                        <textarea class="form-control" id="instruction" name="instruction" rows="3"></textarea>
-                      </div>
+                        <textarea class="form-control instruction-input" id="instruction" name="instruction" rows="3"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="d-grid gap-2">
@@ -32,6 +34,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="section profile-section">
     <div class="container">
         <div class="row row-cols-6 g-5">
@@ -48,7 +52,13 @@
                     <div class="card-body border-dark">
                         <h5>{{trainer.first_name.0}}.{{trainer.middle_name.0}}. {{trainer.last_name}}</h5>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><b>Центр обучения:</b> {{trainer.education_centers.all.0}}</li>
+                            <li class="list-group-item">
+                                <b>Центр обучения:</b> 
+                                {{trainer.education_centers.all.0}}
+                                {% if trainer.role == 'CO' %}
+                                    {{trainer.education_center}}
+                                {% endif %}
+                            </li>
                             <li class="list-group-item"><b>Email:</b> {{trainer.email}}</li>
                             <li class="list-group-item"><b>Номер телефона:</b> {{trainer.phone_number}}</li>
                             <li class="list-group-item"><b>Роль:</b> Преподователь</li>
@@ -66,16 +76,21 @@
                             <div class="card-body">
                                 <h5 class="card-title">Компетенция "{{slot.competence}}"</h5>
                                 <p><b>Центр обучения:</b> {{slot.education_center}}</p>
-                                <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
+                                <p><b>Дата и время:</b> {{slot.date|date:"d/m/y"}} {{slot.time}}</p>
+                                {% if trainer.role == 'CO' %}
+                                    <p><b>Преподователь:</b> {{slot.trainer}}</p>
+                                {% endif %}
                                 {% if slot.online %}
                                     {% if slot.zoom_link is not None %}
                                         <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                        <p><b>Инструкция:</b> {{slot.zoom_instruction}}</p>
                                     {% else %}
                                     <p>Ссылка на конференцию не указана.</p>
                                     {% endif %}
                                 {% else %}
                                     <p><b>Адрес:</b> {{slot.workshop.adress}}</p>
                                     <p>{{slot.Workshop.description}}</p>
+                                    
                                 {% endif %}
                             </div>
                         </div>
@@ -94,22 +109,45 @@
         {% if slots_count != 0 %}
             {% for slot in slots %}
                 <div class="col">
-                    <div class="card h-100 group-card">
+                    <div class="card group-card">
                         <div class="card-body">
                             <div class="card-header">
                                 <h5 class="card-title">Профпроба по компетенции "{{slot.competence}}"</h5>
                             </div>
                             <div class="card-text">
                                 <p><b>Центр обучения:</b> {{slot.education_center}}</p>
-                                <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
-                                <p><b>Кол-во студентов:</b> {{slot.participants.all|length}}</p>
+                                <p><b>Дата и время:</b> {{slot.date|date:"d/m/y"}} {{slot.time}}</p>
+                                {% if trainer.role == 'CO' %}
+                                    <p><b>Преподователь:</b> {{slot.trainer}}</p>
+                                {% endif %}
+                                <p><b>Участники пробы:</b></p>
+                                <ul class="list-group list-group-flush">
+                                    {% for student in slot.participants.all %}
+                                            <li class="list-group-item assessment-false">
+                                                <div class="unsub-form">
+                                                    <div>
+                                                        {{student}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            
+                            <div class="card-footer">
                                 {% if slot.online %}
                                     {% if slot.zoom_link is not None %}
                                         <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
+                                        <p>{{slot.zoom_instruction}}</p>
+                                        <div class="d-grid gap-2 d-md-block">
+                                            <button type="button" class="btn btn-change-link btn-primary" data-slot="{{slot.id}}" data-zoom="{{slot.zoom_link}}" data-instruction="{{slot.zoom_instruction}}" data-bs-toggle="modal" data-bs-target="#ChangeZoomModal" id="Link_change">
+                                                Изменить данные для подключения
+                                            </button>
+                                        </div>
                                     {% else %}
-                                    <p>Ссылка на конференцию будет позже</p>
+                                    <p>Ссылка на конференцию не указана.</p>
                                     <div class="d-grid gap-2 d-md-block">
-                                        <button type="button" class="btn btn-change-link btn-primary" id="Link_change" data-bs-toggle="modal" data-bs-target="#LinkChange">
+                                        <button type="button" class="btn btn-add-link btn-primary" data-slot="{{slot.id}}" data-bs-toggle="modal" data-bs-target="#ChangeZoomModal" id="Link_change">
                                             Указать данные для подключения
                                         </button>
                                     </div>

@@ -176,9 +176,18 @@ def student_profile(request, user_id):
             if len(bundle.participants.all()) < attendance_limit:
                 available_bundles.append(bundle)
 
+    slots = TimeSlot.objects.filter(participants=user).order_by('date')
+    if len(slots) >= 2:
+        upcoming_slots = list(slots)[:2]
+    elif len(slots) != 0:
+        upcoming_slots = list(slots)
+    else:
+        upcoming_slots = None
+
     return render(request, "schedule/student_profile.html",{
         'page_name': 'Личный кабинет',
         'user': user,
+        'upcoming_slots': upcoming_slots,
         'schools': School.objects.all(),
         'disability_types': DisabilityType.objects.all(),
         'choosen_bundles': Bundle.objects.filter(participants=user),

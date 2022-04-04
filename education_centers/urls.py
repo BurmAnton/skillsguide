@@ -10,5 +10,6 @@ urlpatterns = [
     path('workshops/', views.workshops_list, name="workshops_list"),
     path('workshops/add', views.add_workshop, name="add_workshop"),
     #Преподователь
-    path('trainer/profile/<int:trainer_id>', views.trainer_profile, name='trainer_profile')
+    path('trainer/profile/<int:trainer_id>', views.trainer_profile, name='trainer_profile'),
+    path('trainer/add_zoom_link/', views.add_zoom_link, name='add_zoom_link'),
 ]

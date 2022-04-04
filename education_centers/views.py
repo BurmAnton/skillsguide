@@ -4,6 +4,7 @@ import random
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+import education_centers
 
 from education_centers.models import Competence, EducationCenter, Workshop
 from schedule.models import TimeSlot
@@ -12,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .imports import  slots_import
-from users.models import User
+from users.models import User, SchoolContactPersone
 
 # Create your views here.
 @login_required
@@ -39,7 +40,7 @@ def import_programs(request):
 def trainers_list(request):
     if request.user.role != 'CO':
         return HttpResponseRedirect(reverse("login"))
-    education_center = EducationCenter.objects.get(id=request.user.education_centers.id)
+    education_center = request.user.education_center
     return render(request, "education_centers/trainers_list.html",{
         "education_center": education_center,
         "trainers": education_center.trainers.all()
@@ -80,7 +81,7 @@ def add_trainer(request):
 def workshops_list(request):
     if request.user.role != 'CO':
         return HttpResponseRedirect(reverse("login"))
-    education_center = EducationCenter.objects.get(id=request.user.education_centers.id)
+    education_center = EducationCenter.objects.get(id=request.user.education_center.id)
     return render(request, "education_centers/workshops_list.html",{
         "education_center": education_center,
         "workshops": education_center.workshops.all()
@@ -115,7 +116,10 @@ def add_workshop(request):
 #Преродаватель
 def trainer_profile(request, trainer_id):
     trainer = get_object_or_404(User, id=trainer_id)
-    slots = TimeSlot.objects.filter(trainer=trainer).exclude(participants=None)
+    if trainer.role == 'CO':
+        slots = TimeSlot.objects.filter(education_center=trainer.education_center).exclude(participants=None).order_by('date')
+    else:
+        slots = TimeSlot.objects.filter(trainer=trainer).exclude(participants=None).order_by('date')
     if len(slots) >= 2:
         upcoming_slots = list(slots)[:2]
     elif len(slots) == 2:
@@ -128,3 +132,17 @@ def trainer_profile(request, trainer_id):
         "slots": slots,
         'upcoming_slots': upcoming_slots
     })
+
+@login_required
+@csrf_exempt
+def add_zoom_link(request):
+    if request.method == "POST":
+        slot = get_object_or_404(TimeSlot, id=request.POST["slot_id"])
+        link = request.POST["link"]
+        instruction = request.POST["instruction"]
+
+        slot.zoom_link = link
+        slot.zoom_instruction = instruction
+        slot.save()
+    
+    return HttpResponseRedirect(reverse("trainer_profile", args=(request.user.id,)))

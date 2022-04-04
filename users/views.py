@@ -163,6 +163,28 @@ def password_recovery(request, step):
             return JsonResponse({"message": "Passwords mismatch"}, status=201)
     return HttpResponseRedirect(reverse("login"))
 
+@csrf_exempt
+def trainers_send_password(request):
+    users = User.objects.filter(role='TCH')
+    
+    for user in users: 
+        password = code_generator()
+        user.set_password(password)
+        user.save()
+        email = {
+            'subject': 'Пароль от аккаунта преподователья skillsguide.ru',
+            'html': f'Здравствуйте!<p>Пароль от вашего аккаунта преподователя на skillsguide.ru: {password}. <br> Это автоматическое письмо на него не нужно отвечать.</p>',
+            'text': f'Здравствуйте!\n Пароль от вашего аккаунта преподователя на skillsguide.ru: {password}. \n Это автоматическое письмо на него не нужно отвечать.',
+            'from': {'name': 'ЦОПП СО', 'email': 'info@copp63.ru'},
+            'to': [
+                {'name': "f{user.first_name} {user.last_name}", 'email': user.email}
+            ],
+        }
+        SPApiProxy = mailing()
+        SPApiProxy.smtp_send_mail(email)
+    
+    return HttpResponseRedirect(reverse("login"))
+
 @login_required()
 @csrf_exempt
 def change_password(request):
