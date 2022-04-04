@@ -89,7 +89,7 @@
                                     {% endif %}
                                 {% else %}
                                     <p><b>Адрес:</b> {{slot.workshop.adress}}</p>
-                                    <p>{{slot.Workshop.description}}</p>
+                                    <p>{{slot.workshop.description}}</p>
                                     
                                 {% endif %}
                             </div>
@@ -126,7 +126,14 @@
                                             <li class="list-group-item assessment-false">
                                                 <div class="unsub-form">
                                                     <div>
-                                                        {{student}}
+                                                        {{student}} 
+                                                        {% if student.phone_number != '-' %}
+                                                            ({{student.phone_number}})
+                                                        {% elif student.phone_number is none %}
+                                                            ({{student.email}})
+                                                        {% else %}
+                                                            ({{student.email}})
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </li>
