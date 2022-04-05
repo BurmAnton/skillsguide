@@ -85,7 +85,7 @@ class TimeSlot(models.Model):
 
 class Assessment(models.Model):
     timeslot = models.ForeignKey(TimeSlot, verbose_name="Слот", related_name="assessment", on_delete=models.CASCADE)
-    grade = models.IntegerField("Оценка", validators=[MinValueValidator(1),MaxValueValidator(5)], null=True, blank=True)
+    grade = models.IntegerField("Оценка", validators=[MinValueValidator(0),MaxValueValidator(3)], null=True, blank=True)
     criterion = models.ForeignKey(Criterion, verbose_name="Критерий", related_name="assessment", on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name="Ученик", related_name="assessment", on_delete=models.CASCADE)
 

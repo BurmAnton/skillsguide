@@ -81,11 +81,14 @@
                                             {% else %}
                                                 <option value="–">–</option>
                                             {% endif %}
+                                            {% if assessment.criterion.skill_type == "SFT" %}
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
+                                            {% else %}
+                                            <option value="0">нет</option>
+                                            <option value="1">да</option>
+                                            {% endif %}
                                         </select>   
                                     </td>
                                 {% endif %}
