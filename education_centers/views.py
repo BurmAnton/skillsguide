@@ -6,8 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 import education_centers
 
-from education_centers.models import Competence, EducationCenter, Workshop
-from schedule.models import TimeSlot
+from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop
+from schedule.models import TimeSlot, Assessment, Attendance
 from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -145,4 +145,50 @@ def add_zoom_link(request):
         slot.zoom_instruction = instruction
         slot.save()
     
+    return HttpResponseRedirect(reverse("trainer_profile", args=(request.user.id,)))
+
+@login_required
+def add_assesment_all(request):
+    programs = TrainingProgram.objects.all()
+    soft_skills = Criterion.objects.filter(skill_type='SFT')
+    for skill in soft_skills:
+        skill.programs.add(*programs)
+        skill.save()
+    slots = TimeSlot.objects.exclude(program=None).distinct()
+    for slot in slots:
+        for participant in slot.participants.all():
+            attendance = Attendance(
+                timeslot=slot,
+                user=participant,
+            )
+            attendance.save()
+            for criterion in slot.program.criteria.all():
+                assessment = Assessment(
+                    timeslot=slot,
+                    criterion=criterion,
+                    user=participant,
+                )
+                assessment.save()
+    return HttpResponseRedirect(reverse("login"))
+
+
+@login_required
+@csrf_exempt
+def set_assessment(request):
+    if request.method == "POST":
+        slot = get_object_or_404(TimeSlot, id=request.POST["slot_id"])
+        for user in slot.participants.all():
+            attendance = get_object_or_404(Attendance, user=user, timeslot=slot)
+            try:
+                attendance_id=request.POST[f"{slot.id}_{user.id}_attendance"]
+                attendance.is_attend = True
+            except:
+                attendance.is_attend = False
+            attendance.save()
+            for assessment in slot.assessment.filter(user=user):
+                grade=request.POST[f"{slot.id}_{user.id}_{assessment.id}"]
+                if grade != "–":
+                    assessment.grade = int(grade)
+                    assessment.save()
+
     return HttpResponseRedirect(reverse("trainer_profile", args=(request.user.id,)))

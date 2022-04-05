@@ -69,6 +69,11 @@ class EducationCenter(models.Model):
 
 class Criterion(models.Model):
     name = models.CharField("Назывние критерия", max_length=1000)
+    СOMPETENCE_TYPES = (
+        ('SFT', 'SoftSkill'),
+        ('HRD', 'HardSkill'),
+    )
+    skill_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип', default='HRD')
 
     class Meta:
         verbose_name = "Критерий"
@@ -83,7 +88,7 @@ class TrainingProgram(models.Model):
     description = models.CharField("Описание", max_length=1000, null=True)
     competence = models.ForeignKey(Competence, verbose_name="Компетенция", on_delete=CASCADE, related_name='programs')
     program_link =  models.CharField("Ссылка на программу", max_length=200, blank=True, null=True)
-    criteria = models.ManyToManyField(Criterion, verbose_name="Критерии")
+    criteria = models.ManyToManyField(Criterion, verbose_name="Критерии", related_name="programs")
 
     education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="programs", on_delete=CASCADE)
     attendance_limit = models.IntegerField("Максимальное кол-во участников", default=10)

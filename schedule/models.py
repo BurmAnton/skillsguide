@@ -5,8 +5,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
 
-from users.models import User, Group, DisabilityType, School
-from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence
+from users.models import User, School
+from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence, Criterion
 
 # Create your models here.
 class Bundle(models.Model):
@@ -65,6 +65,14 @@ class TimeSlot(models.Model):
     zoom_link = models.URLField("Ссылка на конференцию", max_length=400, blank=True, null=True)
     zoom_instruction = models.TextField("Инструкция по подключению", default="", blank=True, null=True)
 
+    SCHEDULE_TYPE= (
+        ('FTR', 'Будущая'),
+        ('CRNT', 'Текущая'),
+        ('ASSM', 'Требует оценки'),
+        ('END', 'Завершёна'),
+    )
+    status = models.CharField("Тип расписания", choices=SCHEDULE_TYPE, default='FTR', max_length=4)
+    
     is_nonprofit = models.BooleanField("На безвозмездной основе", default=True)
 
     class Meta:
@@ -73,3 +81,24 @@ class TimeSlot(models.Model):
 
     def __str__(self):
         return  f"{self.id} {self.competence} – {self.date} {self.time}"
+
+
+class Assessment(models.Model):
+    timeslot = models.ForeignKey(TimeSlot, verbose_name="Слот", related_name="assessment", on_delete=models.CASCADE)
+    grade = models.IntegerField("Оценка", validators=[MinValueValidator(1),MaxValueValidator(5)], null=True, blank=True)
+    criterion = models.ForeignKey(Criterion, verbose_name="Критерий", related_name="assessment", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name="Ученик", related_name="assessment", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Ассессмент"
+        verbose_name_plural = "Ассессмент"
+
+
+class Attendance(models.Model):
+    timeslot = models.ForeignKey(TimeSlot, verbose_name="Слот", related_name="attendance", on_delete=models.CASCADE)
+    is_attend = models.BooleanField("Посетил", default=False)
+    user = models.ForeignKey(User, verbose_name="Ученик", related_name="attendance", on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name = "Посещаемость"
+        verbose_name_plural = "Посещаемость"

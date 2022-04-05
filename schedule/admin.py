@@ -3,7 +3,7 @@ from django.contrib import admin
 from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, ChoiceDropdownFilter
 
-from .models import Stream, Bundle, TimeSlot
+from .models import Stream, Bundle, TimeSlot, Assessment, Attendance
 from users.models import User
 
 
@@ -50,8 +50,23 @@ class Bundle(admin.ModelAdmin):
         'name',
     )
 
+
+@admin.register(Assessment)
+class AssessmentAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'user',
+        'timeslot',
+        'is_attend'
+    )
+
 @admin.register(TimeSlot)
 class TimeSlotAdmin(admin.ModelAdmin):
+    form = TimeSlotForm
     list_display = ( 
         '__str__',
         'stream',
