@@ -53,7 +53,13 @@ class Bundle(admin.ModelAdmin):
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'id',
+        'user',
+        'criterion',
+        'grade',
+        'timeslot'
+    )
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
