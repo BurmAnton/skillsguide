@@ -1,5 +1,5 @@
 import math
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from multiprocessing.dummy import current_process
 
 from django.urls import reverse
@@ -178,9 +178,9 @@ def student_profile(request, user_id):
 
     slots = TimeSlot.objects.filter(participants=user).order_by('date')
     if len(slots) >= 2:
-        upcoming_slots = list(slots)[:2]
+        upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]
     elif len(slots) != 0:
-        upcoming_slots = list(slots)
+        upcoming_slots = list(slots.filter(date__gte=date.today()))
     else:
         upcoming_slots = None
 
@@ -412,9 +412,9 @@ def school_profile(request, school_id):
     students = User.objects.filter(school=school, role='ST')
     slots = TimeSlot.objects.filter(participants__in=students).distinct().order_by('date')
     if len(slots) >= 2:
-        upcoming_slots = list(slots)[:2]
+        upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]
     elif len(slots) == 2:
-        upcoming_slots = list(slots)[0]
+        upcoming_slots = list(slots.filter(date__gte=date.today()))[0]
     else:
         upcoming_slots = None
     try:

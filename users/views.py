@@ -35,7 +35,7 @@ def login(request):
             contact = SchoolContactPersone.objects.get(user=request.user)
             return HttpResponseRedirect(reverse('school_profile', args=(contact.school.id,)))
         elif len(User.objects.filter(role="TCH", email=request.user.email)) != 0:
-            return HttpResponseRedirect(reverse('trainer_profile', args=(request.user.id,)))
+            return HttpResponseRedirect(reverse('trainer_profile', args=(request.user.id,1)))
         elif len(User.objects.filter(role="CO", email=request.user.email)) != 0:
             edu_center = EducationCenter.objects.filter(contact_person=request.user)
             if len(edu_center) != 0:

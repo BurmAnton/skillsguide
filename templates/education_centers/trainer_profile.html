@@ -213,11 +213,11 @@
                     <div class="card group-card">
                         <div class="card-body">
                             <div class="card-header">
-                                <h5 class="card-title">Профпроба по компетенции "{{slot.competence}}" №{{slot.stream.id}}</h5>
+                                <h5 class="card-title">Профпроба по компетенции "{{slot.competence}}" №{{slot.stream_id}}</h5>
                             </div>
                             <div class="card-text">
-                                <p><b>Центр обучения:</b> {{slot.education_center}}</p>
-                                <p><b>Дата и время:</b> {{slot.date|date:"d/m/y"}} {{slot.time}}</p>
+                                <p><b>Программа обучения:</b> {{slot.program}}</p>
+                                <p><b>Дата и время:</b> {{slot.date_time}}</p>
                                 {% if trainer.role == 'CO' %}
                                     <p><b>Преподователь:</b> {{slot.trainer}}</p>
                                 {% endif %}
@@ -268,6 +268,25 @@
                 </div>
             </div>
         {% endif %}
+    </div>
+    <div class="slot-nav">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if previous_page_number is not None %}
+                <li class="page-item"><a class="page-link" href="{% url 'trainer_profile' request.user.id previous_page_number %}"><</a></li>
+                {% endif %}
+                {% for page in page_list %}
+                    {% if page == page_number %}
+                        <li class="page-item"><a class="page-link current-page" href="{% url 'trainer_profile' request.user.id page %}"><b>{{page}}</b></a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url 'trainer_profile' request.user.id page %}">{{page}}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if next_page_number is not None %}
+                    <li class="page-item"><a class="page-link" href="{% url 'trainer_profile' request.user.id next_page_number %}">></a></li>
+                {% endif %}
+            </ul>
+        </nav> 
     </div>
 </div>
 {% endblock %}

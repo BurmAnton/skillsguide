@@ -4,7 +4,7 @@ import random
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-import education_centers
+from django.core.paginator import Paginator
 
 from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop
 from schedule.models import TimeSlot, Assessment, Attendance
@@ -114,7 +114,7 @@ def add_workshop(request):
     })
 
 #Преродаватель
-def trainer_profile(request, trainer_id):
+def trainer_profile(request, trainer_id, page_number):
     trainer = get_object_or_404(User, id=trainer_id)
     if trainer.role == 'CO':
         slots = TimeSlot.objects.filter(education_center=trainer.education_center).exclude(participants=None).order_by('date')
@@ -126,10 +126,25 @@ def trainer_profile(request, trainer_id):
         upcoming_slots = list(slots)[0]
     else:
         upcoming_slots = None
+     
+    slots = Paginator(slots, 3)
+    slots_page = slots.get_page(page_number)
+    pages = slots.num_pages
+
+    previous_page_number = page_number - 1
+    if previous_page_number <= 0:
+        previous_page_number = None
+    next_page_number = page_number + 1
+    if next_page_number > slots.num_pages:
+        next_page_number = None
 
     return render(request, "education_centers/trainer_profile.html",{
         "trainer": trainer,
-        "slots": slots,
+        "slots": [slot.serialize() for slot in slots_page],
+        "page_number": page_number,
+        "previous_page_number": previous_page_number,
+        "next_page_number": next_page_number,
+        "page_list": range(1,slots.num_pages+1),
         'upcoming_slots': upcoming_slots
     })
 

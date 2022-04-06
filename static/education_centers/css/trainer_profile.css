@@ -134,4 +134,23 @@
 .group-card .unsub-form .btn {
   padding: 3px;
 }
+
+.slot-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 15px;
+}
+
+.slot-nav .page-link {
+  color: #394959;
+}
+
+.slot-nav .current-page {
+  background: #394959;
+  color: white;
+}
 /*# sourceMappingURL=trainer_profile.css.map */

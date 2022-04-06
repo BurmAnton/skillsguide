@@ -65,22 +65,36 @@ class TimeSlot(models.Model):
     zoom_link = models.URLField("Ссылка на конференцию", max_length=400, blank=True, null=True)
     zoom_instruction = models.TextField("Инструкция по подключению", default="", blank=True, null=True)
 
-    SCHEDULE_TYPE= (
+    STATUS_LIST = (
         ('FTR', 'Будущая'),
         ('CRNT', 'Текущая'),
         ('ASSM', 'Требует оценки'),
         ('END', 'Завершёна'),
     )
-    status = models.CharField("Тип расписания", choices=SCHEDULE_TYPE, default='FTR', max_length=4)
+    status = models.CharField("Статус", choices=STATUS_LIST, default='FTR', max_length=4)
     
     is_nonprofit = models.BooleanField("На безвозмездной основе", default=True)
+
+    def serialize(self):
+        return {
+            'stream_id': self.stream.id,
+            'competence': self.competence.name,
+            'program': self.program.name,
+            'date_time': f"{self.date.strftime('%d.%m.%Y')} {self.time}",
+            'online': self.online,
+            'workshop': self.workshop,
+            'participants': self.participants.all(),
+            'trainer': self.trainer.__str__(),
+            'zoom_instruction': self.zoom_instruction,
+            'zoom_link': self.zoom_link
+        }
+
+    def __str__(self):
+        return  f"{self.id} {self.competence} – {self.date} {self.time}"
 
     class Meta:
         verbose_name = "Слот"
         verbose_name_plural = "Слоты"
-
-    def __str__(self):
-        return  f"{self.id} {self.competence} – {self.date} {self.time}"
 
 
 class Assessment(models.Model):
