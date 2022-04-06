@@ -1,5 +1,6 @@
 import string
 import random
+from datetime import date
 
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
@@ -121,9 +122,9 @@ def trainer_profile(request, trainer_id, page_number):
     else:
         slots = TimeSlot.objects.filter(trainer=trainer).exclude(participants=None).order_by('date')
     if len(slots) >= 2:
-        upcoming_slots = list(slots)[:2]
+        upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]
     elif len(slots) == 2:
-        upcoming_slots = list(slots)[0]
+        upcoming_slots = list(slots.filter(date__gte=date.today()))[0]
     else:
         upcoming_slots = None
      
