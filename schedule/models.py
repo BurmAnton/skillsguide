@@ -77,9 +77,10 @@ class TimeSlot(models.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             'stream_id': self.stream.id,
             'competence': self.competence.name,
-            'program': self.program.name,
+            'program': self.program,
             'date_time': f"{self.date.strftime('%d.%m.%Y')} {self.time}",
             'online': self.online,
             'workshop': self.workshop,

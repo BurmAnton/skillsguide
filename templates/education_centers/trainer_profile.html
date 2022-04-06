@@ -127,7 +127,7 @@
                                         <th>Школа</th>
                                         <th>Номер школы</th>
                                     </tr>
-                                    {% for user in slot.participants.all %}
+                                    {% for user in slot.participants %}
                                         <tr>
                                             <td>{{user}}</td>
                                             <td>{{user.phone_number}}</td>
@@ -159,11 +159,11 @@
                                         <th>{{criterion.name}}</th>
                                     {% endfor %}
                                 </tr>
-                                {% for user in slot.participants.all %}
+                                {% for user in slot.participants %}
                                     <tr>
-                                        <td> {{user}}</td>
+                                        <td>{{user}}</td>
                                         {% for attendance in user.attendance.all %}
-                                            {% if attendance.timeslot == slot %}
+                                            {% if attendance.timeslot.id == slot.id %}
                                                 <td>
                                                     <div class="form-check">
                                                         {% if attendance.is_attend %}
@@ -176,7 +176,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         {% for assessment in user.assessment.all %}
-                                            {% if assessment.timeslot == slot %}
+                                            {% if assessment.timeslot.id == slot.id %}
                                                 <td>
                                                     <select class="selectpicker" data-width="100%" data-live-search="true" name="{{slot.id}}_{{user.id}}_{{assessment.id}}">
                                                         {% if assessment.grade is not none %}
@@ -216,7 +216,7 @@
                                 <h5 class="card-title">Профпроба по компетенции "{{slot.competence}}" №{{slot.stream_id}}</h5>
                             </div>
                             <div class="card-text">
-                                <p><b>Программа обучения:</b> {{slot.program}}</p>
+                                <p><b>Программа обучения:</b> {{slot.program.name}}</p>
                                 <p><b>Дата и время:</b> {{slot.date_time}}</p>
                                 {% if trainer.role == 'CO' %}
                                     <p><b>Преподователь:</b> {{slot.trainer}}</p>
