@@ -173,18 +173,22 @@ def add_assesment_all(request):
     slots = TimeSlot.objects.exclude(program=None).distinct()
     for slot in slots:
         for participant in slot.participants.all():
-            attendance = Attendance(
-                timeslot=slot,
-                user=participant,
-            )
-            attendance.save()
-            for criterion in slot.program.criteria.all():
-                assessment = Assessment(
+            attendance = Attendance.objects.filter(user=participant,timeslot=slot)
+            if len(attendance) == 0:
+                attendance = Attendance(
                     timeslot=slot,
-                    criterion=criterion,
                     user=participant,
                 )
-                assessment.save()
+                attendance.save()
+            for criterion in slot.program.criteria.all():
+                assessment = Assessment.objects.filter(user=participant,timeslot=slot, criterion=criterion)
+                if len(assessment) == 0:
+                    assessment = Assessment(
+                        timeslot=slot,
+                        criterion=criterion,
+                        user=participant,
+                    )
+                    assessment.save()
     return HttpResponseRedirect(reverse("login"))
 
 
