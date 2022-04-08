@@ -107,7 +107,7 @@
             <h2>Профессиональны пробы (Цикл #2)</h2>
             <p>Ученики школ Самарской области с 6 по 11 класс могут принять участии в мероприятиях, организованных ЦОПП СО и партнёрами. Часть мероприятий будет проходить онлайн, часть на площадках партнёрских центров обучения в вашем городе, длительность одного мероприятия – 90 минут. Профпробы будут объедененны в наборы по 11 проб по различным компетенциям.</p> 
         </div>
-        {% if slots_count != 0 %}
+         {% if slots_count != 0 %}
             {% for slot in slots %}
             <!--Модалы-->
             <div class="modal fade" id="participants{{slot.id}}" tabindex="-1" aria-labelledby="Participants{{slot.id}}Label" aria-hidden="true">
@@ -129,16 +129,15 @@
                                     </tr>
                                     {% for user in slot.participants %}
                                         <tr>
-                                            <td>{{user}}</td>
+                                            <td>{{user.full_name}}</td>
                                             <td>{{user.phone_number}}</td>
                                             <td>{{user.email}}</td>
-                                            <td>{{user.school_class.grade_number}}{{user.school_class.grade_letter}}</td>
+                                            <td>{{user.school_class}}</td>
                                             <td>{{user.school.name}}</td>
                                             <td>{{user.school.school_contact.user.phone_number}}</td>
                                         </tr>
                                     {% endfor %}
                                 </table>
-            
                         </div>
                 </div>
             </div>
@@ -161,40 +160,34 @@
                                 </tr>
                                 {% for user in slot.participants %}
                                     <tr>
-                                        <td>{{user}}</td>
-                                        {% for attendance in user.attendance.all %}
-                                            {% if attendance.timeslot.id == slot.id %}
-                                                <td>
-                                                    <div class="form-check">
-                                                        {% if attendance.is_attend %}
-                                                        <input class="form-check-input" type="checkbox" value="{{attendance.id}}" name="{{slot.id}}_{{user.id}}_attendance" checked>
-                                                        {% else %}
-                                                            <input class="form-check-input" type="checkbox" value="{{attendance.id}}" name="{{slot.id}}_{{user.id}}_attendance">
-                                                        {% endif %}
-                                                    </div>  
-                                                </td>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% for assessment in user.assessment.all %}
-                                            {% if assessment.timeslot.id == slot.id %}
-                                                <td>
-                                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="{{slot.id}}_{{user.id}}_{{assessment.id}}">
-                                                        {% if assessment.grade is not none %}
-                                                        <option value="{{assessment.grade}}">{{assessment.grade}}</option>
-                                                        {% else %}
-                                                            <option value="–">–</option>
-                                                        {% endif %}
-                                                        {% if assessment.criterion.skill_type == "SFT" %}
+                                        <td>{{user.full_name}}</td>
+                                        <td>
+                                            <div class="form-check">
+                                                {% if user.attendance.0.is_attend %}
+                                                    <input class="form-check-input" type="checkbox" value="{{user.attendance.0.id}}" name="{{slot.id}}_{{user.id}}_attendance" checked>
+                                                {% else %}
+                                                    <input class="form-check-input" type="checkbox" value="{{user.attendance.0.id}}" name="{{slot.id}}_{{user.id}}_attendance">
+                                                {% endif %}
+                                            </div>  
+                                        </td>
+                                        {% for assessment in user.assessment %}
+                                            <td>
+                                                <select class="selectpicker" data-width="100%" data-live-search="true" name="{{slot.id}}_{{user.id}}_{{assessment.id}}">
+                                                    {% if assessment.grade is not none %}
+                                                    <option value="{{assessment.grade}}">{{assessment.grade}}</option>
+                                                    {% else %}
+                                                        <option value="–">–</option>
+                                                    {% endif %}
+                                                    {% if assessment.criterion.skill_type == "SFT" %}
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
                                                         <option value="3">3</option>
-                                                        {% else %}
+                                                    {% else %}
                                                         <option value="0">нет</option>
                                                         <option value="1">да</option>
-                                                        {% endif %}
-                                                    </select>   
-                                                </td>
-                                            {% endif %}
+                                                    {% endif %}
+                                                </select>   
+                                            </td>
                                         {% endfor %}
                                     </tr>
                                 {% endfor %}
@@ -209,7 +202,7 @@
                 </div>
             </div>
             <!--Модалы-->
-                <div class="col">
+               <div class="col">
                     <div class="card group-card">
                         <div class="card-body">
                             <div class="card-header">
@@ -221,7 +214,7 @@
                                 {% if trainer.role == 'CO' %}
                                     <p><b>Преподователь:</b> {{slot.trainer}}</p>
                                 {% endif %}
-                                <p><b>Участников пробы:</b> {{slot.participants.all|length}}</p>
+                                <p><b>Участников пробы:</b> {{slot.participants|length}}</p>
                                 {% if slot.online %}
                                     {% if slot.zoom_link is not None %}
                                         <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>

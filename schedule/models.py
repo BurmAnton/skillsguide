@@ -76,6 +76,19 @@ class TimeSlot(models.Model):
     is_nonprofit = models.BooleanField("На безвозмездной основе", default=True)
 
     def serialize(self):
+        participants = []
+        for participant in self.participants.all():
+            user = {
+                "id": participant.id,
+                "full_name": participant.__str__(),
+                "attendance": participant.attendance.filter(timeslot=self.id),
+                "assessment": participant.assessment.filter(timeslot=self.id),
+                "phone_number": participant.phone_number,
+                "email": participant.email,
+                "school_class": f"{participant.school_class.grade_number}{participant.school_class.grade_letter}",
+                "school": participant.school
+            }
+            participants.append(user)
         return {
             "id": self.id,
             'stream_id': self.stream.id,
@@ -84,7 +97,9 @@ class TimeSlot(models.Model):
             'date_time': f"{self.date.strftime('%d.%m.%Y')} {self.time}",
             'online': self.online,
             'workshop': self.workshop,
-            'participants': self.participants.all(),
+            'participants': participants,
+            'attendance': [participant.attendance.filter(timeslot=self.id) for participant in self.participants.all()],
+            'assessment': [participant.assessment.filter(timeslot=self.id) for participant in self.participants.all()],
             'trainer': self.trainer.__str__(),
             'zoom_instruction': self.zoom_instruction,
             'zoom_link': self.zoom_link

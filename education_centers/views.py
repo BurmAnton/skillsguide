@@ -207,4 +207,4 @@ def set_assessment(request):
                     assessment.grade = int(grade)
                     assessment.save()
 
-    return HttpResponseRedirect(reverse("trainer_profile", args=(request.user.id,)))
+    return HttpResponseRedirect(reverse("trainer_profile", args=(request.user.id,1)))
