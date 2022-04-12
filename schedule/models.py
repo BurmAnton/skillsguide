@@ -77,7 +77,7 @@ class TimeSlot(models.Model):
 
     def serialize(self):
         participants = []
-        for participant in self.participants.all():
+        for participant in self.participants.filter(role='ST').exclude(school_class=None):
             user = {
                 "id": participant.id,
                 "full_name": participant.__str__(),
