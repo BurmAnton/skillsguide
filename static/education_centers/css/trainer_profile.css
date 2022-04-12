@@ -53,37 +53,54 @@
   margin-bottom: 5px;
 }
 
-.group-card {
+.card-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+.card-list .group-card {
+  margin-top: 20px;
+  max-width: 30%;
+  min-width: 300px;
   -webkit-box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
           box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
 }
 
-.group-card .card-body {
+.card-list .group-card .card-body {
   padding: 0;
 }
 
-.group-card .card-body p {
+.card-list .group-card .card-body p {
   margin-bottom: 7px;
 }
 
-.group-card .card-body .card-header {
+.card-list .group-card .card-body .card-header {
   padding: 10px;
   background-color: #394959;
   color: white;
   text-align: center;
 }
 
-.group-card .card-body .card-header .card-title {
+.card-list .group-card .card-body .card-header .card-title {
   margin: 0;
   font-weight: 500 !important;
 }
 
-.group-card .card-body .card-text {
+.card-list .group-card .card-body .card-text {
   margin: 15px;
   margin-bottom: 0px;
 }
 
-.group-card .card-body .btn-add-link {
+.card-list .group-card .card-body .btn-add-link {
   background-color: #394959;
   -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
           box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
@@ -93,7 +110,7 @@
   margin-bottom: 10px;
 }
 
-.group-card .card-body .btn-change-link {
+.card-list .group-card .card-body .btn-change-link {
   color: #394959;
   font-weight: bold;
   background-color: white;
@@ -105,23 +122,23 @@
   margin-bottom: 10px;
 }
 
-.group-card .card-body .add-form {
+.card-list .group-card .card-body .add-form {
   display: none;
 }
 
-.group-card .slot-submit {
+.card-list .group-card .slot-submit {
   margin-top: 10px;
 }
 
-.group-card .cancel_slot {
+.card-list .group-card .cancel_slot {
   width: 100%;
 }
 
-.group-card .cancel_slot .btn {
+.card-list .group-card .cancel_slot .btn {
   width: 100%;
 }
 
-.group-card .unsub-form {
+.card-list .group-card .unsub-form {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -131,7 +148,7 @@
           justify-content: space-between;
 }
 
-.group-card .unsub-form .btn {
+.card-list .group-card .unsub-form .btn {
   padding: 3px;
 }
 
