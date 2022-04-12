@@ -21,13 +21,30 @@ body
     
     
 .navbar
-    background-color: #394959
+    background-color: #394959 !important
     padding: 5px 15%
     .nav-link
         vertical-align: middle
+    a
+        text-decoration: none
+        button
+            &:hover
+                background-color: #2c3946
+                border: 1px solid white
+    .logout
+        text-decoration: none
+        display: flex
+        div
+            margin: auto
+        .logout-img
+            img
+                width: 30px
+        p
+            margin: 0
+            color: white
+            text-decoration: none
 .nav-brand
     display: flex
-
     margin: 0px
     padding: 0px
     .navbar-title
