@@ -128,7 +128,7 @@ def trainer_profile(request, trainer_id, page_number):
     else:
         upcoming_slots = None
      
-    slots = Paginator(slots, 12)
+    slots = Paginator(slots, 3)
     slots_page = slots.get_page(page_number)
     pages = slots.num_pages
 
@@ -146,6 +146,7 @@ def trainer_profile(request, trainer_id, page_number):
         "previous_page_number": previous_page_number,
         "next_page_number": next_page_number,
         "page_list": range(1,slots.num_pages+1),
+        "num_page": slots.num_pages,
         'upcoming_slots': upcoming_slots
     })
 
