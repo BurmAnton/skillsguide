@@ -40,6 +40,19 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     document.querySelector('.btn-submit').style.display = 'none';
 
+    //Проверка email
+    document.querySelector('.reg-email').addEventListener("change", () => {
+        let email = document.querySelector('.reg-email');
+        var re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+        if (re.test(email.value)){
+            email.classList.remove('is-invalid');
+            email.classList.add('is-valid');
+        }else{
+            email.classList.remove('is-valid');
+            email.classList.add('is-invalid');
+        }
+    })
+
     //Востановление пароля
     document.querySelector('.pass-recovery').addEventListener('click', () => {
         passRecovery();
@@ -355,39 +368,49 @@ function click_forward(){
 };
 
 function send_reg_info(){
-    console.log(document.querySelector("#Email").value)
-    fetch('/user/registration/', {
-        method: 'POST',
-        body: JSON.stringify({
-            email: document.querySelector("#Email").value,
-            password: document.querySelector("#InputPasswordReg").value,
-            confirmation: document.querySelector("#СonfirmPassword").value,
-            
-            first_name: document.querySelector("#Name").value,
-            last_name: document.querySelector("#LastName").value,
-            middle_name: document.querySelector("#MiddleName").value,
-            birthday: document.querySelector("#Birthday").value,
-            phone: document.querySelector("#Phone").value,
-            disability_check: document.querySelector("#disability-check").value,
-            disability_type: document.querySelector("#disability_type").value,
-            
-            school_id: document.querySelector("#School").value,
-            grade_number: document.querySelector("#school_class").value,
-            grade_letter: document.querySelector("#school_class_latter").value,
-        })
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log(result.message);
-            if (result.message === "Account created successfully."){
-                document.querySelector(".email-login").value = document.querySelector("#Email").value;
-                document.querySelector("#InputPassword").value = document.querySelector("#InputPasswordReg").value;
-                document.querySelector(".sign-button").click();
-            }else{
-                let message = "При регистрации произошёл сбой. Попробуйте обновить страницу и пройти регистрацию ещё раз."
-                alert_fade(message);
-            }
-        })
+    let email = document.querySelector('.reg-email')
+    if (email.classList.contains('is-valid')){
+        fetch('/user/registration/', {
+            method: 'POST',
+            body: JSON.stringify({
+                email: document.querySelector("#Email").value,
+                password: document.querySelector("#InputPasswordReg").value,
+                confirmation: document.querySelector("#СonfirmPassword").value,
+                
+                first_name: document.querySelector("#Name").value,
+                last_name: document.querySelector("#LastName").value,
+                middle_name: document.querySelector("#MiddleName").value,
+                birthday: document.querySelector("#Birthday").value,
+                phone: document.querySelector("#Phone").value,
+                disability_check: document.querySelector("#disability-check").value,
+                disability_type: document.querySelector("#disability_type").value,
+                
+                school_id: document.querySelector("#School").value,
+                grade_number: document.querySelector("#school_class").value,
+                grade_letter: document.querySelector("#school_class_latter").value,
+            })
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result.message);
+                if (result.message === "Account created successfully."){
+                    document.querySelector(".email-login").value = document.querySelector("#Email").value;
+                    document.querySelector("#InputPassword").value = document.querySelector("#InputPasswordReg").value;
+                    document.querySelector(".sign-button").click();
+                } else if (result.message == 'Password mismatch.') {
+                    let message = "Введённые пароли не совпадают."
+                    alert_fade(message);
+                } else if (result.message == 'Email already taken.') {
+                    let message = "Email занят."
+                    alert_fade(message);
+                }else{
+                    let message = "При регистрации произошёл сбой. Попробуйте обновить страницу и пройти регистрацию ещё раз."
+                    alert_fade(message);
+                }
+            })
+    }else{
+        console.log("Email incorect");
+    }
 };
 
 function passRecovery() {
@@ -471,8 +494,7 @@ function passRecovery() {
                 document.querySelector(".email-login").value = document.querySelector(".email-recovery").value;
                 document.querySelector("#InputPassword").value = document.querySelector(".password-recovery").value;
                 document.querySelector(".sign-button").click();
-            }
-            else {
+            } else {
                 message = "При попытке смены пароля, произошёл сбой. Попробуйте повторить операцию позже."
                 alert_fade(message)
             }

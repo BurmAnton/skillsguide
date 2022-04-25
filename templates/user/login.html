@@ -95,23 +95,23 @@
                     <div class="step-title" style="text-align:center;"><h5>Шаг 1/3: Данные родителя</h5></div>
                 <!--Первый шаг-->
                     <div class="input-group mb-3 parent-step parent-step-mandatory">
-                        <input type="input" class="form-control" name="parent_last_name" id="parentLastName" placeholder="Фамилия">
+                        <input type="input" class="form-control" name="parent_last_name" id="parentLastName" placeholder="Фамилия" onkeydown="return /[a/а-я]/i.test(event.key)">
                     </div>
                     <div class="input-group mb-3 parent-step parent-step-mandatory">
-                        <input type="input" class="form-control" name="parent_name" id="parentName" placeholder="Имя">
+                        <input type="input" class="form-control" name="parent_name" id="parentName" placeholder="Имя" onkeydown="return /[a/а-я]/i.test(event.key)">
                     </div>
                     <div class="input-group mb-3 parent-step parent-step-optional">
-                        <input type="input" class="form-control" name="parent_middle_name" id="parentMiddleName" placeholder="Отчество">
+                        <input type="input" class="form-control" name="parent_middle_name" id="parentMiddleName" placeholder="Отчество" onkeydown="return /[a/а-я]/i.test(event.key)">
                     </div>
                 <!--Второй шаг-->
                     <div class="input-group mb-3 child-step child-step-mandatory">
-                        <input type="input" class="form-control" name="last_name" id="LastName" placeholder="Фамилия">
+                        <input type="input" class="form-control" name="last_name" id="LastName" placeholder="Фамилия" onkeydown="return /[a/а-я]/i.test(event.key)">
                     </div>
                     <div class="input-group mb-3 child-step child-step-mandatory">
-                        <input type="input" class="form-control" name="name" id="Name" placeholder="Имя" required>
+                        <input type="input" class="form-control" name="name" id="Name" placeholder="Имя" onkeydown="return /[a/а-я]/i.test(event.key)" required>
                     </div>
                     <div class="input-group mb-3 child-step child-step-optional">
-                        <input type="input" class="form-control" name="middle_name" id="MiddleName" placeholder="Отчество">
+                        <input type="input" class="form-control" name="middle_name" id="MiddleName" placeholder="Отчество" onkeydown="return /[a/а-я]/i.test(event.key)">
                     </div>
                     <div class="input-group mb-3 child-step child-step-mandatory">
                         <input type="date" class="form-control" name="birthday" id="Birthday" placeholder="Дата рождения" required>
@@ -147,7 +147,7 @@
                                 </select>
                             </div>
                             <div class="col letter-col child-step-mandatory">
-                                <input type="input" class="form-control" data-width="100%" name="school_class_latter" id="school_class_latter" placeholder="Буква класса" required>
+                                <input type="input" class="form-control" data-width="100%" name="school_class_latter" id="school_class_latter" maxlength="2" onkeydown="return /[a/а-я]/i.test(event.key)" placeholder="Буква класса" required>
                             </div>
                         </div>
                     </div>
@@ -166,10 +166,10 @@
                     </div>
                 <!--Финальный шаг-->
                     <div class="input-group mb-3 auth-step">
-                        <input type="email" class="form-control" name="email" id="Email" placeholder="Email" required>
+                        <input type="email" class="form-control reg-email" name="email" id="Email" placeholder="Email" required>
                     </div>
                     <div class="input-group mb-3 auth-step">
-                        <input type="phone2numeric" class="form-control" name="phone" id="Phone" placeholder="Номер телефона" required>
+                        <input type="phone2numeric" class="form-control" name="phone" id="Phone" placeholder="Номер телефона" maxlength="18" onkeydown="return /[a\1-9 + ( ) ]/i.test(event.key)" required>
                     </div>
                     <div class="input-group mb-3 auth-step">
                         <input type="password" class="form-control" name="password" id="InputPasswordReg" placeholder="Пароль" required>
