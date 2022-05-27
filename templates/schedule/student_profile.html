@@ -158,7 +158,7 @@
                                                 </div>
                                             </div>
                                         {% endfor %}
-                                    {% else %}
+                                    {% elif choosen_bundles_len == 0 %}
                                         {% for bundle in choosen_bundles %}
                                             <div class="col-12">
                                                 <div class="card h-100">
@@ -175,6 +175,7 @@
                                             </div>
                                         {% endfor %}
                                     {% endif %}
+                                    
                                 </div>
                             {% endif %}
                         </div>
@@ -217,7 +218,7 @@
                                 </div>
                             </div>
                         {% endfor %}
-                    {% else %}
+                    {% elif choosen_bundles_len == 0 %}
                         <div class="zero-alert col-12">
                             <div class="alert alert-warning " role="alert">
                                 <h4 class="alert-heading">Нет доступных проб!</h4>
@@ -227,6 +228,83 @@
                             </div>
                         </div>
                     {% endif %}
+                    
+                </div>
+                <div class="card-list">
+                    {% for slot in slots %}
+                        <div class="modal fade" id="Assessment{{slot.0.id}}" tabindex="-1" aria-labelledby="Assessment{{slot.id}}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="Assessment{{slot.0.id}}Label">Ассессмент</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                        <table class="table table-hover table-responsive">
+                                            <tr>
+                                                <th>Посещаемость</th>
+                                                {% for criterion in slot.0.program.criteria.all %}
+                                                    <th>{{criterion.name}}</th>
+                                                {% endfor %}
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            {% if slot.1 %}
+                                                                <input class="form-check-input" disabled type="checkbox" checked>
+                                                            {% else %}
+                                                                <input class="form-check-input" disabled type="checkbox">
+                                                            {% endif %}
+                                                        </div>  
+                                                    </td>
+                                                    {% for assessment in slot.2 %}
+                                                        <td>
+                                                            {% if assessment.grade == None %}
+                                                                –
+                                                            {% else %}
+                                                                {{assessment.grade}}
+                                                                {% if assessment.criterion.skill_type == "SFT" %}
+                                                                    из 3
+                                                                {% else %}
+                                                                    из 2
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        </td>
+                                                    {% endfor %}
+                                                </tr>
+                                        </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card group-card">
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <h5 class="card-title">Профпроба по компетенции "{{slot.0.competence}}"</h5>
+                                </div>
+                                <div class="card-text">
+                                    <p><b>Программа обучения:</b> {{slot.0.program.name}}</p>
+                                    <p><b>Дата и время:</b> {{slot.0.date_time}}</p>
+                                    <p><b>Центр обучения:</b> {{slot.0.education_center}}</p>
+                                    <p><b>Преподователь:</b> {{slot.0.trainer}}</p>
+                                    {% if slot.0.online %}
+                                        {% if slot.0.zoom_link is not None %}
+                                            <p><a href="{{slot.0.zoom_link}}">Ссылка на конференцию</a></p>
+                                            <p>{{slot.0.zoom_instruction}}</p>
+                                        {% endif %}
+                                    {% else %}
+                                        <p><b>Адрес:</b> {{slot.0.workshop.adress}}</p>
+                                        <p>{{slot.0.workshop.description}}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button type="button" class="btn btn-add-link btn-primary" data-slot="{{slot.0.id}}" data-bs-toggle="modal" data-bs-target="#Assessment{{slot.0.id}}">
+                                            Ассессмент (оценка)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

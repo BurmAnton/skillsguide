@@ -132,15 +132,63 @@
                     </div>
                     {% if slots_count != 0 %}
                         {% for slot in slots %}
+                        <div class="modal fade" id="Assessment{{slot.id}}" tabindex="-1" aria-labelledby="Assessment{{slot.id}}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="Assessment{{slot.id}}Label">Ассессмент</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                        <table class="table table-hover table-responsive">
+                                            <tr>
+                                                <th>Участник</th>
+                                                <th>Посещаемость</th>
+                                                {% for criterion in slot.program.criteria.all %}
+                                                    <th>{{criterion.name}}</th>
+                                                {% endfor %}
+                                            </tr>
+                                            {% for user in slot.participants %}
+                                                <tr>
+                                                    <td>{{user.full_name}}</td>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            {% if user.attendance.0.is_attend %}
+                                                                <input class="form-check-input" disabled type="checkbox" checked>
+                                                            {% else %}
+                                                                <input class="form-check-input" disabled type="checkbox">
+                                                            {% endif %}
+                                                        </div>  
+                                                    </td>
+                                                    {% for assessment in user.assessment %}
+                                                        <td>
+                                                            {% if assessment.grade is not none %}
+                                                                {{assessment.grade}}
+                                                                {% if assessment.criterion.skill_type == "SFT" %}
+                                                                    из 3
+                                                                {% else %}
+                                                                    из 2
+                                                                {% endif %}
+                                                            {% else %}
+                                                                <option value="–">–</option>
+                                                            {% endif %}
+                                                        </td>
+                                                    {% endfor %}
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                             <div class="col">
-                                <div class="card h-100 group-card">
+                                <div class="card group-card">
                                     <div class="card-body">
                                         <div class="card-header">
                                             <h5 class="card-title">Профпроба по компетенции {{slot.competence}}</h5>
                                         </div>
                                         <div class="card-text">
                                             <p><b>Центр обучения:</b> {{slot.education_center}}</p>
-                                            <p><b>Дата и время:</b> {{slot.time}} {{slot.date}}</p>
+                                            <p><b>Дата и время:</b> {{slot.date_time}}</p>
                                             {% if slot.online %}
                                                 {% if slot.zoom_link is not None %}
                                                     <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
@@ -154,12 +202,12 @@
                                             <p><b>Участники от школы:</b></p>
                                         </div>
                                         <ul class="list-group list-group-flush">
-                                            {% for student in slot.participants.all %}
+                                            {% for student in slot.participants %}
                                                 {% if student.school == school %}
                                                     <li class="list-group-item assessment-false">
                                                         <div class="unsub-form">
                                                             <div>
-                                                                {{student}} ({{student.school_class.grade_number}}{{student.school_class.grade_letter}})
+                                                                {{student.full_name}} ({{student.school_class}})
                                                             </div>
                                                             <div>
                                                                 <form action="{% url 'student_dismissal' %}" method="POST">
@@ -174,6 +222,13 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
+                                        <div class="card-footer">
+                                            <div class="d-grid gap-2 d-md-block">
+                                                <button type="button" class="btn btn-add-link btn-primary" data-slot="{{slot.id}}" data-bs-toggle="modal" data-bs-target="#Assessment{{slot.id}}">
+                                                    Ассессмент
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -94,6 +94,7 @@ class TimeSlot(models.Model):
             'stream_id': self.stream.id,
             'competence': self.competence.name,
             'program': self.program,
+            'education_center': self.education_center,
             'date_time': f"{self.date.strftime('%d.%m.%Y')} {self.time}",
             'online': self.online,
             'workshop': self.workshop,

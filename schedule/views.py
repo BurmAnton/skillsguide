@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 #Models
-from .models import Bundle, Stream, TimeSlot
+from .models import Attendance, Bundle, Stream, TimeSlot, Assessment
 from users.models import DisabilityType, User, School, SchoolClass, SchoolContactPersone, City
 from education_centers.models import EducationCenter, TrainingProgram, Competence, Workshop
 
@@ -177,6 +177,16 @@ def student_profile(request, user_id):
                 available_bundles.append(bundle)
 
     slots = TimeSlot.objects.filter(participants=user).order_by('date')
+    slots_list = []
+    for slot in slots:
+        attendance = Attendance.objects.filter(timeslot=slot, user=user)
+        if len(attendance) != 0:
+            attendance = attendance[0].is_attend
+        else:
+            attendance = False
+        assessments = Assessment.objects.filter(timeslot=slot, user=user)
+        slots_list.append([slot,attendance,assessments])
+            
     if len(slots) >= 2:
         upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]
     elif len(slots) != 0:
@@ -187,6 +197,7 @@ def student_profile(request, user_id):
     return render(request, "schedule/student_profile.html",{
         'page_name': 'Личный кабинет',
         'user': user,
+        'slots': slots_list,
         'upcoming_slots': upcoming_slots,
         'schools': School.objects.all(),
         'disability_types': DisabilityType.objects.all(),
@@ -425,7 +436,7 @@ def school_profile(request, school_id):
     return render(request, "schedule/school_profile.html",{
         "cities": City.objects.all(),
         "school": school,
-        "slots": slots,
+        "slots": [slot.serialize() for slot in slots],
         'upcoming_slots': upcoming_slots,
         "slots_count": len(slots),
         'contact': contact
