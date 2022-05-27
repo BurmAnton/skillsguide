@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.db.models import Max
+from django.db.models import Sum
 #Decorators
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -185,7 +186,8 @@ def student_profile(request, user_id):
         else:
             attendance = False
         assessments = Assessment.objects.filter(timeslot=slot, user=user)
-        slots_list.append([slot,attendance,assessments])
+        assessments_sum = assessments.aggregate(Sum('grade'))['grade__sum']
+        slots_list.append([slot,attendance,assessments,assessments_sum])
             
     if len(slots) >= 2:
         upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]

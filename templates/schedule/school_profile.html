@@ -146,6 +146,7 @@
                                                 {% for criterion in slot.program.criteria.all %}
                                                     <th>{{criterion.name}}</th>
                                                 {% endfor %}
+                                                <th>Итого</th>
                                             </tr>
                                             {% for user in slot.participants %}
                                                 <tr>
@@ -173,6 +174,13 @@
                                                             {% endif %}
                                                         </td>
                                                     {% endfor %}
+                                                    <td>
+                                                        {% if user.assessment_sum == None %}
+                                                            0
+                                                        {% else %}
+                                                            {{user.assessment_sum}}
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         </table>

@@ -1,6 +1,7 @@
 import datetime
 from pyexpat import model
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Sum
 
 from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
@@ -83,6 +84,7 @@ class TimeSlot(models.Model):
                 "full_name": participant.__str__(),
                 "attendance": participant.attendance.filter(timeslot=self.id),
                 "assessment": participant.assessment.filter(timeslot=self.id),
+                "assessment_sum": participant.assessment.filter(timeslot=self.id).aggregate(Sum('grade'))['grade__sum'],
                 "phone_number": participant.phone_number,
                 "email": participant.email,
                 "school_class": f"{participant.school_class.grade_number}{participant.school_class.grade_letter}",
