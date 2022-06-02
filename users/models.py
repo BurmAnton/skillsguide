@@ -115,9 +115,12 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        if self.first_name != "" and self.middle_name != "" and self.last_name != "":
-            return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}.'
-        return f'{self.email}'
+        if self.last_name == "" or self.first_name != "":
+            return f'{self.email}'
+        if self.middle_name == "":
+            return f'{self.first_name[0]}. {self.last_name}'
+        return f'{self.first_name[0]}.{self.middle_name[0]}. {self.last_name}'
+        
             
     class Meta:
         verbose_name = "Пользователь"
