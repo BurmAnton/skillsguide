@@ -115,7 +115,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        if self.first_name is not None and self.middle_name is not None and self.last_name is not None:
+        if self.first_name != "" and self.middle_name != "" and self.last_name != "":
             return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}.'
         return f'{self.email}'
             

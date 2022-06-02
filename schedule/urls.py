@@ -5,8 +5,8 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('create/cycle', views.create_cycle, name='create_cycle'),
-   # path('bundle/<int:bundle_id>/streams/fill', views.streams_fill, name='streams_fill'),
-  #  path('bundle/<int:bundle_id>/slots/fill', views.slots_fill, name='slots_fill'),
+    #path('bundle/<int:bundle_id>/streams/fill', views.streams_fill, name='streams_fill'),
+    #path('bundle/<int:bundle_id>/slots/fill', views.slots_fill, name='slots_fill'),
 
     path('student/profile/<int:user_id>/', views.student_profile, name='student_profile'),
     path('student/change/profile/', views.change_profile_student, name='change_profile_student'),
