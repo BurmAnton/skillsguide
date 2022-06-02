@@ -39,5 +39,8 @@
             </div>
         </form>
     </div>
+    {% for user in users %}
+        {{user.email}}
+    {% endfor %}
 
 {% endblock %}

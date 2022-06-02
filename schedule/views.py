@@ -218,10 +218,13 @@ def choose_bundle(request):
             bundle = bundle[0]
             bundle.participants.add(request.user)
             bundle.save()
+            slots_fill(request, bundle.id)
+    
             message = "Registration successful"
         else:
             message = "Bundle doesn't exist"
-    return HttpResponseRedirect(reverse("login")) 
+        
+    return HttpResponseRedirect(reverse("add_assesment_all")) 
 
 
 @login_required

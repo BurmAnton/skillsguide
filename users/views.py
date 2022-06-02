@@ -67,8 +67,7 @@ def login(request):
 
 @login_required
 def logout(request):
-    if request.user.is_authenticated:
-        auth.logout(request)
+    auth.logout(request)
     return HttpResponseRedirect(reverse("login"))
 
 def code_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -113,7 +112,8 @@ def mailing_form(request):
 
     return render(request, "user/mailing_form.html", {
         'bundles': Bundle.objects.all(),
-        'message': message
+        'message': message,
+        'users': users
     })
 
 
@@ -288,7 +288,7 @@ def import_students_coordinator(request):
         'form': form
     })
 
-        
+
 @csrf_exempt
 def students_report(request):
     users = User.objects.filter(role='ST')
