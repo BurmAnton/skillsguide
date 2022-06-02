@@ -350,12 +350,14 @@ def competence_schedule(request, ed_center_id, bundle_id, competence_id):
             stream_slots = TimeSlot.objects.filter(competence=None, stream=stream)
         else:
             weeks_count = TimeSlot.objects.filter(competence=None, stream=stream).aggregate(Max('week_number'))['week_number__max']
-            for week_number in range(weeks_count+1):
-                week_slots = TimeSlot.objects.exclude(competence=None).filter(stream=stream, week_number=week_number)
-                if len(week_slots) < stream.week_limit:
-                    free_weeks.add(week_number)
-            stream_slots = TimeSlot.objects.filter(competence=None, stream=stream, week_number__in=free_weeks)
-                
+            if weeks_count is not None:
+                for week_number in range(weeks_count+1):
+                    week_slots = TimeSlot.objects.exclude(competence=None).filter(stream=stream, week_number=week_number)
+                    if len(week_slots) < stream.week_limit:
+                        free_weeks.add(week_number)
+                stream_slots = TimeSlot.objects.filter(competence=None, stream=stream, week_number__in=free_weeks)
+            else:
+                stream_slots = None
         streams.append([stream, stream_slots, row_count, timeslot])
         row_count += 1
 
