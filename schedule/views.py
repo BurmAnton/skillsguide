@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 #Models
 from .models import Attendance, Bundle, Stream, TimeSlot, Assessment
 from users.models import DisabilityType, User, School, SchoolClass, SchoolContactPersone, City
-from education_centers.models import EducationCenter, TrainingProgram, Competence, Workshop
+from education_centers.models import EducationCenter, TrainingProgram, Competence, Workshop, Criterion
 
 
 # Create your views here.
@@ -110,11 +110,7 @@ def create_cycle(request):
         'bundles': bundles,
     })
 
-@login_required
-def streams_fill(request, bundle_id):
-    if not(request.user.is_staff):
-        return HttpResponseRedirect(reverse("login")) 
-
+def streams_fill(bundle_id):
     bundle = get_object_or_404(Bundle, id=bundle_id)
     schools = School.objects.filter(bundles=bundle)
     users = User.objects.filter(school__in=schools, role='ST')
@@ -146,20 +142,16 @@ def streams_fill(request, bundle_id):
                             school_number += 1
                 else:
                     break
-            
-    return HttpResponseRedirect(reverse("login")) 
 
-@login_required
-def slots_fill(request, bundle_id):
-    if request.user.is_staff:
-        bundle = get_object_or_404(Bundle, id=bundle_id)
-        streams = Stream.objects.filter(bundle=bundle)
-        
-        for stream in streams: 
-            slots = TimeSlot.objects.filter(stream=stream).exclude(competence=None).distinct()
-            for slot in slots: 
-                slot.participants.add(*stream.participants.all())
-                slot.save()
+def slots_fill(bundle_id):
+    bundle = get_object_or_404(Bundle, id=bundle_id)
+    streams = Stream.objects.filter(bundle=bundle)
+    
+    for stream in streams: 
+        slots = TimeSlot.objects.filter(stream=stream).exclude(competence=None).distinct()
+        for slot in slots: 
+            slot.participants.add(*stream.participants.all())
+            slot.save()
     return HttpResponseRedirect(reverse("login")) 
 
 @login_required
@@ -209,6 +201,33 @@ def student_profile(request, user_id):
         'bundles_count': len(available_bundles)
     })
 
+
+def add_assesment_all():
+    programs = TrainingProgram.objects.all()
+    soft_skills = Criterion.objects.filter(skill_type='SFT')
+    for skill in soft_skills:
+        skill.programs.add(*programs)
+        skill.save()
+    slots = TimeSlot.objects.exclude(program=None).distinct()
+    for slot in slots:
+        for participant in slot.participants.all():
+            attendance = Attendance.objects.filter(user=participant,timeslot=slot)
+            if len(attendance) == 0:
+                attendance = Attendance(
+                    timeslot=slot,
+                    user=participant,
+                )
+                attendance.save()
+            for criterion in slot.program.criteria.all():
+                assessment = Assessment.objects.filter(user=participant,timeslot=slot, criterion=criterion)
+                if len(assessment) == 0:
+                    assessment = Assessment(
+                        timeslot=slot,
+                        criterion=criterion,
+                        user=participant,
+                    )
+                    assessment.save()
+
 @login_required
 @csrf_exempt
 def choose_bundle(request):
@@ -218,13 +237,14 @@ def choose_bundle(request):
             bundle = bundle[0]
             bundle.participants.add(request.user)
             bundle.save()
-            slots_fill(request, bundle.id)
-    
+            streams_fill(bundle.id)
+            slots_fill(bundle.id)
+            add_assesment_all()
             message = "Registration successful"
         else:
             message = "Bundle doesn't exist"
         
-    return HttpResponseRedirect(reverse("add_assesment_all")) 
+    return HttpResponseRedirect(reverse("login")) 
 
 
 @login_required

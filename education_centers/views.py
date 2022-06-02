@@ -164,34 +164,6 @@ def add_zoom_link(request):
     
     return HttpResponseRedirect(reverse("trainer_profile", args=(request.user.id,)))
 
-@login_required
-def add_assesment_all(request):
-    programs = TrainingProgram.objects.all()
-    soft_skills = Criterion.objects.filter(skill_type='SFT')
-    for skill in soft_skills:
-        skill.programs.add(*programs)
-        skill.save()
-    slots = TimeSlot.objects.exclude(program=None).distinct()
-    for slot in slots:
-        for participant in slot.participants.all():
-            attendance = Attendance.objects.filter(user=participant,timeslot=slot)
-            if len(attendance) == 0:
-                attendance = Attendance(
-                    timeslot=slot,
-                    user=participant,
-                )
-                attendance.save()
-            for criterion in slot.program.criteria.all():
-                assessment = Assessment.objects.filter(user=participant,timeslot=slot, criterion=criterion)
-                if len(assessment) == 0:
-                    assessment = Assessment(
-                        timeslot=slot,
-                        criterion=criterion,
-                        user=participant,
-                    )
-                    assessment.save()
-    return HttpResponseRedirect(reverse("login"))
-
 
 @login_required
 @csrf_exempt
