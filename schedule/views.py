@@ -349,9 +349,9 @@ def competence_schedule(request, ed_center_id, bundle_id, competence_id):
         if stream.schedule_type == "SDW":
             stream_slots = TimeSlot.objects.filter(competence=None, stream=stream)
         else:
-            weeks_count = TimeSlot.objects.filter(competence=None, stream=stream).aggregate(Max('week_number'))['week_number__max']
+            weeks_count = TimeSlot.objects.filter(competence=None, stream=stream).aggregate(Max('week_number'))
             if (weeks_count != None):
-                for week_number in range(weeks_count+1):
+                for week_number in range(weeks_count['week_number__max']+1):
                     week_slots = TimeSlot.objects.exclude(competence=None).filter(stream=stream, week_number=week_number)
                     if len(week_slots) < stream.week_limit:
                         free_weeks.add(week_number)
