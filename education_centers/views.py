@@ -14,7 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .imports import  slots_import
-from users.models import User, SchoolContactPersone
+from users.models import User 
+from schools.models import SchoolContactPersone
 
 # Create your views here.
 @login_required

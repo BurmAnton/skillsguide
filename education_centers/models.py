@@ -4,6 +4,7 @@ from django.db.models.deletion import DO_NOTHING, CASCADE
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from users.models import User, DisabilityType
+from regions.models import City
 
 
 class FieldOfActivity(models.Model):
@@ -54,17 +55,109 @@ class Competence(models.Model):
         return self.name
 
 
+class EducationCenterType(models.Model):
+    type_name = models.CharField("Тип учебного заведения", max_length=200, blank=False, null=False)
+    
+    def __str__(self):
+        return self.type_name
+
+    class Meta:
+        verbose_name = "Тип учебного завдения"
+        verbose_name_plural = "Типология учебных заведений"
+
+
 class EducationCenter(models.Model):
-    name = models.CharField("Название организации", max_length=500)
-    contact_person = models.OneToOneField(User, verbose_name="Контактное лицо", related_name="education_center", on_delete=DO_NOTHING, blank=True, null=True)
+    name = models.CharField("Название организации", max_length=500, blank=False, null=False)
+    short_name = models.CharField("Краткое название", max_length=50, blank=False, null=True)
+    city = models.ForeignKey(City, verbose_name="Населённый пункт", related_name="education_centers", on_delete=CASCADE)
+
+    is_trains = models.BooleanField("Проводит обучение", default=False)
     trainers = models.ManyToManyField(User, verbose_name="Преподователи", related_name="education_centers", blank=True)
+
+    contact_person = models.OneToOneField(
+        User, 
+        verbose_name="Контактное лицо", 
+        related_name="education_center", 
+        on_delete=DO_NOTHING, 
+        blank=True, 
+        null=True
+    )
+
+    def __str__(self):
+        return self.short_name
 
     class Meta:
         verbose_name = "Центр обучения"
         verbose_name_plural = "Центры обучения"
 
+
+class Faculty(models.Model):
+    faculty_name = models.CharField("Название факультета", max_length=200, blank=False, null=False)
+    edu_center = models.ForeignKey(EducationCenter, verbose_name="Учебное заведение", related_name="faculties", on_delete=CASCADE)
+
     def __str__(self):
-        return self.name
+        return f'{self.faculty_name} ({self.edu_center.short_name})'
+
+    class Meta:
+        verbose_name = "Центр обучения"
+        verbose_name_plural = "Центры обучения"
+
+
+class Speciality(models.Model):
+    name = models.CharField("Название специальности", max_length=200, blank=False, null=False)
+    speciality_code = models.CharField("Код специалности", max_length=15, blank=False, null=False)
+    faculties = models.ManyToManyField(
+        Faculty, 
+        verbose_name="Факультет", 
+        related_name="specialities", 
+        blank=True
+    )
+
+    def __str__(self):
+        return f'{self.name} ({self.code})'
+    
+    class Meta:
+        verbose_name = "Специальность"
+        verbose_name_plural = "Специальности"
+
+
+class Student(models.Model):
+    user = models.OneToOneField(User, related_name="student", verbose_name="Пользователь", on_delete=CASCADE)
+    edu_center = models.ForeignKey(
+        EducationCenter, 
+        related_name="students", 
+        verbose_name="Образовательное учреждение", 
+        on_delete=CASCADE
+    )
+    speciality = models.ForeignKey(
+        Speciality, 
+        related_name="Специальность", 
+        verbose_name="students",
+        on_delete=DO_NOTHING,
+        null=True
+    )
+    year = models.IntegerField("Год обучения", null=False, blank=False)
+    DEGREE_TYPES = (
+        ('UG', 'Бакалавриат'),
+        ('MGT', 'Магистратура'),
+        ('SPC', 'Специалитет'),
+        ('HQP', 'Подготовка кадров высшей квалификации'),
+    )
+    degree_type = models.CharField(
+        "Вид образования", 
+        choices=DEGREE_TYPES, 
+        max_length=3, 
+        blank=False, 
+        null=False
+    )
+    is_graduated = models.BooleanField("Выпустился", default=False)
+
+    def __str__(self):
+        return f'{self.user} ({self.speciality.name})'
+
+    class Meta:
+        verbose_name = "Студент"
+        verbose_name_plural = "Студенты"
 
 
 class Criterion(models.Model):

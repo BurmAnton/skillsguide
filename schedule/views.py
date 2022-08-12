@@ -13,7 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 #Models
 from .models import Attendance, Bundle, Stream, TimeSlot, Assessment
-from users.models import DisabilityType, User, School, SchoolClass, SchoolContactPersone, City
+from users.models import DisabilityType, User
+from regions.models import City
+from schools.models import School, Grade, SchoolContactPersone
 from education_centers.models import EducationCenter, TrainingProgram, Competence, Workshop, Criterion
 
 
@@ -275,17 +277,17 @@ def change_profile_student(request):
         else:
             user.disability_type = None
         
-        school_class = SchoolClass.objects.filter(
+        school_class = Grade.objects.filter(
                 school=school,
-                grade_number=grade_number,
+                grade=grade_number,
                 grade_letter=grade_letter
         )
         if len(school_class) != 0:
             school_class = school_class[0]
         else:
-            school_class = SchoolClass(
+            school_class = Grade(
                 school=school,
-                grade_number=int(grade_number),
+                grade=int(grade_number),
                 grade_letter=grade_letter.upper()
             )
             school_class.save()
@@ -425,7 +427,7 @@ def student_dashboard(request):
         school_list = []
         school_list.append(school)
         for i in range(6,12):
-            school_classes = SchoolClass.objects.filter(school=school, grade_number=i)
+            school_classes = Grade.objects.filter(school=school, grade_number=i)
             school_students_count = 0
             if len(school_classes) != 0:
                 for school_class in school_classes:

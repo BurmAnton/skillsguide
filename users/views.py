@@ -12,7 +12,8 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 #Models
-from users.models import User, DisabilityType, School, SchoolClass, SchoolContactPersone
+from users.models import User, DisabilityType 
+from schools.models import School, Grade, SchoolContactPersone
 from schedule.models import Bundle, EducationCenter
 
 from education_centers.forms import ImportDataForm
@@ -239,17 +240,17 @@ def registration(request):
             user.disability_type = disability_type
 
             user.role = 'ST'
-            school_class = SchoolClass.objects.filter(
+            school_class = Grade.objects.filter(
                 school=school,
-                grade_number=grade_number,
+                grade=grade_number,
                 grade_letter=grade_letter
             )
             if len(school_class) != 0:
                 school_class = school_class[0]
             else:
-                school_class = SchoolClass(
+                school_class = Grade(
                     school=school,
-                    grade_number=int(grade_number),
+                    grade=int(grade_number),
                     grade_letter=grade_letter.upper()
                 )
                 school_class.save()

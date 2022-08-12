@@ -1,7 +1,8 @@
 from openpyxl import load_workbook
 from datetime import datetime, timedelta
 
-from users.models import School, DisabilityType, SchoolClass, User
+from users.models import DisabilityType, User
+from schools.models import School, Grade
 
 
 def get_sheet(form):
@@ -77,13 +78,13 @@ def load_student(sheet_dict, row):
     school = school[0]
     grade_letter = sheet_dict["Буква класса"][row]
     grade_number = int(sheet_dict["Класс"][row])
-    school_class = SchoolClass.objects.filter(school=school, grade_number=grade_number, grade_letter=grade_letter)
+    school_class = Grade.objects.filter(school=school, grade=grade_number, grade_letter=grade_letter)
     if len(school_class) != 0:
         school_class = school_class[0]
     else:
-        school_class = SchoolClass(
+        school_class = Grade(
             school=school,
-            grade_number=grade_number,
+            grade=grade_number,
             grade_letter=grade_letter
         )
         school_class.save()

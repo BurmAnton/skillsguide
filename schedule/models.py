@@ -6,7 +6,8 @@ from django.db.models import Sum
 from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
 
-from users.models import User, School
+from users.models import User
+from schools.models import School
 from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence, Criterion
 
 # Create your models here.
