@@ -48,3 +48,28 @@ class TerAdministration(models.Model):
     class Meta:
         verbose_name = "Тер. управление"
         verbose_name_plural = "Тер. управления"
+
+
+
+class Address(models.Model):
+    city = models.ForeignKey(
+        City, 
+        on_delete=CASCADE, 
+        related_name="addresses", 
+        verbose_name="Населённый пункт"
+    )
+    street = models.CharField("Улица", max_length=200, blank=False, null=False)
+    building_number = models.CharField("Дом", max_length=10, blank=False, null=False)
+    floor = models.IntegerField("Этаж", blank=True, null=True)
+    apartment = models.CharField("Аудитория", max_length=10, blank=True, null=True)
+
+    def __str__(self):
+        if self.floor is not None and self.apartment is not None:
+            return f'{self.city}, ул. {self.street}, дом №{self.building_number}, {self.floor} этаж, каб. {self.apartment}'
+        if self.apartment is not None:
+            return f'{self.city}, ул. {self.street}, дом {self.building_number}, каб. {self.apartment}'
+        return f'{self.city}, ул. {self.street}, дом {self.building_number}'
+    
+    class Meta:
+        verbose_name = "Адрес"
+        verbose_name_plural = "Адреса"

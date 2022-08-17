@@ -4,7 +4,7 @@ from django.db.models.deletion import DO_NOTHING, CASCADE
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from users.models import User, DisabilityType
-from regions.models import City
+from regions.models import City, Address
 
 
 class FieldOfActivity(models.Model):
@@ -69,7 +69,7 @@ class EducationCenterType(models.Model):
 class EducationCenter(models.Model):
     name = models.CharField("Название организации", max_length=500, blank=False, null=False)
     short_name = models.CharField("Краткое название", max_length=50, blank=False, null=True)
-    city = models.ForeignKey(City, verbose_name="Населённый пункт", related_name="education_centers", on_delete=CASCADE)
+    address = models.ForeignKey(Address, on_delete=DO_NOTHING, verbose_name="Адрес", related_name="education_centers", null=True)
 
     is_trains = models.BooleanField("Проводит обучение", default=False)
     trainers = models.ManyToManyField(User, verbose_name="Преподователи", related_name="education_centers", blank=True)
@@ -200,7 +200,7 @@ class TrainingProgram(models.Model):
 class Workshop(models.Model):
     education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", on_delete=CASCADE, related_name='workshops')
     competence = models.ForeignKey(Competence, verbose_name="Компетенция",  on_delete=CASCADE, related_name='workshops')
-    adress = models.CharField("Адрес", max_length=350)
+    adress = models.ForeignKey(Address, on_delete=DO_NOTHING, verbose_name="Адрес", related_name="workshops", null=True)
     description = models.CharField("Описание", max_length=700, null=True, blank=True)
 
     class Meta:

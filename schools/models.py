@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.deletion import DO_NOTHING, CASCADE
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-from regions.models import City, TerAdministration
+from regions.models import City, TerAdministration, Address
 from users.models import User
 
 # Create your models here.
@@ -12,8 +12,7 @@ class School(models.Model):
     specialty = models.CharField("Уклон школы", max_length=50, blank=True, null=True)
 
     ter_administration = models.ForeignKey(TerAdministration, verbose_name="Тер. управление", related_name="adm_schools", on_delete=DO_NOTHING, null=True, blank=True)
-    city = models.ForeignKey(City, verbose_name="Город", related_name="cities_schools", on_delete=DO_NOTHING, null=True, blank=True)
-    adress = models.CharField("Адрес", max_length=250, blank=True, null=True)
+    address = models.ForeignKey(Address, on_delete=DO_NOTHING, verbose_name="Адрес", related_name="schools", null=True)
 
     class Meta:
         verbose_name = "Школа"
