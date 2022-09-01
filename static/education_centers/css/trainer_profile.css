@@ -8,166 +8,117 @@
   background-color: #e9ecf7;
   color: #394959;
 }
-
 .profile-section .card {
   border: 1px solid black;
-  -webkit-box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
 }
-
 .profile-section .card .card-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .profile-section .card .card-header .btn-primary {
   background-color: #394959;
   border: 1px solid #394959;
-  -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
-          box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
 }
-
 .profile-section .card .card-body {
   border: 1px;
 }
-
 .profile-section .card .list-group-item {
   color: #394959;
 }
-
 .profile-section .upcoming-events {
   text-align: center;
 }
-
 .profile-section .upcoming-card {
   width: 600px;
   margin: auto;
   margin-bottom: 10px;
 }
-
 .profile-section .upcoming-card p {
   margin-bottom: 5px;
 }
 
 .card-list {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: baseline;
 }
-
 .card-list .group-card {
   margin-top: 20px;
   max-width: 30%;
   min-width: 300px;
-  -webkit-box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
 }
-
 .card-list .group-card .card-body {
   padding: 0;
 }
-
 .card-list .group-card .card-body p {
   margin-bottom: 7px;
 }
-
 .card-list .group-card .card-body .card-header {
   padding: 10px;
-  background-color: #394959;
+  background-color: rgb(57, 73, 89);
   color: white;
   text-align: center;
 }
-
 .card-list .group-card .card-body .card-header .card-title {
   margin: 0;
   font-weight: 500 !important;
 }
-
 .card-list .group-card .card-body .card-text {
   margin: 15px;
   margin-bottom: 0px;
 }
-
 .card-list .group-card .card-body .btn-add-link {
   background-color: #394959;
-  -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
-          box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
   border: 0px;
   width: 100%;
   margin: 5px;
   margin-bottom: 10px;
 }
-
 .card-list .group-card .card-body .btn-change-link {
   color: #394959;
   font-weight: bold;
   background-color: white;
-  -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
-          box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
   border: 1px solid #394959;
   width: 100%;
   margin: 5px;
   margin-bottom: 10px;
 }
-
 .card-list .group-card .card-body .add-form {
   display: none;
 }
-
 .card-list .group-card .slot-submit {
   margin-top: 10px;
 }
-
 .card-list .group-card .cancel_slot {
   width: 100%;
 }
-
 .card-list .group-card .cancel_slot .btn {
   width: 100%;
 }
-
 .card-list .group-card .unsub-form {
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .card-list .group-card .unsub-form .btn {
   padding: 3px;
 }
 
 .slot-nav {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   margin-top: 15px;
 }
-
 .slot-nav .page-link {
   color: #394959;
 }
-
 .slot-nav .current-page {
   background: #394959;
   color: white;
-}
-/*# sourceMappingURL=trainer_profile.css.map */
+}/*# sourceMappingURL=trainer_profile.css.map */

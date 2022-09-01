@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Добавление школы{% endblock %}
+{% block style %}
+    <link href="{% static 'schools/css/add_school.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="card" id='import_form'>
+        <h2>Добавление&nbspшколы</h2>
+        {% if message is not None %}
+            {% if message == "Success" %}
+                <div class="alert alert-success" role="alert">
+                    Школа добавлена успешно!
+                </div> 
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                </div> 
+            {% endif %}
+        {% endif %}
+        <form enctype="multipart/form-data" action="{% url 'add_school' %}" method="post">
+            <div class="form">
+                <div class="School">
+                    <p>Школа</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="SchoolName" placeholder="Название школы" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="INN" placeholder="ИНН школы" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <select name="TerAdmin" class="form-select" aria-label="Тер. управление" required>
+                            <option selected>Выберите теруправление</option>
+                            {% for ter_admin in ter_admins %}
+                                <option value={{ter_admin.id}}>{{ter_admin.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="Address">
+                    <p>Адрес</p>
+                    <div class="input-group mb-3">
+                        <select name="City" class="form-select" aria-label="Тер. управление" required>
+                            <option selected>Выберите город</option>
+                            {% for city in cities %}
+                                <option value={{city.id}}>{{city.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="Street" placeholder="Улица" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="BuildingNumber" placeholder="Номер здания" required>
+                    </div>
+                </div>
+                <div class="ContactPerson">
+                    <p>Представитель школы</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="FirstName" placeholder="Фамилия" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="LastName" placeholder="Имя" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="MiddleName" placeholder="Отчество">
+                    </div>
+                </div>
+                <div class="Contacts">
+                    <p>Контакты</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" name="Email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="Phone" placeholder="Телефон" required>
+                    </div>
+                </div>
+            </div>
+            <div class="submit">
+                <input type="submit" value="Добавить школу" class="btn btn-primary">   
+            </div>
+        </form>
+    </div>
+{% endblock %}

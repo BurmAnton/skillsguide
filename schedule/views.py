@@ -446,31 +446,7 @@ def student_dashboard(request):
         "count_students": count_students
     })
 
-#Школа
-def school_profile(request, school_id):
-    school = get_object_or_404(School, id=school_id)
-    students = User.objects.filter(school=school, role='ST')
-    slots = TimeSlot.objects.filter(participants__in=students).distinct().order_by('date')
-    if len(slots) >= 2:
-        upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]
-    elif len(slots) == 2:
-        upcoming_slots = list(slots.filter(date__gte=date.today()))[0]
-    else:
-        upcoming_slots = None
-    try:
-        contact = SchoolContactPersone.objects.get(school=school.id)
-    except SchoolContactPersone.DoesNotExist:
-        contact = None
-    
-    return render(request, "schedule/school_profile.html",{
-        "cities": City.objects.all(),
-        "school": school,
-        "slots": [slot.serialize() for slot in slots],
-        'upcoming_slots': upcoming_slots,
-        "slots_count": len(slots),
-        'contact': contact
-    })
-
+#Удаление студента со слота
 @login_required
 @csrf_exempt
 def student_dismissal(request):
@@ -483,29 +459,4 @@ def student_dismissal(request):
             return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))
         slot.participants.remove(participant)
         slot.save()
-    return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))
-
-@login_required
-@csrf_exempt
-def change_school(request):
-    if request.method == "POST":
-        try:
-            school = School.objects.get(id=request.POST["school_id"])
-        except School.DoesNotExist:
-            return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))
-        school.name = request.POST["name"]
-        try:
-            school.city = City.objects.get(id=request.POST["city"])
-        except City.DoesNotExist:
-            pass
-        school.adress = request.POST["adress"]
-        school.save()
-        try:
-            contact = SchoolContactPersone.objects.get(school=school)
-        except SchoolContactPersone.DoesNotExist:
-            return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))
-        contact.user.phone_number = request.POST["phone"]
-        contact.user.email = request.POST["email"]
-        contact.user.save()
-
     return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))

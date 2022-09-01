@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Личный кабинет{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/school_profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'schedule/js/school_profile.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    {{school}}
+    <div>Учеников: {{students_count}}</div>
+
+    {% for grade in grades %}
+        <div>
+            {{grade.grade}}{{grade.grade_letter}} - {{grade.students_count}} учеников
+        </div>
+    {% endfor %}
+{% endblock %}

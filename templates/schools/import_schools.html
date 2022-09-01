@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Импорт школ{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schools/css/import_schools.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'schools/js/import_schools.js' %}" rel="stylesheet"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="card" style="width: 25rem;" id='import_form'>
+        <h2>Импортировать&nbspданные</h2>
+        <form enctype="multipart/form-data" action="{% url 'import_schools' %}" method="post">
+            <div class="mb-3">
+                {{ form }}
+            </div>
+            <div class="submit">
+                <input type="submit" value="Загрузить данные" class="btn btn-primary">   
+            </div>
+        </form>
+
+        {% if message == 'IndexError' %}
+            <div class="alert alert-danger" role="alert">
+                Проблема обработки файла!
+            </div> 
+        {% elif message == 'EmptySheet' %}
+            <div class="alert alert-danger" role="alert">
+                Таблица пуста!
+            </div> 
+        {% elif message == 'MissingFieldsError' %}
+            <div class="alert alert-danger" role="alert">
+                Часть полей отсутствует:
+                <ul>
+                    {% for field in data.2 %}
+                        <li>{{field}}</li>
+                    {% endfor %}
+                </ul>
+            </div> 
+        {% elif message %}
+            <div class="alert alert-success" role="alert">
+                Школ добавлено: {{data.1}}
+            </div> 
+            <!--Ошибки-->
+            {% for problem in data.2 %}
+                {% if problem.0 == 'CityErorr' %}
+                    <div class="alert alert-danger" role="alert">
+                        Город с названием '{{problem.1}}' не найден!
+                        Школы с этим городом не добавлены.
+                    </div> 
+                {% endif %}
+                {% if problem.0 == 'TerAdminErorr' %}
+                    <div class="alert alert-danger" role="alert">
+                        Теруправления с названием '{{problem.1}}' не найдено!
+                        Школы с этим теруправлением не добавлены.
+                    </div> 
+                {% endif %}
+                
+                {% if problem.0 == 'UserDublicateError' %}
+                    <div class="alert alert-danger" role="alert">
+                        Пользователь с email '{{problem.1}}' уже существует!
+                    </div> 
+                {% endif %}
+            {% endfor %}
+            <!--Дубликаты-->
+            {% for duplicate_inn in data.3 %}
+                <div class="alert alert-warning" role="alert">
+                    Школа с ИНН '{{duplicate_inn}}' уже добавлена!
+                </div> 
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

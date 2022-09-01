@@ -15,9 +15,9 @@ form {
 }
 
 .alert {
-  padding-top: 10px;
-  padding-bottom: 0px;
-  margin: 0 !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 5px !important;
 }
 .alert p {
   margin-bottom: 10px;
@@ -33,7 +33,7 @@ h2 {
 
 #id_import_file {
   color: #394959;
-  border: 1px solid #e9ecf7;
+  border: 1px solid #394959;
 }
 
 .submit {
@@ -43,8 +43,13 @@ h2 {
   margin-bottom: 20px;
 }
 .submit .btn-primary {
-  background-color: #426cf8 !important;
-  border-color: #426cf8 !important;
+  font-weight: bold;
+  background-color: #394959 !important;
+  border-color: #394959 !important;
+}
+.submit .btn-primary:hover {
+  background-color: white !important;
+  color: #394959;
 }
 
 #navbar {
@@ -53,8 +58,5 @@ h2 {
 }
 
 .alert-success {
-  width: 100%;
   text-align: center;
-  margin: auto;
-  margin-bottom: 10px;
-}/*# sourceMappingURL=import.css.map */
+}/*# sourceMappingURL=import_schools.css.map */

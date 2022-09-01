@@ -19,7 +19,7 @@ class School(models.Model):
         verbose_name_plural = "Школы"
 
     def __str__(self):
-        return  f"{self.name}({self.city})"
+        return  f"{self.name}"
 
 
 class Grade(models.Model):
@@ -33,7 +33,7 @@ class Grade(models.Model):
         verbose_name_plural = "Классы"
 
     def __str__(self):
-        return  f"{self.grade_number}{self.grade_letter} – {self.school}"
+        return  f"{self.grade}{self.grade_letter} – {self.school}"
 
 
 class SchoolStudent(models.Model):
@@ -51,8 +51,8 @@ class SchoolStudent(models.Model):
 
 
 class SchoolContactPersone(models.Model):
-    user = models.OneToOneField(User, verbose_name="Контактное лицо", related_name="school_contact", on_delete=DO_NOTHING)
-    school = models.OneToOneField(School, verbose_name="Школа", related_name="school_contact", on_delete=DO_NOTHING)
+    user = models.OneToOneField(User, verbose_name="Контактное лицо", related_name="school_contact", on_delete=CASCADE)
+    school = models.OneToOneField(School, verbose_name="Школа", related_name="school_contact", on_delete=CASCADE)
 
     def __str__(self):
         return f'{self.user} ({self.school.name})'

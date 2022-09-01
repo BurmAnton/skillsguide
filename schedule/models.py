@@ -71,7 +71,7 @@ class TimeSlot(models.Model):
         ('FTR', 'Будущая'),
         ('CRNT', 'Текущая'),
         ('ASSM', 'Требует оценки'),
-        ('END', 'Завершёна'),
+        ('END', 'Завершёна')
     )
     status = models.CharField("Статус", choices=STATUS_LIST, default='FTR', max_length=4)
     

@@ -57,7 +57,7 @@ def login(request):
     schools = School.objects.all()
     cities = set()
     for school in schools:
-        cities.add(school.city) 
+        cities.add(school.address.city) 
     return render(request, "user/login.html", {
         "message": message,
         "page_name": "ЦОПП СО | Авторизация",
