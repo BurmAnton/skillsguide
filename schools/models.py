@@ -60,4 +60,3 @@ class SchoolContactPersone(models.Model):
     class Meta:
         verbose_name = "Представитель школы"
         verbose_name_plural = "Представители школ"
-

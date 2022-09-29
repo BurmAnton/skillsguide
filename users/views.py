@@ -19,7 +19,7 @@ from schedule.models import Bundle, EducationCenter
 from education_centers.forms import ImportDataForm
 from .imports import students_import
 
-from pysendpulse.pysendpulse import PySendPulse
+from .mailing import send_mail
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -32,7 +32,7 @@ def login(request):
     if request.user.is_authenticated:
         if len(User.objects.filter(role="ST", email=request.user.email)) != 0:
             return HttpResponseRedirect(reverse('student_profile', args=(request.user.id,)))
-        if len(User.objects.filter(role="SCH", email=request.user.email)) != 0:
+        if len(User.objects.filter(role="RSC", email=request.user.email)) != 0:
             contact = SchoolContactPersone.objects.get(user=request.user)
             return HttpResponseRedirect(reverse('school_profile', args=(contact.school.id,)))
         elif len(User.objects.filter(role="TCH", email=request.user.email)) != 0:
@@ -74,14 +74,6 @@ def logout(request):
 def code_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-def mailing():
-    REST_API_ID = 'e071900fe5ab9aa6dd4dec2f42160ead'
-    REST_API_SECRET = '7e82daa1ccfd678487a894b3e3487967'
-    TOKEN_STORAGE = 'memcached'
-    MEMCACHED_HOST = '127.0.0.1:11211'
-    SPApiProxy = PySendPulse(REST_API_ID, REST_API_SECRET, TOKEN_STORAGE, memcached_host=MEMCACHED_HOST)
-    return SPApiProxy
-
 
 @login_required
 @csrf_exempt
@@ -93,22 +85,16 @@ def mailing_form(request):
         users = User.objects.filter(school__in=schools)
         
         for user in users:
+            #Отправляем письмо
             text = request.POST['text']
             html = text
-            email = {
-                    'subject': request.POST['subject'],
-                    'html': html,
-                    'text': text,
-                    'from': {'name': 'ЦОПП СО', 'email': 'bvb@copp63.ru'},
-                    'to': [
-                        {
-                            'name': f"{user.first_name} {user.last_name}", 
-                            'email': user.email
-                        }
-                    ],
-                }
-            SPApiProxy = mailing()
-            SPApiProxy.smtp_send_mail(email)
+            subject = request.POST['subject']
+            html = html
+            text = text
+            to_name = f"{user.first_name} {user.last_name}" 
+            to_email = user.email
+            send_mail(subject, html, text, to_name, to_email)
+
         message = "OK"
 
     return render(request, "user/mailing_form.html", {
@@ -130,17 +116,15 @@ def password_recovery(request, step):
                 code = code_generator()
                 user.code = code
                 user.save()
-                email = {
-                    'subject': 'Востановление пароля skillsguide.ru',
-                    'html': f'Здравствуйте!<p>Вы получили это письмо потому, что вы (либо кто-то, выдающий себя за вас) попросили выслать новый пароль к вашей учётной записи на сайте http://skillsguide.ru/. <br> Если вы не просили выслать пароль, то не обращайте внимания на это письмо. <br> Код подтверждения для смены пароля: {code} <br> Это автоматическое письмо на него не нужно отвечать.</p>',
-                    'text': f'Здравствуйте!\n Вы получили это письмо потому, что вы (либо кто-то, выдающий себя за вас) попросили выслать новый пароль к вашей учётной записи на сайте http://skillsguide.ru/. \n Если вы не просили выслать пароль, то не обращайте внимания на это письмо. \n Код подтверждения для смены пароля: {code} \n Это автоматическое письмо на него не нужно отвечать.',
-                    'from': {'name': 'ЦОПП СО', 'email': 'bvb@copp63.ru'},
-                    'to': [
-                        {'name': "f{user.first_name} {user.last_name}", 'email': email}
-                    ],
-                }
-                SPApiProxy = mailing()
-                SPApiProxy.smtp_send_mail(email)
+                
+                #Посылаем письмо с кодом
+                subject = 'Востановление пароля skillsguide.ru'
+                html = f'Здравствуйте!<p>Вы получили это письмо потому, что Вы (либо кто-то, выдающий себя за вас) попросили выслать новый пароль к вашей учётной записи на сайте http://skillsguide.ru/. <br> Если вы не просили выслать пароль, то не обращайте внимания на это письмо. <br> Код подтверждения для смены пароля: {code} <br> Это автоматическое письмо на него не нужно отвечать.</p>'
+                text = f'Здравствуйте!\n Вы получили это письмо потому, что Вы (либо кто-то, выдающий себя за вас) попросили выслать новый пароль к вашей учётной записи на сайте http://skillsguide.ru/. \n Если вы не просили выслать пароль, то не обращайте внимания на это письмо. \n Код подтверждения для смены пароля: {code} \n Это автоматическое письмо на него не нужно отвечать.'
+                to_name = f"{user.first_name} {user.last_name}"
+                to_email = email
+                send_mail(subject, html, text, to_name, to_email)
+
                 return JsonResponse({"message": "Email exist"}, status=201)
             return JsonResponse({"message": "Email not found"}, status=201)
         if step == 2:
@@ -162,28 +146,6 @@ def password_recovery(request, step):
                 user.save()
                 return JsonResponse({"message": "Password changed"}, status=201)
             return JsonResponse({"message": "Passwords mismatch"}, status=201)
-    return HttpResponseRedirect(reverse("login"))
-
-@csrf_exempt
-def trainers_send_password(request):
-    users = User.objects.filter(role='TCH')
-    
-    for user in users: 
-        password = code_generator()
-        user.set_password(password)
-        user.save()
-        email = {
-            'subject': 'Пароль от аккаунта преподователья skillsguide.ru',
-            'html': f'Здравствуйте!<p>Пароль от вашего аккаунта преподователя на skillsguide.ru: {password}. <br> Это автоматическое письмо на него не нужно отвечать.</p>',
-            'text': f'Здравствуйте!\n Пароль от вашего аккаунта преподователя на skillsguide.ru: {password}. \n Это автоматическое письмо на него не нужно отвечать.',
-            'from': {'name': 'ЦОПП СО', 'email': 'info@copp63.ru'},
-            'to': [
-                {'name': "f{user.first_name} {user.last_name}", 'email': user.email}
-            ],
-        }
-        SPApiProxy = mailing()
-        SPApiProxy.smtp_send_mail(email)
-    
     return HttpResponseRedirect(reverse("login"))
 
 @login_required()

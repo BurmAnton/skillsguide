@@ -1,0 +1,20 @@
+.body {
+  justify-content: center;
+}
+
+.school_profile {
+  background-color: rgba(233, 236, 247, 0.4705882353);
+  color: #394959;
+  padding: 20px 30px;
+}
+
+table {
+  margin-bottom: 0px !important;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+table th {
+  color: #394959 !important;
+  background-color: white !important;
+}/*# sourceMappingURL=school_profile.css.map */

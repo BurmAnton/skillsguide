@@ -1,3 +1,6 @@
+import secrets
+import string
+
 from email import message
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -11,6 +14,7 @@ from regions.models import City, TerAdministration, Address
 from .models import Grade, School, SchoolContactPersone, SchoolStudent
 
 from education_centers.forms import ImportDataForm
+from users.mailing import send_mail
 from . import imports
 
 #ЛК школы
@@ -28,6 +32,7 @@ def school_profile(request, school_id):
         "cities": City.objects.all(),
         "school": school,
         "students_count": students_count,
+        "school_students": school.students.all(),
         'grades': grades,
         'contact': contact
     })
@@ -55,8 +60,12 @@ def change_school(request):
         contact.user.phone_number = request.POST["phone"]
         contact.user.email = request.POST["email"]
         contact.user.save()
-
     return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))
+
+def password_generator():
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    return password
 
 # Добавление школ
 @csrf_exempt
@@ -91,12 +100,12 @@ def add_school(request):
             )
             school.save()
             email = request.POST["Email"]
-            password = '12345'
+            password = password_generator()
             user = User.objects.create_user(email, password)
             user.first_name = request.POST["FirstName"]
             user.middle_name = request.POST["MiddleName"]
             user.last_name = request.POST["LastName"]
-            user.phone = request.POST["Phone"]
+            user.phone_number = request.POST["Phone"]
             user.role = 'RSC'
             user.save()
             contact = SchoolContactPersone(
@@ -105,6 +114,14 @@ def add_school(request):
             )
             contact.save()
             message = "Success"
+            
+            #Отправляем email+пароль на почту
+            subject = 'Данные для входа в личный кабинет skillsguide.ru'
+            html = f'Здравствуйте, {user.first_name}!<p>Вам предоставлен доступ к платформе http://skillsguide.ru/ (проект "Мой выбор"), как представителю школы "{school.name}".</p> <p><br><b>Логин:</b> {user.email}<br><b>Пароль:</b> {password}</p><br><br>Это автоматическое письмо на него не нужно отвечать.'
+            text = f'Здравствуйте!\n Здравствуйте, {user.first_name}! \nВам предоставлен доступ к платформе http://skillsguide.ru/ (проект "Мой выбор"), как представителю школы "{school.name}".\nЛогин: {user.email}\nПароль: {password} \n\nЭто автоматическое письмо на него не нужно отвечать.'
+            to_name = f"{user.first_name} {user.last_name}"
+            to_email = email
+            send_mail(subject, html, text, to_name, to_email)
 
     cities = City.objects.all()
     ter_admins = TerAdministration.objects.all()

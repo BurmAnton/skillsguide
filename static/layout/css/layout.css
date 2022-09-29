@@ -81,6 +81,7 @@ body {
 }
 
 .body {
+  display: flex;
   position: relative !important;
   min-height: calc(100vh - 264px);
 }

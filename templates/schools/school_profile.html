@@ -3,16 +3,42 @@
 {% block title %}ЦОПП СО | Личный кабинет{% endblock %}
 
 {% block style %}
-        <link href="{% static 'schedule/css/school_profile.css' %}" rel="stylesheet">
+        <link href="{% static 'schools/css/school_profile.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'schedule/js/school_profile.js' %}"></script>
+
 {% endblock %}
 
 {% block body %}
-    {{school}}
-    <div>Учеников: {{students_count}}</div>
+    <div class="card school_profile">
+        <h2>{{school}}</h2>
+        <p><b>Представитель школы:</b> {{contact.user.first_name}} {{contact.user.last_name}}</p>
+        <p><b>Контактный номер:</b> {{contact.user.phone_number}}</p>
+        <p><b>Контактный email:</b> {{contact.user.email}}</p>
+        <div>Учеников зарегестрировано: {{students_count}}</div>
+    </div>
+    <table class="table table-striped">
+        <tr class="sticky-top"> 
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">Класс</th>
+            <th scope="col">Email</th>
+            <th scope="col">Телефон</th>
+        </tr>
+        {% for student in school_students %}
+            <tr>
+                <td scope="row">{{student.user.last_name}}</td>
+                <td scope="row">{{student.user.first_name}}</td>
+                <td scope="row">{{student.user.middle_name}}</td>
+                <td scope="row">{{student.grade.grade}}{{student.grade.grade_letter}}</td>
+                <td scope="row">{{student.user.email}}</td>
+                <td scope="row">{{student.user.phone_number}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
 
     {% for grade in grades %}
         <div>

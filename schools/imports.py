@@ -1,8 +1,13 @@
+import secrets
+import string
+
 from openpyxl import load_workbook
 
 from .models import School, SchoolContactPersone
 from users.models import User
 from regions.models import Address, City, TerAdministration
+
+from users.mailing import send_mail
 
 def get_sheet(form):
     workbook = load_workbook(form.cleaned_data['import_file'])
@@ -53,8 +58,7 @@ def schools(form):
         'Название школы', 'ИНН школы', 'Теруправление',
         'Город', 'Улица', 'Номер здания',
         'Фамилия', 'Имя', 'Отчество',
-        'Email', 'Телефон',
-        'Пароль'
+        'Email', 'Телефон'
     }
 
     cheak_col_names = cheak_col_match(sheet, fields_names)
@@ -82,7 +86,9 @@ def schools(form):
     return [True, schools_count, problems, dublicates]
 
 def load_school(sheet, row):
-    cheak_school = School.objects.filter(inn=sheet["ИНН школы"][row])
+    try: inn = str(int(sheet["ИНН школы"][row]))
+    except: inn = str(sheet["ИНН школы"][row])
+    cheak_school = School.objects.filter(inn=inn)
     if len(cheak_school) == 0:
         #Определяем город
         city_name = sheet["Город"][row]
@@ -122,8 +128,6 @@ def load_school(sheet, row):
         ter_admin = ter_admin[0]
 
         #Добавляем школу
-        try: inn = str(int(sheet["ИНН школы"][row]))
-        except: inn = str(sheet["ИНН школы"][row])
         school = School(
             inn=inn,
             name=sheet["Название школы"][row],
@@ -134,6 +138,11 @@ def load_school(sheet, row):
         return [True, school]
     return ['Duplicate', cheak_school[0]]
 
+def password_generator():
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    return password
+
 def load_school_contact(school, sheet, row):
     #Добавляем пользователя
     email = sheet["Email"][row]
@@ -141,7 +150,7 @@ def load_school_contact(school, sheet, row):
     if len(cheak_user) == 0:
         email = email.replace(" ", "")
         email = email.lower()
-        password = sheet["Пароль"][row]
+        password = password_generator()
         user = User.objects.create_user(email, password)
 
         first_name = sheet["Имя"][row]
@@ -156,8 +165,8 @@ def load_school_contact(school, sheet, row):
         last_name = last_name.replace(" ", "")
         last_name = last_name.capitalize()
         user.last_name = last_name
-        password = sheet["Пароль"][row]
-        user.phone_number = sheet["Телефон"][row]
+        user.phone_number = str(int(sheet["Телефон"][row]))
+        user.role = 'RSC'
         user.save()
 
         #Добавляем контакт
@@ -166,6 +175,15 @@ def load_school_contact(school, sheet, row):
             school=school
         )
         contact.save()
+        
+        #Отправляем email+пароль на почту
+        subject = 'Данные для входа в личный кабинет skillsguide.ru'
+        html = f'Здравствуйте, {user.first_name}!<p>Вам предоставлен доступ к платформе http://skillsguide.ru/ (проект "Мой выбор"), как представителю школы "{school.name}".</p> <p><br><b>Логин:</b> {user.email}<br><b>Пароль:</b> {password}</p><br><br>Это автоматическое письмо на него не нужно отвечать.'
+        text = f'Здравствуйте!\n Здравствуйте, {user.first_name}! \nВам предоставлен доступ к платформе http://skillsguide.ru/ (проект "Мой выбор"), как представителю школы "{school.name}".\nЛогин: {user.email}\nПароль: {password} \n\nЭто автоматическое письмо на него не нужно отвечать.'
+        to_name = f"{user.first_name} {user.last_name}"
+        to_email = email
+        send_mail(subject, html, text, to_name, to_email)
+
         return [True, contact]
     user = cheak_user[0]
     cheak_contact = SchoolContactPersone.objects.filter(user=user)

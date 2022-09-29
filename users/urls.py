@@ -18,5 +18,4 @@ urlpatterns = [
     path('export/students/report', views.students_report, name="students_report"),
     #mailing
     path('mailing/form', views.mailing_form, name="mailing_form"),
-    path('send/password/trainers', views.trainers_send_password, name="trainers_send_password")
 ]
