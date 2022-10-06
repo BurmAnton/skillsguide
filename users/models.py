@@ -46,12 +46,32 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        if self.last_name == "" or self.first_name != "":
+        if self.last_name == None or self.first_name == None:
             return f'{self.email}'
-        if self.middle_name == "":
+        if self.middle_name == None:
             return f'{self.first_name[0]}. {self.last_name}'
         return f'{self.first_name[0]}.{self.middle_name[0]}. {self.last_name}'
         
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+class Parent(models.Model):
+    children = models.ManyToManyField(User, verbose_name="Дети", blank=False)
+
+    first_name = models.CharField("Имя", max_length=30, blank=False, null=False)
+    last_name = models.CharField("Фамилия", max_length=30, blank=False, null=False)
+    middle_name = models.CharField("Отчество", max_length=30, blank=True, null=True)
+
+    def __str__(self):
+        if self.last_name == None or self.first_name == None:
+            return f'{self.email}'
+        if self.middle_name == None:
+            return f'{self.first_name[0]}. {self.last_name}'
+        return f'{self.first_name[0]}.{self.middle_name[0]}. {self.last_name}'
+    
+    class Meta:
+        verbose_name = "Родитель"
+        verbose_name_plural = "Родители"
+

@@ -133,7 +133,6 @@ def add_school(request):
     })
 
 #Импорт школ
-#[True, schools_count, problems, dublicates]
 @csrf_exempt
 @login_required
 def import_schools(request):

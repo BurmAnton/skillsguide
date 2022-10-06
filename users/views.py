@@ -12,8 +12,8 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 #Models
-from users.models import User, DisabilityType 
-from schools.models import School, Grade, SchoolContactPersone
+from .models import User, DisabilityType, Parent
+from schools.models import School, Grade, SchoolContactPersone, SchoolStudent
 from schedule.models import Bundle, EducationCenter
 
 from education_centers.forms import ImportDataForm
@@ -30,7 +30,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 def login(request):
     message = None
     if request.user.is_authenticated:
-        if len(User.objects.filter(role="ST", email=request.user.email)) != 0:
+        if len(User.objects.filter(role="SST", email=request.user.email)) != 0:
             return HttpResponseRedirect(reverse('student_profile', args=(request.user.id,)))
         if len(User.objects.filter(role="RSC", email=request.user.email)) != 0:
             contact = SchoolContactPersone.objects.get(user=request.user)
@@ -172,24 +172,17 @@ def registration(request):
         password = data.get("password", "")
         confirmation = data.get("confirmation", "")
 
-        phone = data.get("phone", "")
+        phone = data.get("phone", "").replace(" - ", "-")
         first_name = data.get("first_name", "")
         last_name = data.get("last_name", "")
         middle_name = data.get("middle_name", "")
         birthday = data.get("birthday", "")
-        disability_type = data.get("disability_type", "")
 
         school_id = data.get("school_id", "")
         grade_number = data.get("grade_number", "")
         grade_letter = data.get("grade_letter", "")
         school = School.objects.get(id=school_id)
 
-        if disability_type.isdigit():
-            disability_type = DisabilityType.objects.filter(id=disability_type)
-            if len(disability_type) != 0:
-                disability_type = disability_type[0]
-        else:
-            disability_type = None
         if password != confirmation:
             return JsonResponse({"message": "Password mismatch."}, status=201)
         try:
@@ -199,26 +192,47 @@ def registration(request):
             user.last_name = last_name
             user.birthday = birthday
             user.phone_number = phone
-            user.disability_type = disability_type
 
-            user.role = 'ST'
-            school_class = Grade.objects.filter(
+            user.role = 'SST'
+            grade = Grade.objects.filter(
                 school=school,
                 grade=grade_number,
                 grade_letter=grade_letter
             )
-            if len(school_class) != 0:
-                school_class = school_class[0]
+            if len(grade) != 0:
+                grade = grade[0]
             else:
-                school_class = Grade(
+                grade = Grade(
                     school=school,
                     grade=int(grade_number),
                     grade_letter=grade_letter.upper()
                 )
-                school_class.save()
-            user.school = school
-            user.school_class = school_class
+                grade.save()
             user.save()
+            disabilities = data.get("disabilities", "")
+            user.disability_types.add(*disabilities)
+            user.save()
+            
+            parent_first_name = data.get("parent_first_name", "")
+            parent_last_name = data.get("parent_last_name", "")
+            parent_middle_name = data.get("parent_middle_name", "")
+            if parent_first_name != "":
+                parent = Parent(
+                    first_name=parent_first_name,
+                    last_name=parent_last_name,
+                    middle_name=parent_middle_name
+                )
+                parent.save()
+                parent.children.add(user)
+                parent.save()
+            
+            school_student = SchoolStudent(
+                user=user,
+                school=school,
+                grade=grade
+            )
+            school_student.save()
+            
         except IntegrityError:
             return JsonResponse({"message": "Email already taken."}, status=201)
 

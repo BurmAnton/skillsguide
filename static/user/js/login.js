@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const cssPhone = 'input[name="phone"';
+    (new phoneMask()).init(cssPhone);
     //Скрываем форму регистрации и выбора типа регистрации
     document.querySelector('.reg-form').style.display = "none";
     document.querySelector('.reg-choice-form').style.display = "none";
@@ -23,6 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.querySelectorAll('.child-step-mandatory-select').forEach(input =>{
         input.addEventListener('change', () => {cheak_step('.child-step-mandatory')});
+    });
+    document.querySelectorAll('.auth-step').forEach(input =>{
+        input.addEventListener('input', () => {cheak_step('.auth-step-mandatory')});
+    });
+    document.querySelectorAll('.auth-step-mandatory-phone').forEach(input =>{
+        input.addEventListener('input', () => {cheak_step('.auth-step-mandatory')});
     });
 
     document.querySelector('.btn-forward').addEventListener('click', () => {
@@ -258,13 +266,15 @@ function registration(){
         renderState(state);
     };
 }
+function getCountOfDigits(str) {
+    return str.replace(/[^0-9]/g, '').length;
+  }
 
 function cheak_step(step_name){
-    console.log(`cheak-${step_name}`);
     let is_filled = true;
     document.querySelectorAll(step_name).forEach(input => {
-        console.log(`forEach`);
         if (input.firstElementChild.value === "") {
+            console.log(input)
             is_filled = false;
         };
     });
@@ -273,9 +283,20 @@ function cheak_step(step_name){
             is_filled = false;
         };
     });
+    document.querySelectorAll(`${step_name}-cheakbox`).forEach(input => {
+        if (input.checked == false) {
+            is_filled = false;
+        };
+    });
+    if (step_name === '.auth-step-mandatory'){
+        if (getCountOfDigits(document.querySelector('.auth-step-mandatory-phone').firstElementChild.value) != 11){
+            is_filled = false;
+        }
+        
+    }
 
-    if (is_filled) {activate_forward_btn()}
-    else {disable_forward_btn()};
+    if (is_filled) {activate_forward_btn(step_name)}
+    else {disable_forward_btn(step_name)};
 
     disability_cheak = document.querySelector('.disability-check');
     if (!disability_cheak.checked){
@@ -284,18 +305,29 @@ function cheak_step(step_name){
     console.log(`is_filled: ${is_filled}`);
 };
 
-function activate_forward_btn(){
-    button = document.querySelector('.btn-forward');
-    button.classList.remove('disabled');
-    button.classList.remove('btn-secondary');
-    button.classList.add('btn-primary');
+function activate_forward_btn(step_name){
+    if (step_name === '.auth-step-mandatory'){
+        button = document.querySelector('.reg-button-end');
+        
+        button.classList.remove('disabled');
+    } else {
+        button = document.querySelector('.btn-forward');
+        button.classList.remove('disabled');
+        button.classList.remove('btn-secondary');
+        button.classList.add('btn-primal');
+    }
 };
 
-function disable_forward_btn(){
-    button = document.querySelector('.btn-forward');
-    button.classList.add('disabled');
-    button.classList.add('btn-secondary');
-    button.classList.remove('btn-primary');
+function disable_forward_btn(step_name){
+    if (step_name === '.auth-step-mandatory'){
+        button = document.querySelector('.reg-button-end');
+        button.classList.add('disabled');
+    } else {
+        button = document.querySelector('.btn-forward');
+        button.classList.add('disabled');
+        button.classList.add('btn-secondary');
+        button.classList.remove('btn-primal');
+    }
 };
 
 function change_step_title(step){
@@ -367,9 +399,25 @@ function click_forward(){
     renderState(state);
 };
 
+function getSelectValues(select) {
+    var result = [];
+    var options = select && select.options;
+    var opt;
+
+    for (var i=0, iLen=options.length; i<iLen; i++) {
+        opt = options[i];
+
+        if (opt.selected) {
+        result.push(opt.value || opt.text);
+        }
+    }
+    return result;
+}
+
 function send_reg_info(){
     let email = document.querySelector('.reg-email')
     if (email.classList.contains('is-valid')){
+        disabilities = getSelectValues(document.querySelector("#disability_type"))
         fetch('/user/registration/', {
             method: 'POST',
             body: JSON.stringify({
@@ -377,13 +425,17 @@ function send_reg_info(){
                 password: document.querySelector("#InputPasswordReg").value,
                 confirmation: document.querySelector("#СonfirmPassword").value,
                 
+                parent_first_name: document.querySelector("#parentName").value,
+                parent_last_name: document.querySelector("#parentLastName").value,
+                parent_middle_name: document.querySelector("#parentMiddleName").value,
+
                 first_name: document.querySelector("#Name").value,
                 last_name: document.querySelector("#LastName").value,
                 middle_name: document.querySelector("#MiddleName").value,
                 birthday: document.querySelector("#Birthday").value,
-                phone: document.querySelector("#Phone").value,
+                phone: document.querySelector("#phone").value,
                 disability_check: document.querySelector("#disability-check").value,
-                disability_type: document.querySelector("#disability_type").value,
+                disabilities: disabilities,
                 
                 school_id: document.querySelector("#School").value,
                 grade_number: document.querySelector("#school_class").value,
@@ -584,10 +636,10 @@ function getCookie(name) {
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
-            }
+            }const cssPhone = 'input[name="phone"';
+            (new phoneMask()).init(cssPhone);
         }
     }
-    return cookieValue;
 }
 
 function alert_fade(message) {

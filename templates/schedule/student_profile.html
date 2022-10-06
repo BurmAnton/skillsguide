@@ -108,212 +108,31 @@
                                         <li class="list-group-item"><b>Email:</b> {{user.email}}</li>
                                         <li class="list-group-item"><b>Номер телефона:</b> {{user.phone_number}}</li>
                                         <li class="list-group-item"><b>Дата рождения:</b> {{user.birthday}}</li>
-                                        <li class="list-group-item"><b>Школа:</b> {{user.school.name}}</li>
-                                        <li class="list-group-item"><b>Класс:</b> {{user.school_class.grade_number}}{{user.school_class.grade_letter}}</li>
+                                        <li class="list-group-item"><b>Школа:</b> {{student.school.name}}</li>
+                                        <li class="list-group-item"><b>Класс:</b> {{student.grade.grade}}{{student.grade.grade_letter}}</li>
                                     </ul>
                                 </div>
-                                <div class="card-footer text-end border-dark">
+                                <!--<div class="card-footer text-end border-dark">
                                     <div class="d-grid gap-2 d-md-block">
                                         <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
                                             Изменить личные данные
                                         </button>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                         <div class="col-7">
-                            <h2> 
-                                Ближайщие профориентационные мероприятия
-                            </h2>
-                            {% if choosen_bundles_len == 0 %}
-                                <p>На данный момент у Вас нет выбранных мероприятий</p>
-                            {% else %}
-                                <div class="row row-cols-2 g-3">
-                                    {% if upcoming_slots is not None %}
-                                        {% for slot in upcoming_slots %}
-                                            <div class="col">
-                                                <div class="card upcoming-card h-100">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">Компетенция "{{slot.competence}}"</h5>
-                                                        <p><b>Центр обучения:</b> {{slot.education_center}}</p>
-                                                        <p><b>Дата и время:</b> {{slot.date|date:"d/m/y"}} {{slot.time}}</p>
-                                                        {% if trainer.role == 'CO' %}
-                                                            <p><b>Преподователь:</b> {{slot.trainer}}</p>
-                                                        {% endif %}
-                                                        {% if slot.online %}
-                                                            {% if slot.zoom_link is not None %}
-                                                                <p><a href="{{slot.zoom_link}}">Ссылка на конференцию</a></p>
-                                                                <p><b>Инструкция:</b> {{slot.zoom_instruction}}</p>
-                                                            {% else %}
-                                                            <p>Ссылка на конференцию не указана.</p>
-                                                            {% endif %}
-                                                        {% else %}
-                                                            <p><b>Адрес:</b> {{slot.workshop.adress}}</p>
-                                                            <p>{{slot.Workshop.description}}</p>
-                                                        {% endif %}
-                                                        <p><b>Преподователь:</b> {{slot.trainer}}</p>
-                                                        <p><b>Контактный email:</b> {{slot.trainer.email}}</p>
-                                                        <p><b>Контактный телефон:</b> {{slot.trainer.phone_number}}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% elif choosen_bundles_len == 0 %}
-                                        {% for bundle in choosen_bundles %}
-                                            <div class="col-12">
-                                                <div class="card h-100">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">Набор "{{bundle.name}}"</h5>
-                                                        <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей.</p>
-                                                    </div>
-                                                    <div class="card-footer">
-                                                        <div class="d-grid gap-2">
-                                                            <p>Расписание профпроб будет сформированно 1 апреля (пятница) 2022 года. Его вы сможете найти в личном кабинете, также на вашу почту будет высланно письмо с расписанием.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                    
-                                </div>
-                            {% endif %}
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-        <div class="section online-section">
-            <div class="container">
-                <div class="row row-cols-3 g-3">
-                    <div class="col-12 justify-content-center text-center">
-                        <h2>Профессиональны пробы (Цикл #2)</h2>
-                        <p>Ученики школ Самарской области с 6 по 11 класс могут принять участии в мероприятиях, организованных ЦОПП СО и партнёрами. Часть мероприятий будет проходить онлайн, часть на площадках партнёрских центров обучения в вашем городе, длительность одного мероприятия – 90 минут. Профпробы будут объедененны в наборы по 11 проб по различным компетенциям.</p> 
-                    </div>
-                    {% if bundles_count != 0 %}
-                        {% for bundle in bundles %}
-                            <div class="col-6">
-                                <div class="card bundle-card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Набор "{{bundle.name}}"</h5>
-                                        <p class="card-text">Набор проб по 11 компетенциям в различных профобластях позволяет понять и попробовать множество различных профессиональных путей. В набор входя следующие компетенции:</p>
-
-                                        <ul class="list-group list-group-flush">
-                                            {% for competence in bundle.competencies.all %}
-                                                <li class="list-group-item">{{competence}}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="d-grid gap-2">
-                                            <form action="{% url 'choose_bundle' %}" method="post">
-                                                <input type="input" class="form-control" name="bundle_id" value="{{bundle.id}}" style="display: none;">
-                                                <div class="d-grid gap-2">
-                                                        <button type="submit" class="btn btn-primary">Записаться</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% elif choosen_bundles_len == 0 %}
-                        <div class="zero-alert col-12">
-                            <div class="alert alert-warning " role="alert">
-                                <h4 class="alert-heading">Нет доступных проб!</h4>
-                                <p>В ближайщие несколько дней мы предоставим доступ к форме записи. Сейчас мы согласовываем состав и расписание с нашими партнёрами.</p>
+                            <div class="alert alert-success" role="alert">
+                                <h4 class="alert-heading">Регистрация завершена!</h4>
+                                <p>На данный момент Вам не доступно ни одного мероприятия профвыбора, мы уведомим Вас и представителя школы на почту о начале цикла мероприятий 22-23 учебного года.</p>
                                 <hr>
-                                <p class="mb-0">Спасибо за терпение, когда запись будет доступна, мы отправим уведомление на Вашу почту!</p>
+                                <p class="mb-0">На данный момент на сайте проводятся технические работы!</p>
                             </div>
                         </div>
-                    {% endif %}
-                    
-                </div>
-                <div class="card-list">
-                    {% for slot in slots %}
-                        <div class="modal fade" id="Assessment{{slot.0.id}}" tabindex="-1" aria-labelledby="Assessment{{slot.id}}Label" aria-hidden="true">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="Assessment{{slot.0.id}}Label">Ассессмент</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                        <table class="table table-hover table-responsive">
-                                            <tr>
-                                                <th>Посещаемость</th>
-                                                {% for criterion in slot.0.program.criteria.all %}
-                                                    <th>{{criterion.name}}</th>
-                                                {% endfor %}
-                                                <th>Итого</th>
-                                            </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-check">
-                                                            {% if slot.1 %}
-                                                                <input class="form-check-input" disabled type="checkbox" checked>
-                                                            {% else %}
-                                                                <input class="form-check-input" disabled type="checkbox">
-                                                            {% endif %}
-                                                        </div>  
-                                                    </td>
-                                                    {% for assessment in slot.2 %}
-                                                        <td>
-                                                            {% if assessment.grade == None %}
-                                                                –
-                                                            {% else %}
-                                                                {{assessment.grade}}
-                                                                {% if assessment.criterion.skill_type == "SFT" %}
-                                                                    из 3
-                                                                {% else %}
-                                                                    из 2
-                                                                {% endif %}
-                                                            {% endif %}
-                                                        </td>
-                                                    {% endfor %}
-                                                    <td>
-                                                        {% if slot.3 == None %}
-                                                            0
-                                                        {% else %}
-                                                            {{slot.3}}
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                        </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card group-card">
-                            <div class="card-body">
-                                <div class="card-header">
-                                    <h5 class="card-title">Профпроба по компетенции "{{slot.0.competence}}"</h5>
-                                </div>
-                                <div class="card-text">
-                                    <p><b>Программа обучения:</b> {{slot.0.program.name}}</p>
-                                    <p><b>Дата и время:</b> {{slot.0.time}} {{slot.0.date}}</p>
-                                    <p><b>Центр обучения:</b> {{slot.0.education_center}}</p>
-                                    <p><b>Преподователь:</b> {{slot.0.trainer}}</p>
-                                    {% if slot.0.online %}
-                                        {% if slot.0.zoom_link is not None %}
-                                            <p><a href="{{slot.0.zoom_link}}">Ссылка на конференцию</a></p>
-                                            <p>{{slot.0.zoom_instruction}}</p>
-                                        {% endif %}
-                                    {% else %}
-                                        <p><b>Адрес:</b> {{slot.0.workshop.adress}}</p>
-                                        <p>{{slot.0.workshop.description}}</p>
-                                    {% endif %}
-                                </div>
-                                <div class="card-footer">
-                                    <div class="d-grid gap-2 d-md-block">
-                                        <button type="button" class="btn btn-add-link btn-primary" data-slot="{{slot.0.id}}" data-bs-toggle="modal" data-bs-target="#Assessment{{slot.0.id}}">
-                                            Ассессмент (оценка)
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+
 {% endblock %}

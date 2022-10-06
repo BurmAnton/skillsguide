@@ -1,12 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
-from django_admin_listfilter_dropdown.filters import  RelatedOnlyDropdownFilter
 from easy_select2 import select2_modelform
-from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter, ChoiceDropdownFilter, RelatedOnlyDropdownFilter
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User, DisabilityType
+from .models import User, DisabilityType, Parent
 from schedule.models import Bundle
 
 
@@ -14,12 +13,10 @@ from schedule.models import Bundle
 class UserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
-    list_display = ('email', 'last_name', 'first_name', 'middle_name', 'get_bundles', 'role', 'is_staff', 'date_joined')
+    list_display = ('email', 'last_name', 'first_name', 'middle_name', 'role', 'date_joined', 'is_staff')
     list_filter = (
-        ('groups', RelatedOnlyDropdownFilter), 
-        'is_staff', 
-        'is_active',
-        'bundles'
+        ('role', ChoiceDropdownFilter), 
+        'is_staff',
     )
     fieldsets = (
         (None,
@@ -29,6 +26,7 @@ class UserAdmin(UserAdmin):
         ('Важные даты', 
             {'fields': ('last_login', 'date_joined')}),
     )
+    filter_horizontal = ('disability_types',)
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -36,19 +34,14 @@ class UserAdmin(UserAdmin):
         ),
     )
     search_fields = ('email','last_name', 'first_name')
-    ordering = ('email',)
-
-    def get_bundles(self, user):
-        bundles = Bundle.objects.filter(participants=user)
-        if len(bundles) != 0:
-            return list(bundles)
-        return "–"
-    get_bundles.short_description = 'Выбранные наборы'
+    ordering = ('-date_joined', '-role')
 
 
 @admin.register(DisabilityType)
 class DisabilityTypeAdmin(admin.ModelAdmin):
     pass
 
-
+@admin.register(Parent)
+class ParentAdmin(admin.ModelAdmin):
+    pass
 

@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Attendance, Bundle, Stream, TimeSlot, Assessment
 from users.models import DisabilityType, User
 from regions.models import City
-from schools.models import School, Grade, SchoolContactPersone
+from schools.models import School, Grade, SchoolContactPersone, SchoolStudent
 from education_centers.models import EducationCenter, TrainingProgram, Competence, Workshop, Criterion
 
 
@@ -23,7 +23,19 @@ from education_centers.models import EducationCenter, TrainingProgram, Competenc
 def index(request):
     return HttpResponseRedirect(reverse("login"))
 
+@login_required
+def student_profile(request, user_id):
+    user = request.user
+    student = get_object_or_404(SchoolStudent, user=user)
+    school = student.school
 
+    return render(request, "schedule/student_profile.html",{
+        'page_name': 'Личный кабинет',
+        'user': user,
+        'student': student,
+        'school': school
+    })
+    
 @login_required
 @csrf_exempt
 def create_cycle(request):
@@ -155,53 +167,6 @@ def slots_fill(bundle_id):
             slot.participants.add(*stream.participants.all())
             slot.save()
     return HttpResponseRedirect(reverse("login")) 
-
-@login_required
-def student_profile(request, user_id):
-    user = request.user
-    school = user.school
-
-    bundles = Bundle.objects.filter(schools=school).exclude(participants=user)
-    available_bundles = []
-    for bundle in bundles:
-        streams = Stream.objects.filter(bundle=bundle)
-        if len(streams) != 0:
-            stream = streams[0]
-            attendance_limit = stream.attendance_limit * len(streams)
-            if len(bundle.participants.all()) < attendance_limit:
-                available_bundles.append(bundle)
-
-    slots = TimeSlot.objects.filter(participants=user).order_by('date')
-    slots_list = []
-    for slot in slots:
-        attendance = Attendance.objects.filter(timeslot=slot, user=user)
-        if len(attendance) != 0:
-            attendance = attendance[0].is_attend
-        else:
-            attendance = False
-        assessments = Assessment.objects.filter(timeslot=slot, user=user)
-        assessments_sum = assessments.aggregate(Sum('grade'))['grade__sum']
-        slots_list.append([slot,attendance,assessments,assessments_sum])
-            
-    if len(slots) >= 2:
-        upcoming_slots = list(slots.filter(date__gte=date.today()))[:2]
-    elif len(slots) != 0:
-        upcoming_slots = list(slots.filter(date__gte=date.today()))
-    else:
-        upcoming_slots = None
-
-    return render(request, "schedule/student_profile.html",{
-        'page_name': 'Личный кабинет',
-        'user': user,
-        'slots': slots_list,
-        'upcoming_slots': upcoming_slots,
-        'schools': School.objects.all(),
-        'disability_types': DisabilityType.objects.all(),
-        'choosen_bundles': Bundle.objects.filter(participants=user),
-        'choosen_bundles_len': len(Bundle.objects.filter(participants=user)),
-        'bundles': available_bundles,
-        'bundles_count': len(available_bundles)
-    })
 
 
 def add_assesment_all():

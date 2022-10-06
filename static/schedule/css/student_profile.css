@@ -1,32 +1,29 @@
-@use 'styles' {}.row {
-  display: -webkit-box;
-  display: -ms-flexbox;
+.body {
+  flex-direction: column !important;
+  background-color: #e9ecf7;
+}
+
+.row {
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
 
 .card {
   color: #394959;
   padding-top: 0px;
   border: 0px;
-  -webkit-box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
 }
-
 .card .btn-primary {
   background-color: #426cf8;
   border: 0px;
   border-radius: 0px 0px 5px px;
 }
-
 .card .btn-outline-primary {
   border-color: #394959;
   color: #394959;
   background-color: white;
 }
-
 .card img {
   -o-object-fit: cover;
      object-fit: cover;
@@ -36,16 +33,13 @@
   max-width: 100%;
   max-height: 150px;
 }
-
 .card .card-title {
   text-align: center;
   font-weight: bold;
 }
-
 .card p {
   margin-bottom: 3px;
 }
-
 .card a {
   color: #778899;
 }
@@ -56,13 +50,11 @@
 
 .bootstrap-select {
   border: 1px solid #ced4da;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
-
 .bootstrap-select .dropdown-toggle {
   background-color: #fff;
 }
-
 .bootstrap-select .filter-option {
   color: #000;
 }
@@ -76,19 +68,15 @@
   background-color: #e9ecf7;
   color: #394959;
 }
-
 .profile-section .card {
   border: 1px solid black;
 }
-
 .profile-section .card .btn-primary {
   background-color: #394959;
 }
-
 .profile-section .card-body {
   border: 1px;
 }
-
 .profile-section .list-group-item {
   color: #394959;
 }
@@ -111,38 +99,26 @@
 }
 
 .date-time {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  justify-content: space-around;
 }
-
 .date-time .date, .date-time .time, .date-time .zoom {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
-
 .date-time .date .calendar-icon {
   height: 40px;
   width: 40px;
 }
-
 .date-time .time {
   padding-right: 5px;
   padding-top: 5px;
 }
-
 .date-time .time .time-icon {
   height: 40px;
   width: 40px;
   margin-bottom: 5px;
 }
-
 .date-time .zoom .zoom-icon {
   height: 40px;
   width: 40px;
@@ -151,7 +127,6 @@
 .zero-alert {
   text-align: center;
 }
-
 .zero-alert .alert {
   background-color: #394959 !important;
   border: 0 !important;
@@ -161,101 +136,72 @@
 }
 
 .card-list {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: baseline;
 }
-
 .card-list .group-card {
   margin-top: 20px;
   max-width: 30%;
   min-width: 300px;
-  -webkit-box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.2);
 }
-
 .card-list .group-card .card-body {
   padding: 0;
 }
-
 .card-list .group-card .card-body p {
   margin-bottom: 7px;
 }
-
 .card-list .group-card .card-body .card-header {
   padding: 10px;
-  background-color: #394959;
+  background-color: rgb(57, 73, 89);
   color: white;
   text-align: center;
 }
-
 .card-list .group-card .card-body .card-header .card-title {
   margin: 0;
   font-weight: 500 !important;
 }
-
 .card-list .group-card .card-body .card-text {
   margin: 15px;
   margin-bottom: 0px;
 }
-
 .card-list .group-card .card-body .btn-add-link {
   background-color: #394959;
-  -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
-          box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
   border: 0px;
   width: 100%;
   margin: 5px;
   margin-bottom: 10px;
 }
-
 .card-list .group-card .card-body .btn-change-link {
   color: #394959;
   font-weight: bold;
   background-color: white;
-  -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
-          box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
   border: 1px solid #394959;
   width: 100%;
   margin: 5px;
   margin-bottom: 10px;
 }
-
 .card-list .group-card .card-body .add-form {
   display: none;
 }
-
 .card-list .group-card .slot-submit {
   margin-top: 10px;
 }
-
 .card-list .group-card .cancel_slot {
   width: 100%;
 }
-
 .card-list .group-card .cancel_slot .btn {
   width: 100%;
 }
-
 .card-list .group-card .unsub-form {
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .card-list .group-card .unsub-form .btn {
   padding: 3px;
-}
-/*# sourceMappingURL=student_profile.css.map */
+}/*# sourceMappingURL=student_profile.css.map */
