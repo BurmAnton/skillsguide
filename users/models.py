@@ -49,8 +49,8 @@ class User(AbstractUser):
         if self.last_name == None or self.first_name == None:
             return f'{self.email}'
         if self.middle_name == None:
-            return f'{self.first_name[0]}. {self.last_name}'
-        return f'{self.first_name[0]}.{self.middle_name[0]}. {self.last_name}'
+            return f'{self.first_name} {self.last_name}'
+        return f'{self.first_name} {self.middle_name} {self.last_name}'
         
     class Meta:
         verbose_name = "Пользователь"

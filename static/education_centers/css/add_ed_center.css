@@ -1,0 +1,61 @@
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+}
+.body .card {
+  background-color: rgba(233, 236, 247, 0.4705882353);
+  color: #394959;
+  padding: 10px 30px;
+  box-shadow: 4px 5px 7px 3px rgba(0, 0, 0, 0.4);
+}
+.body .card h2 {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.body .card p {
+  font-weight: 600;
+  text-align: center;
+}
+.body .card .form {
+  row-gap: 10px;
+  -moz-column-gap: 20px;
+       column-gap: 20px;
+  display: grid;
+  grid-template-columns: 350px 350px;
+  grid-template-rows: auto auto auto;
+  grid-auto-flow: row;
+}
+.body .card .form .School {
+  grid-column: 1;
+  grid-row: 1;
+}
+.body .card .form .Address {
+  grid-column: 2;
+  grid-row: 1;
+}
+.body .card .form .ContactPerson {
+  grid-column: 1;
+  grid-row: 2;
+}
+.body .card .form .Contacts {
+  grid-column: 2;
+  grid-row: 2;
+}
+.body .card .submit {
+  margin: auto;
+  margin-bottom: 15px;
+  width: 50%;
+}
+.body .card .submit input {
+  width: 100%;
+  background-color: #394959;
+  border: 1px solid #394959;
+  font-weight: bold;
+}
+.body .card .submit input:hover {
+  background-color: white;
+  color: #394959;
+}/*# sourceMappingURL=add_ed_center.css.map */

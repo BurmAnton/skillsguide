@@ -1,3 +1,4 @@
+import secrets
 import string
 import random
 from datetime import date
@@ -6,6 +7,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
+import education_centers
 
 from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop
 from schedule.models import TimeSlot, Assessment, Attendance
@@ -13,11 +15,101 @@ from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
-from .imports import  slots_import
+from users.mailing import send_mail
+
 from users.models import User 
 from schools.models import SchoolContactPersone
+from regions.models import City, TerAdministration, Address
+from . import imports
 
 # Create your views here.
+def password_generator():
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    return password
+
+@login_required
+@csrf_exempt
+def add_ed_center(request):
+    message = None
+    if request.method == 'POST':
+        inn = request.POST["INN"]
+        duplicates = EducationCenter.objects.filter(inn=inn)
+        if len(duplicates) != 0:
+            message = "Центр обучения с таким ИНН уже существует!"
+        else:
+            city_id = request.POST["City"]
+            city = City.objects.get(id=city_id)
+            street = request.POST["Street"]
+            building_number = request.POST["BuildingNumber"]
+
+            address = Address(
+                city=city,
+                street=street,
+                building_number=building_number
+            )
+            address.save()
+            
+            email = request.POST["Email"]
+            password = password_generator()
+            contact_person = User.objects.create_user(email, password)
+            contact_person.first_name = request.POST["FirstName"]
+            contact_person.middle_name = request.POST["MiddleName"]
+            contact_person.last_name = request.POST["LastName"]
+            contact_person.phone_number = request.POST["Phone"]
+            contact_person.role = 'REC'
+            contact_person.save()
+            
+            name = request.POST["Name"]
+            short_name = request.POST["ShortName"]
+            is_trains = True
+            education_center = EducationCenter(
+                inn=inn,
+                name=name,
+                short_name=short_name,
+                is_trains=is_trains,
+                address=address,
+                contact_person=contact_person
+            )
+            education_center.save()
+            message = "Success"
+            
+            #Отправляем email+пароль на почту
+            subject = 'Данные для входа в личный кабинет skillsguide.ru (проект "Мой выбор")'
+            html = f'Здравствуйте, {contact_person.first_name}!<p>Вам предоставлен доступ к платформе http://skillsguide.ru/ (проект "Мой выбор"), как представителю центра обучения ({education_center.name}).</p> <p><br><b>Логин:</b> {contact_person.email}<br><b>Пароль:</b> {password}</p><br><br>Это автоматическое письмо на него не нужно отвечать.'
+            text = f'Здравствуйте!\n Здравствуйте, {contact_person.first_name}! \nВам предоставлен доступ к платформе http://skillsguide.ru/ (проект "Мой выбор"), как представителю центра обучения ({education_center.name}).\nЛогин: {contact_person.email}\nПароль: {password} \n\nЭто автоматическое письмо на него не нужно отвечать.'
+            to_name = f"{contact_person.first_name} {contact_person.last_name}"
+            to_email = email
+            send_mail(subject, html, text, to_name, to_email)
+
+    cities = City.objects.all()
+    
+    return render(request, 'education_centers/add_ed_center.html', {
+        'cities': cities,
+        'message': message
+    })
+
+@login_required
+@csrf_exempt
+def import_ed_centers(request):
+    if request.method == 'POST':
+        form = ImportDataForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = imports.ed_centers(form)
+            message = data[0]
+            return render(request, 'education_centers/import_ed_centers.html', {
+                'form': ImportDataForm(),
+                'message': message,
+                'data': data
+            })
+        else:
+            data = form.errors
+            message = "IndexError"
+
+    return render(request, 'education_centers/import_ed_centers.html', {
+        'form' : ImportDataForm()
+    })
+
 @login_required
 @csrf_exempt
 def import_programs(request):

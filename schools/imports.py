@@ -165,7 +165,8 @@ def load_school_contact(school, sheet, row):
         last_name = last_name.replace(" ", "")
         last_name = last_name.capitalize()
         user.last_name = last_name
-        user.phone_number = str(int(sheet["Телефон"][row]))
+        try: user.phone_number = str(int(sheet["Телефон"][row]))
+        except: user.phone_number = str(int(sheet["Телефон"][row]))
         user.role = 'RSC'
         user.save()
 

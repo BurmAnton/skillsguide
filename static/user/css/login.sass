@@ -30,16 +30,43 @@ body
 
     border: 1px solid #dddddd
     color: #394959
+
+    .sign-form-container
+        margin: auto
+        .sign-form
+            margin: 0
+    .sign-form .form-floating:focus-within 
+        z-index: 2
+    .sign-form input[type="email"] 
+        width: 275px
+        margin-bottom: -1px
+        border-bottom-right-radius: 0
+        border-bottom-left-radius: 0
+    .sign-form input[type="password"]
+        width: 275px
+        margin-bottom: 10px
+        border-top-left-radius: 0
+        border-top-right-radius: 0
+    
     label
         margin-bottom: 2px
     .sign-button
+        width: 275px
+        height: 46px
+        
         background-color: #587490
         color: white
+
+        font-size: 18px
+        font-weight: 500
+
         border: 0px
+        border-radius: 0.25rem
     .reg-button, .reg-button-end
         margin-top: 10px
         background-color: #4BB34B
         color: white
+        font-weight: 500
         border: 0px
         width: 100%
     a
@@ -57,6 +84,9 @@ body
         input[type="checkbox"]
             height: 14px
     .pass-recovery
+        margin-top: 40px
+        font-size: 13px
+        text-align: center
         text-decoration: underline
         color: #394959
         font-size: 14px !important
@@ -93,14 +123,9 @@ body
     margin-bottom: 16px
 
 .form-title
-    font-size: 20px
+    font-size: 25px
     text-align: center
-    color: black
-
-#SignUpHelp
-    font-size: 13px
-    padding-top: 20px
-    text-align: center
+    color: black    
 
 .reg-choice-form
     justify-content: center

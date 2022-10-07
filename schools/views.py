@@ -74,8 +74,8 @@ def add_school(request):
     message = None
     if request.method == 'POST':
         inn = request.POST["INN"]
-        check_inn = School.objects.filter(inn=inn)
-        if len(check_inn) != 0:
+        duplicates = School.objects.filter(inn=inn)
+        if len(duplicates) != 0:
             message = "Школа с таким ИНН уже существует!"
         else:
             city_id = request.POST["City"]

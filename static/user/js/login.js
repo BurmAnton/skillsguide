@@ -79,7 +79,7 @@ function replaceState(){
         title: document.querySelector('title').innerHTML,
         form_title: 'auth',
         form_subtitle: 'none',
-        sign_form: document.querySelector('.sign-form').style.display,
+        sign_form: document.querySelector('.sign-form-container').style.display,
         recovery_form: document.querySelector('.pass-rec-form').style.display,
         recovery_btn: "Отправить",
         reg_choice_form: reg_choice_form.style.display,
@@ -122,7 +122,7 @@ function renderState(state){
         }
     }
     //Меняем форму
-    document.querySelector('.sign-form').style.display = state.sign_form;
+    document.querySelector('.sign-form-container').style.display = state.sign_form;
 
     document.querySelector('.pass-rec-form').style.display = state.recovery_form;
     document.querySelector('.btn-recovery-code').innerHTML =state.recovery_btn;

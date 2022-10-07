@@ -67,8 +67,10 @@ class EducationCenterType(models.Model):
 
 
 class EducationCenter(models.Model):
+    inn = models.CharField("ИНН", max_length=20, blank=True, null=True)
     name = models.CharField("Название организации", max_length=500, blank=False, null=False)
     short_name = models.CharField("Краткое название", max_length=50, blank=False, null=True)
+    
     address = models.ForeignKey(Address, on_delete=DO_NOTHING, verbose_name="Адрес", related_name="education_centers", null=True)
 
     is_trains = models.BooleanField("Проводит обучение", default=False)

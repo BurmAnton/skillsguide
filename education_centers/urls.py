@@ -3,6 +3,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('import/', views.import_ed_centers, name='import_ed_centers'),
+    path('add/', views.add_ed_center, name='add_ed_center'),
+
     path('import/programs/', views.import_programs, name="import_programs"),
     #path('assesment/add/all/', views.add_assesment_all, name="add_assesment_all"),
     #ЦО

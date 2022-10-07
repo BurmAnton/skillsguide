@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Добавление центра обучения{% endblock %}
+{% block style %}
+    <link href="{% static 'education_centers/css/add_ed_center.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="card" id='import_form'>
+        <h2>Добавление&nbspцентра обучения</h2>
+        {% if message is not None %}
+            {% if message == "Success" %}
+                <div class="alert alert-success" role="alert">
+                    ЦО добавлен успешно!
+                </div> 
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                </div> 
+            {% endif %}
+        {% endif %}
+        <form enctype="multipart/form-data" action="{% url 'add_ed_center' %}" method="post">
+            <div class="form">
+                <div class="School">
+                    <p>Школа</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="Name" placeholder="Название ЦО" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="ShortName" placeholder="Краткое название ЦО" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="INN" placeholder="ИНН ЦО" required>
+                    </div>
+                </div>
+                <div class="Address">
+                    <p>Адрес</p>
+                    <div class="input-group mb-3">
+                        <select name="City" class="form-select" aria-label="Город" required>
+                            <option selected>Выберите город</option>
+                            {% for city in cities %}
+                                <option value={{city.id}}>{{city.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="Street" placeholder="Улица" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="BuildingNumber" placeholder="Номер здания" required>
+                    </div>
+                </div>
+                <div class="ContactPerson">
+                    <p>Представитель ЦО</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="FirstName" placeholder="Фамилия" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="LastName" placeholder="Имя" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="MiddleName" placeholder="Отчество">
+                    </div>
+                </div>
+                <div class="Contacts">
+                    <p>Контакты</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" name="Email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="Phone" placeholder="Телефон" required>
+                    </div>
+                </div>
+            </div>
+            <div class="submit">
+                <input type="submit" value="Добавить центр обучения" class="btn btn-primary">   
+            </div>
+        </form>
+    </div>
+{% endblock %}
