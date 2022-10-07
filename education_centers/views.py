@@ -111,6 +111,17 @@ def import_ed_centers(request):
     })
 
 @login_required
+def ed_center_dashboard(request, ed_center_id):
+    ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
+    if request.user != ed_center.contact_person:
+        return HttpResponseRedirect(reverse("login"))
+
+
+    return render(request, 'education_centers/ed_center.html', {
+        'ed_center' : ed_center
+    })
+
+@login_required
 @csrf_exempt
 def import_programs(request):
     if request.method == "POST":

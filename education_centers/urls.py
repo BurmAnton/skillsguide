@@ -7,8 +7,8 @@ urlpatterns = [
     path('add/', views.add_ed_center, name='add_ed_center'),
 
     path('import/programs/', views.import_programs, name="import_programs"),
-    #path('assesment/add/all/', views.add_assesment_all, name="add_assesment_all"),
     #ЦО
+    path('dashboard/<int:ed_center_id>', views.ed_center_dashboard, name="ed_center_dashboard"),
     path('trainers/', views.trainers_list, name="trainers_list"),
     path('trainers/add', views.add_trainer, name="add_trainer"),
     path('workshops/', views.workshops_list, name="workshops_list"),

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ЦОПП СО | Импорт ЦО{% endblock %}
+
+{% block style %}
+        <link href="{% static 'education_centers/css/ed_center.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block body %}
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Позравляем, Вы успешно авторизировались!</h4>
+        <p>К сожалению, в данный момент на сайте проводятся технические работы. Мы уведомим Вас на  электронную почту, когда будуn закончены работы над функционалом личного кабинета центра обучения.</p>
+        <hr>
+        <p class="mb-0">Спасибо за понимание.</p>
+    </div>
+{% endblock %}

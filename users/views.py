@@ -37,10 +37,10 @@ def login(request):
             return HttpResponseRedirect(reverse('school_profile', args=(contact.school.id,)))
         elif len(User.objects.filter(role="TCH", email=request.user.email)) != 0:
             return HttpResponseRedirect(reverse('trainer_profile', args=(request.user.id,1)))
-        elif len(User.objects.filter(role="CO", email=request.user.email)) != 0:
+        elif len(User.objects.filter(role="REC", email=request.user.email)) != 0:
             edu_center = EducationCenter.objects.filter(contact_person=request.user)
             if len(edu_center) != 0:
-                return HttpResponseRedirect(reverse("bundles", args=(edu_center[0].id,)))
+                return HttpResponseRedirect(reverse("ed_center_dashboard", args=(edu_center[0].id,)))
         elif request.user.is_staff:
             return HttpResponseRedirect(reverse("admin:index"))
     elif request.method == "POST":

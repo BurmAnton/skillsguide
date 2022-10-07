@@ -13,7 +13,7 @@ def send_mail(subject, html, text, to_name, to_email):
         'subject': subject,
         'html': html,
         'text': text,
-        'from': {'name': 'ЦОПП СО', 'email': 'bvb@copp63.ru'},
+        'from': {'name': 'ЦОПП СО', 'email': 'skillsguide@copp63.ru'},
         'to': [
             {'name': to_name, 'email': to_email}
         ],

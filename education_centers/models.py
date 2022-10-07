@@ -180,13 +180,13 @@ class Criterion(models.Model):
 
 class TrainingProgram(models.Model):
     name = models.CharField("Название программы", max_length=300)
-    description = models.CharField("Описание", max_length=1000, null=True)
+    short_description = models.CharField("Крактое описание", max_length=256, null=True)
     competence = models.ForeignKey(Competence, verbose_name="Компетенция", on_delete=CASCADE, related_name='programs')
-    program_link =  models.CharField("Ссылка на программу", max_length=200, blank=True, null=True)
+    program_link =  models.CharField("Ссылка на программу", max_length=200, blank=False, null=True)
     criteria = models.ManyToManyField(Criterion, verbose_name="Критерии", related_name="programs")
 
     education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="programs", on_delete=CASCADE)
-    attendance_limit = models.IntegerField("Максимальное кол-во участников", default=10)
+    attendance_limit = models.IntegerField("Максимальное кол-во участников", default=25)
     disability_types = models.ManyToManyField(DisabilityType, verbose_name="ОВЗ", blank=True)
     
     instructors = models.ManyToManyField(User, verbose_name="Преподователи", blank=True)
