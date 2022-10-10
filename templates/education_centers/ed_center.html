@@ -7,14 +7,183 @@
 {% endblock %}
 
 {% block script %}
-
 {% endblock %}
 
 {% block body %}
-    <div class="alert alert-warning" role="alert">
-        <h4 class="alert-heading">Позравляем, Вы успешно авторизировались!</h4>
-        <p>К сожалению, в данный момент на сайте проводятся технические работы. Мы уведомим Вас на  электронную почту, когда будуn закончены работы над функционалом личного кабинета центра обучения.</p>
-        <hr>
-        <p class="mb-0">Спасибо за понимание.</p>
+    <div class="modal fade" id="addProgramModal" tabindex="-1" aria-labelledby="addProgramModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProgramLabel">Добавить программу</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'add_program' %}" method="post">
+                    <div class="modal-body">
+                        <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
+                            
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="name" id="Name" placeholder="Название программы" required>
+                            <label for="Name">Название программы</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="short_desc" id="ShortDesc" maxlength="256" placeholder="Короткое описание" required>
+                            <label for="ShortName">Короткое описание</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="program_link" id="ProgramLink" placeholder="Ссылка на программу" required>
+                            <label for="ShortName">Ссылка на программу</label>
+                        </div>
+                        <div class="form mb-3">
+                            <select class="selectpicker" data-width="100%" data-live-search="true" name="program_type" id="ProgramType" required>
+                                <option>Выберите тип программы</option>
+                                <option value="SP">Профпроба</option>
+                                <option value="MP">Интенсив</option>
+                                <option value="LP">Обучение</option>
+                            </select>
+                        </div>
+                        <div class="form mb-3 child-step-hidden" id="form-disability">
+                            <select class="selectpicker" title="Выберите нозологии" data-width="100%" data-live-search="true" name="disability_types" multiple>
+                                {% for type in disability_types %}
+                                    <option value="{{type.id}}" class="disability_type" data-school="{{type}}">{{type.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addTrainerModal" tabindex="-1" aria-labelledby="addTrainerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTrainerLabel">Добавить программу</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'add_trainer' %}" method="post">
+                    <div class="modal-body">
+                        <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
+
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="name" id="Name" placeholder="Имя" required>
+                            <label for="Name">Имя</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="middle_name" id="MiddleName" placeholder="Отчество">
+                            <label for="MiddleName">Отчество</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="last_name" id="LastName" placeholder="Фамилия" required>
+                            <label for="LastName">Фамилия</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="position" id="Position" placeholder="Должность" required>
+                            <label for="Position">Должность</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" name="email" id="Email" placeholder="Email" required>
+                            <label for="Email">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="phone2numeric" class="form-control" name="phone" id="Phone" placeholder="Номер телефона" required>
+                            <label for="Phone">Номер телефона</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Добавить преподователя</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="profile">
+        <h2>{{ed_center.short_name}}</h2>
+        <div class="ed_center-preview">
+            <p><b>{{ed_center.name}}</b></p>
+            <p><b>ИНН:</b> {{ed_center.inn}}</p>
+            <p><b>Адрес:</b> {{ed_center.address}}</p>
+        </div>
+        <div class="contact-preview">
+            <p><b>Контактное лицо:</b></p>
+            <p>{{ed_center.contact_person}}</p>
+            <p><b>Тел:</b> {{ed_center.contact_person.phone_number}}</p>
+            <p><b>Email:</b> {{ed_center.contact_person.email}}</p>
+        </div>
+    </div>
+    <div class="dashboard">
+        <div class="overview">
+            <h2>Показатели</h2>
+            <div class="overview-data">
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">0</div>
+                        <div class="description">Профпроб проведено</div>
+                    </div>
+                </div>
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">0</div>
+                        <div class="description">Интенсивов проведено</div>
+                    </div>
+                </div>
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">0</div>
+                        <div class="description">Обучено по коротким программам</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-lists">
+            <div class="trainers-list">
+                <div class="trainers-list-header">
+                    <h3>Преподователи</h3>
+                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTrainerModal">Добавить преподователя</button>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">Должность</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Телефон</th>
+                    </thead>
+                    <tbody>
+                        {% for trainer in trainers %}
+                            <td scope="row">{{trainer.user}}</td>
+                            <td scope="row">{{trainer.position}}</td>
+                            <td scope="row">{{trainer.user.email}}</td>
+                            <td scope="row">{{trainer.user.phone_number}}</td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>            
+            <div class="programs-list">
+                <div class="programs-list-header">
+                    <h3>Программы подготовки</h3>
+                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProgramModal">Добавить программу</button>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <th scope="col">Название</th>
+                        <th scope="col">Ссылка</th>
+                        <th scope="col">Тип программы</th>
+                    </thead>
+                    <tbody>
+                        {% for program in programs %}
+                            <td scope="row">{{program.name}}</td>
+                            <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
+                            <td scope="row">{{program.get_program_type_display}}</td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}

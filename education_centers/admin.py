@@ -34,10 +34,12 @@ EducationCenterForm = select2_modelform(EducationCenter, attrs={'width': '400px'
 class EducationCenterAdmin(admin.ModelAdmin):
     form = EducationCenterForm
     
-    search_fields = ['name']
+    search_fields = ['name', 'short_name']
     list_display = [
-        'id',
+        'short_name',
         'name',
+        'address',
+        'is_trains'
     ]
 
 

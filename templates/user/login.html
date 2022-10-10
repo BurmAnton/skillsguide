@@ -19,6 +19,14 @@
         <!--Авторизация-->
             <div class="sign-form-container">
                 <form class="sign-form" action="{% url 'login' %}" method="post">
+                    {% if message %}
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                            <div>
+                                {{message}}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div style="margin-bottom: 0px !important" class="form-floating mb-3">
                         <input type="email" class="form-control email-login" name="email" placeholder="name@example.com" required>
                         <label for="floatingInput">Email</label>
@@ -28,14 +36,6 @@
                         <label for="floatingPassword">Пароль</label>
                     </div>
                     <button class="btn btn-outline-secondary sign-button" type="submit">Войти</button>
-                    {% if message %}
-                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                            <div>
-                                {{message}}
-                            </div>
-                        </div>
-                    {% endif %}
                 </form>
                 <div id="SignUpHelp" class="form-text pass-recovery">Забыли пароль или не можете войти?</div>
                 <div>
@@ -163,7 +163,6 @@
                                 <option value="{{type.id}}" class="disability_type" data-school="{{type}}">{{type.name}}</option>
                             {% endfor %}
                         </select>
-                        <div class="invalid-feedback">Example invalid select feedback</div>
                     </div>
                 <!--Финальный шаг-->
                     <div class="input-group mb-3 auth-step auth-step-mandatory">

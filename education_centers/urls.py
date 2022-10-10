@@ -6,6 +6,9 @@ urlpatterns = [
     path('import/', views.import_ed_centers, name='import_ed_centers'),
     path('add/', views.add_ed_center, name='add_ed_center'),
 
+    path('add/program/', views.add_program, name='add_program'),
+    path('add/trainer/', views.add_trainer, name='add_trainer'),
+
     path('import/programs/', views.import_programs, name="import_programs"),
     #ЦО
     path('dashboard/<int:ed_center_id>', views.ed_center_dashboard, name="ed_center_dashboard"),

@@ -7,9 +7,10 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
+from requests import post
 import education_centers
 
-from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop
+from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop, Trainer
 from schedule.models import TimeSlot, Assessment, Attendance
 from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
@@ -17,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from users.mailing import send_mail
 
-from users.models import User 
+from users.models import DisabilityType, User 
 from schools.models import SchoolContactPersone
 from regions.models import City, TerAdministration, Address
 from . import imports
@@ -118,8 +119,65 @@ def ed_center_dashboard(request, ed_center_id):
 
 
     return render(request, 'education_centers/ed_center.html', {
-        'ed_center' : ed_center
+        'ed_center' : ed_center,
+        'programs': TrainingProgram.objects.filter(education_center=ed_center),
+        'trainers': Trainer.objects.filter(education_center=ed_center),
+        'disability_types': DisabilityType.objects.all()
     })
+
+@login_required
+@csrf_exempt
+def add_program(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+        short_desc = request.POST["short_desc"]
+        program_link = request.POST["program_link"]
+        program_type = request.POST["program_type"]
+        education_center = request.POST["education_center"]
+        education_center = get_object_or_404(EducationCenter, id=education_center)
+        disability_types = request.POST.getlist("disability_types")
+
+        program = TrainingProgram(
+            name=name,
+            short_description=short_desc,
+            program_link=program_link,
+            program_type=program_type,
+            education_center=education_center,
+        )
+        program.save()
+        program.disability_types.add(*disability_types)
+        program.save()
+    return HttpResponseRedirect(reverse("login"))
+
+def password_generator():
+    alphabet = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    return password
+
+@login_required
+@csrf_exempt
+def add_trainer(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = password_generator()
+        user = User.objects.create_user(email, password)
+        user.first_name = request.POST["name"]
+        user.middle_name = request.POST["middle_name"]
+        user.last_name = request.POST["last_name"]
+        user.phone_number = request.POST["phone"]
+        user.role = 'INTS'
+        user.save()
+
+        position = request.POST["position"]
+        education_center = request.POST["education_center"]
+        education_center = get_object_or_404(EducationCenter, id=education_center)
+        trainer = Trainer(
+            user=user,
+            position=position,
+            education_center=education_center
+        )
+        trainer.save()        
+    return HttpResponseRedirect(reverse("login"))
 
 @login_required
 @csrf_exempt
@@ -150,37 +208,6 @@ def trainers_list(request):
         "education_center": education_center,
         "trainers": education_center.trainers.all()
     })
-
-@login_required
-@csrf_exempt
-def add_trainer(request):
-    message = ""
-    if request.method == "POST":
-        email = request.POST["email"]
-        education_center = EducationCenter.objects.get(id=request.POST["education_center"])
-        phone_number = request.POST["phone"]
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
-        middle_name = request.POST["middle_name"]
-        
-        user = User.objects.create_user(email, 'copp8888')
-        user.first_name = first_name
-        user.middle_name  = middle_name
-        user.last_name = last_name
-        user.role = 'TCH'
-        user.phone_number = phone_number
-        user.save()
-
-        education_center.trainers.add(user)
-        education_center.save()
-        message="Преподаватель добавлен"
-    
-    education_centers = EducationCenter.objects.filter(contact_person=request.user)
-    return render(request, "education_centers/add_trainer.html",{
-        "education_centers": education_centers,
-        "message": message
-    })
-
 
 @login_required
 def workshops_list(request):

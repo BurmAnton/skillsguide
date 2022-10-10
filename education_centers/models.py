@@ -2,6 +2,7 @@ from tabnanny import verbose
 from django.db import models
 from django.db.models.deletion import DO_NOTHING, CASCADE
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.forms import CharField
 
 from users.models import User, DisabilityType
 from regions.models import City, Address
@@ -66,6 +67,22 @@ class EducationCenterType(models.Model):
         verbose_name_plural = "Типология учебных заведений"
 
 
+class Criterion(models.Model):
+    name = models.CharField("Назывние критерия", max_length=1000)
+    СOMPETENCE_TYPES = (
+        ('SFT', 'SoftSkill'),
+        ('HRD', 'HardSkill'),
+    )
+    skill_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип', default='HRD')
+
+    class Meta:
+        verbose_name = "Критерий"
+        verbose_name_plural = "Критерии"
+
+    def __str__(self):
+        return self.name
+
+
 class EducationCenter(models.Model):
     inn = models.CharField("ИНН", max_length=20, blank=True, null=True)
     name = models.CharField("Название организации", max_length=500, blank=False, null=False)
@@ -74,7 +91,6 @@ class EducationCenter(models.Model):
     address = models.ForeignKey(Address, on_delete=DO_NOTHING, verbose_name="Адрес", related_name="education_centers", null=True)
 
     is_trains = models.BooleanField("Проводит обучение", default=False)
-    trainers = models.ManyToManyField(User, verbose_name="Преподователи", related_name="education_centers", blank=True)
 
     contact_person = models.OneToOneField(
         User, 
@@ -91,6 +107,48 @@ class EducationCenter(models.Model):
     class Meta:
         verbose_name = "Центр обучения"
         verbose_name_plural = "Центры обучения"
+
+
+class TrainingProgram(models.Model):
+    name = models.CharField("Название программы", max_length=300)
+    short_description = models.CharField("Крактое описание", max_length=256, null=True)
+    competence = models.ForeignKey(Competence, verbose_name="Компетенция", on_delete=CASCADE, related_name='programs', null=True)
+    program_link =  models.CharField("Ссылка на программу", max_length=200, blank=False, null=True)
+
+    СOMPETENCE_TYPES = (
+        ('SP', 'Профпроба'),
+        ('MP', 'Интенсив'),
+        ('LP', 'Обучение'),
+    )
+    program_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип программы', default='HRD')
+    criteria = models.ManyToManyField(Criterion, verbose_name="Критерии", related_name="programs")
+
+    education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="programs", on_delete=CASCADE)
+    attendance_limit = models.IntegerField("Максимальное кол-во участников", default=25)
+    disability_types = models.ManyToManyField(DisabilityType, verbose_name="ОВЗ", blank=True)
+
+    class Meta:
+        verbose_name = "Программа"
+        verbose_name_plural = "Программы"
+
+    def __str__(self):
+        return self.name
+
+
+class Trainer(models.Model):
+    user = models.OneToOneField(User, related_name="trainer", verbose_name="Пользователь", on_delete=CASCADE)
+    position = models.CharField("Дожность", max_length=50, blank=False, null=False)
+    education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="trainers", on_delete=CASCADE)
+    
+    competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="trainers", blank=True)
+    programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы", related_name="trainers", blank=True)
+
+    class Meta:
+        verbose_name = "Преподователь"
+        verbose_name_plural = "Преподователи"
+
+    def __str__(self):
+        return self.user
 
 
 class Faculty(models.Model):
@@ -160,43 +218,6 @@ class Student(models.Model):
     class Meta:
         verbose_name = "Студент"
         verbose_name_plural = "Студенты"
-
-
-class Criterion(models.Model):
-    name = models.CharField("Назывние критерия", max_length=1000)
-    СOMPETENCE_TYPES = (
-        ('SFT', 'SoftSkill'),
-        ('HRD', 'HardSkill'),
-    )
-    skill_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип', default='HRD')
-
-    class Meta:
-        verbose_name = "Критерий"
-        verbose_name_plural = "Критерии"
-
-    def __str__(self):
-        return self.name
-
-
-class TrainingProgram(models.Model):
-    name = models.CharField("Название программы", max_length=300)
-    short_description = models.CharField("Крактое описание", max_length=256, null=True)
-    competence = models.ForeignKey(Competence, verbose_name="Компетенция", on_delete=CASCADE, related_name='programs')
-    program_link =  models.CharField("Ссылка на программу", max_length=200, blank=False, null=True)
-    criteria = models.ManyToManyField(Criterion, verbose_name="Критерии", related_name="programs")
-
-    education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="programs", on_delete=CASCADE)
-    attendance_limit = models.IntegerField("Максимальное кол-во участников", default=25)
-    disability_types = models.ManyToManyField(DisabilityType, verbose_name="ОВЗ", blank=True)
-    
-    instructors = models.ManyToManyField(User, verbose_name="Преподователи", blank=True)
-
-    class Meta:
-        verbose_name = "Программа"
-        verbose_name_plural = "Программы"
-
-    def __str__(self):
-        return self.name
 
 
 class Workshop(models.Model):
