@@ -5,7 +5,7 @@ from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, ChoiceDropdownFilter
 from openpyxl import Workbook
 
-from .models import FieldOfActivity, Competence, EducationCenter, TrainingProgram, Criterion, Workshop
+from .models import FieldOfActivity, Competence, EducationCenter, TrainingProgram, Criterion, Workshop, Trainer
 
 # Register your models here.
 @admin.register(FieldOfActivity)
@@ -65,3 +65,7 @@ class TrainingProgramAdmin(admin.ModelAdmin):
         'competence',
         'education_center'
     ]
+
+@admin.register(Trainer)
+class TrainerAdmin(admin.ModelAdmin):
+    pass
