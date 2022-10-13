@@ -11,7 +11,7 @@ from requests import post
 import education_centers
 
 from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop, Trainer
-from schedule.models import TimeSlot, Assessment, Attendance
+from schedule.models import Assessment, Attendance
 from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt

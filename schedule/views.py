@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 #Models
-from .models import Attendance, Bundle, Stream, TimeSlot, Assessment
+from .models import Attendance, Assessment
 from users.models import DisabilityType, User
 from regions.models import City
 from schools.models import School, Grade, SchoolContactPersone, SchoolStudent

@@ -1,3 +1,5 @@
+from email.policy import default
+from pyexpat import model
 from tabnanny import verbose
 from django.db import models
 from django.db.models.deletion import DO_NOTHING, CASCADE
@@ -5,7 +7,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms import CharField
 
 from users.models import User, DisabilityType
-from regions.models import City, Address
+from regions.models import City, Address, Region
+from schools.models import School
 
 
 class FieldOfActivity(models.Model):
@@ -23,7 +26,7 @@ class FieldOfActivity(models.Model):
 class Competence(models.Model):
     name = models.CharField("Название компетенции", max_length=200)
     field_of_activity = models.ForeignKey(FieldOfActivity, verbose_name="Сфера деятельности", related_name="competencies", on_delete=CASCADE, null=False, blank=False)
-    
+    description = models.TextField("Описание критерия", null=True, blank=True)
     #Worldskills
     is_ws = models.BooleanField('Worldskills', default=False)
     СOMPETENCE_BLOCKS = (
@@ -67,22 +70,6 @@ class EducationCenterType(models.Model):
         verbose_name_plural = "Типология учебных заведений"
 
 
-class Criterion(models.Model):
-    name = models.CharField("Назывние критерия", max_length=1000)
-    СOMPETENCE_TYPES = (
-        ('SFT', 'SoftSkill'),
-        ('HRD', 'HardSkill'),
-    )
-    skill_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип', default='HRD')
-
-    class Meta:
-        verbose_name = "Критерий"
-        verbose_name_plural = "Критерии"
-
-    def __str__(self):
-        return self.name
-
-
 class EducationCenter(models.Model):
     inn = models.CharField("ИНН", max_length=20, blank=True, null=True)
     name = models.CharField("Название организации", max_length=500, blank=False, null=False)
@@ -121,7 +108,6 @@ class TrainingProgram(models.Model):
         ('LP', 'Обучение'),
     )
     program_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип программы', default='HRD')
-    criteria = models.ManyToManyField(Criterion, verbose_name="Критерии", related_name="programs")
 
     education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="programs", on_delete=CASCADE)
     attendance_limit = models.IntegerField("Максимальное кол-во участников", default=25)
@@ -148,7 +134,40 @@ class Trainer(models.Model):
         verbose_name_plural = "Преподователи"
 
     def __str__(self):
-        return self.user
+        return self.user.__str__()
+
+
+class Lesson(models.Model):
+    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="lessons", on_delete=CASCADE)
+    number = models.IntegerField("Номер урока", default=0)
+    theme = models.CharField("Тема урока", max_length=150, null=True, blank=True)      
+    description = models.TextField("Описание урока", null=True, blank=True)
+    duration = models.TimeField("Длительность", null=False, blank=False)
+
+    class Meta:
+        verbose_name = "Урок"
+        verbose_name_plural = "Уроки"
+
+    def __str__(self):
+        return f'{self.program}(Занятие №{self.number})'
+
+class Criterion(models.Model):
+    name = models.CharField("Назывние критерия", max_length=50)
+    description = models.TextField("Описание критерия", null=True, blank=True)
+    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="criteria", on_delete=CASCADE)
+    СOMPETENCE_TYPES = (
+        ('SFT', 'SoftSkill'),
+        ('HRD', 'HardSkill'),
+    )
+    skill_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип', default='HRD')
+    grading_system = models.IntegerField("Система оценки")
+
+    class Meta:
+        verbose_name = "Критерий оценки"
+        verbose_name_plural = "Критерии оценки"
+
+    def __str__(self):
+        return self.name
 
 
 class Faculty(models.Model):

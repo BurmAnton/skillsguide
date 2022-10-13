@@ -1,4 +1,5 @@
 import datetime
+from email.policy import default
 from pyexpat import model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Sum
@@ -8,120 +9,106 @@ from django.db.models.deletion import CASCADE, DO_NOTHING
 
 from users.models import User
 from schools.models import School
-from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence, Criterion
+from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence, Criterion, FieldOfActivity, Lesson
+from regions.models import Region, City
 
 # Create your models here.
-class Bundle(models.Model):
-    name = models.CharField("Название набора", max_length=100, default="")
-    competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="bundles", blank=True)
-    programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы пробы", related_name="bundles", blank=True)
-    edu_centers = models.ManyToManyField(EducationCenter, verbose_name="Центры обучения", related_name="train_cycles", blank=True)
-    schools = models.ManyToManyField(School, verbose_name="Школы", related_name="bundles")
-    participants = models.ManyToManyField(User, verbose_name="Участники", related_name='bundles', blank=True)
-    
-    class Meta:
-        verbose_name = "Набор проб"
-        verbose_name_plural = "Наборы проб"
-
-
-    def __str__(self):
-        return  f"{self.name}"
-
-
-class Stream(models.Model):
-    bundle = models.ForeignKey(Bundle, verbose_name="Набор проб", related_name="streams", on_delete=CASCADE, null=True)
-    start_date = models.DateField("Дата начала", null=True)
-    attendance_limit = models.IntegerField("Максимальное кол-во участников", default=10)
-    participants = models.ManyToManyField(User, verbose_name="Участники", related_name='streams', blank=True)
-    SCHEDULE_TYPE= (
-        ('ADW', 'Любые дни недели'),
-        ('SDW', 'Конкретные дни недели')
-    )
-    schedule_type = models.CharField("Тип расписания", choices=SCHEDULE_TYPE, default='SDW', max_length=3)
-    week_limit = models.IntegerField("Колво занятий в неделю", default=2)
+class SchoolStudentsGroup(models.Model):
+    users = models.ManyToManyField(User, verbose_name="Участники группы", blank=True)
+    limit = models.IntegerField("Лимит участников", default=25)
 
     class Meta:
-        verbose_name = "Поток"
-        verbose_name_plural = "Потоки"
-    
-    def __str__(self):
-        return f'Поток №{self.id} (Набор "{self.bundle}")'
-
-
-class TimeSlot(models.Model):
-    stream = models.ForeignKey(Stream, verbose_name="Поток", related_name="slots", on_delete=CASCADE, null=True)
-    competence = models.ForeignKey(Competence, verbose_name="Компетенция", related_name="slots", blank=True, null=True, on_delete=CASCADE)
-    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="slots", blank=True, null=True, on_delete=CASCADE)
-    education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="slots", blank=True, null=True, on_delete=CASCADE)
-
-    date = models.DateField("Дата", null=True)
-    time = models.TimeField("Время начала", auto_now=False, auto_now_add=False, null=True)
-    week_number = models.IntegerField("Номер недели", default=0)
-    
-    online = models.BooleanField("Онлайн", default=False)
-    workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="slots", blank=True, null=True, on_delete=DO_NOTHING)
-
-    participants = models.ManyToManyField(User, verbose_name="Участники", related_name='time_slots', blank=True)
-    trainer = models.ForeignKey(User, verbose_name="Преподователь", related_name="slots", on_delete=CASCADE, null=True)
-    
-    zoom_link = models.URLField("Ссылка на конференцию", max_length=400, blank=True, null=True)
-    zoom_instruction = models.TextField("Инструкция по подключению", default="", blank=True, null=True)
-
-    STATUS_LIST = (
-        ('FTR', 'Будущая'),
-        ('CRNT', 'Текущая'),
-        ('ASSM', 'Требует оценки'),
-        ('END', 'Завершёна')
-    )
-    status = models.CharField("Статус", choices=STATUS_LIST, default='FTR', max_length=4)
-    
-    is_nonprofit = models.BooleanField("На безвозмездной основе", default=True)
-
-    def serialize(self):
-        participants = []
-        for participant in self.participants.filter(role='ST').exclude(school_class=None):
-            user = {
-                "id": participant.id,
-                "full_name": participant.__str__(),
-                "attendance": participant.attendance.filter(timeslot=self.id),
-                "assessment": participant.assessment.filter(timeslot=self.id),
-                "assessment_sum": participant.assessment.filter(timeslot=self.id).aggregate(Sum('grade'))['grade__sum'],
-                "phone_number": participant.phone_number,
-                "email": participant.email,
-                "school_class": f"{participant.school_class.grade_number}{participant.school_class.grade_letter}",
-                "school": participant.school
-            }
-            participants.append(user)
-        return {
-            "id": self.id,
-            'stream_id': self.stream.id,
-            'competence': self.competence.name,
-            'program': self.program,
-            'education_center': self.education_center,
-            'date_time': f"{self.date.strftime('%d.%m.%Y')} {self.time}",
-            'online': self.online,
-            'workshop': self.workshop,
-            'participants': participants,
-            'attendance': [participant.attendance.filter(timeslot=self.id) for participant in self.participants.all()],
-            'assessment': [participant.assessment.filter(timeslot=self.id) for participant in self.participants.all()],
-            'trainer': self.trainer.__str__(),
-            'zoom_instruction': self.zoom_instruction,
-            'zoom_link': self.zoom_link
-        }
+        verbose_name = "Цикл профпроб"
+        verbose_name_plural = "Циклы профпроб"
 
     def __str__(self):
-        return  f"{self.id} {self.competence} – {self.date} {self.time}"
+        return f'Группа №{self.id}'
+
+
+class TrainingCycle(models.Model):
+    name = models.CharField("Назывние цикла", max_length=150)
+    
+    fields_of_activity = models.ManyToManyField(FieldOfActivity, verbose_name="Сферы деятельности", related_name="cycles", blank=True)
+    competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="cycles", blank=True)
+    programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы", related_name="cycles", blank=True)
+    region = models.ForeignKey(Region, verbose_name="Регион", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
+    city = models.ForeignKey(City, verbose_name="Населённый пункт", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
+    schools = models.ManyToManyField(School, verbose_name="Школы участники", related_name="cycles", blank=True)
+    groups = models.ManyToManyField(SchoolStudentsGroup, verbose_name="Группы", related_name="cycles", blank=False)
+    start_date = models.DateField("Дата начала", null=False, blank=False)
+    end_date = models.DateField("Дата окончания", null=False, blank=False)
 
     class Meta:
-        verbose_name = "Слот"
-        verbose_name_plural = "Слоты"
+        verbose_name = "Цикл профпроб"
+        verbose_name_plural = "Циклы профпроб"
 
+    def __str__(self):
+        return self.name
+
+
+class TrainingStream(models.Model):
+    cycle = models.ForeignKey(TrainingCycle, verbose_name="Цикл профпроб", related_name="streams", on_delete=models.CASCADE, null=True, blank=False)
+    group = models.ForeignKey(SchoolStudentsGroup, verbose_name="Группы", related_name="streams", on_delete=models.CASCADE, null=True, blank=False)
+
+    class Meta:
+        verbose_name = "Учебный поток"
+        verbose_name_plural = "Учебные потоки"
+
+    def __str__(self):
+        return self.name
+
+
+class Training(models.Model):
+    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="trainings", on_delete=CASCADE)
+    stream = models.ForeignKey(TrainingStream, verbose_name="Учебный поток", related_name="trainings", on_delete=CASCADE, null=True, blank=False)
+    start_date = models.DateField("Дата начала", null=False, blank=False)
+    end_date = models.DateField("Дата окончания", null=False, blank=False)
+    group = models.ForeignKey(SchoolStudentsGroup, verbose_name="Группы", related_name="trainings", on_delete=models.CASCADE, null=True, blank=False)
+
+    class Meta:
+        verbose_name = "Расписание обучения"
+        verbose_name_plural = "Расписания обучения"
+
+    def __str__(self):
+        return f'{self.program.name}({self.start_date}-{self.end_date})'
+
+
+class Conference(models.Model):
+    invite_link = models.URLField("Ссылка на конференцию", null=False, blank=False)
+    Identifier = models.CharField("Идентификатор", max_length=150, null=False, blank=False)
+    access_code = models.CharField("Код доступа", max_length=150, null=False, blank=False)
+    instruction = models.CharField("Инструкция", max_length=250, null=False, blank=False)
+
+    class Meta:
+        verbose_name = "Данные для подключения"
+        verbose_name_plural = "Данные для подключения"
+
+
+class TrainingClass(models.Model):
+    training = models.ForeignKey(Training, verbose_name="Расписание", related_name="classes", on_delete=CASCADE)
+    lesson = models.ForeignKey(Lesson, verbose_name="Занятие", related_name="classes", on_delete=CASCADE)
+    
+    date = models.DateField("Дата проведения", null=False, blank=False)
+    start_time = models.TimeField("Время начала", null=False, blank=False)
+    
+    is_online = models.BooleanField("Онлайн", default=False)
+    workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="classes", on_delete=CASCADE)
+    conference = models.ForeignKey(Conference, verbose_name="Конференция", related_name="classes", on_delete=CASCADE)
+    group = models.ForeignKey(SchoolStudentsGroup, verbose_name="Группы", related_name="classes", on_delete=models.CASCADE, null=True, blank=False)
+    
+    class Meta:
+        verbose_name = "Занятие"
+        verbose_name_plural = "Занятия"
+
+    def __str__(self):
+        return f'{self.program.name}({self.start_date}-{self.end_date})'
+    
 
 class Assessment(models.Model):
-    timeslot = models.ForeignKey(TimeSlot, verbose_name="Слот", related_name="assessment", on_delete=models.CASCADE)
-    grade = models.IntegerField("Оценка", validators=[MinValueValidator(0),MaxValueValidator(3)], null=True, blank=True)
+    timeslot = models.ForeignKey(Training, verbose_name="Расписание обучения", related_name="assessment", on_delete=models.CASCADE)
+    grade = models.IntegerField("Оценка", null=True, blank=True)
     criterion = models.ForeignKey(Criterion, verbose_name="Критерий", related_name="assessment", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, verbose_name="Ученик", related_name="assessment", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name="Участник", related_name="assessment", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Ассессмент"
@@ -129,9 +116,9 @@ class Assessment(models.Model):
 
 
 class Attendance(models.Model):
-    timeslot = models.ForeignKey(TimeSlot, verbose_name="Слот", related_name="attendance", on_delete=models.CASCADE)
+    training_class = models.ForeignKey(TrainingClass, verbose_name="Слот", related_name="attendance", on_delete=models.CASCADE)
     is_attend = models.BooleanField("Посетил", default=False)
-    user = models.ForeignKey(User, verbose_name="Ученик", related_name="attendance", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name="Участник", related_name="attendance", on_delete=models.CASCADE)
     
     class Meta:
         verbose_name = "Посещаемость"

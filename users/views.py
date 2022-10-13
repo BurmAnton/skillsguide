@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 #Models
 from .models import User, DisabilityType, Parent
 from schools.models import School, Grade, SchoolContactPersone, SchoolStudent
-from schedule.models import Bundle, EducationCenter
+from schedule.models import EducationCenter
 
 from education_centers.forms import ImportDataForm
 from .imports import students_import

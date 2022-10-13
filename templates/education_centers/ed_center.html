@@ -104,17 +104,17 @@
         </div>
     </div>
     <div class="profile">
-        <h2>{{ed_center.short_name}}</h2>
         <div class="ed_center-preview">
-            <p><b>{{ed_center.name}}</b></p>
-            <p><b>ИНН:</b> {{ed_center.inn}}</p>
-            <p><b>Адрес:</b> {{ed_center.address}}</p>
+            <div class="ed_center-name">
+                <p style="width: 200px;"><b>{{ed_center.name}}</b></p>
+                <img style="width: 35px; display: none;" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+            </div>
+            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{ed_center.address}}</p>
         </div>
         <div class="contact-preview">
-            <p><b>Контактное лицо:</b></p>
-            <p>{{ed_center.contact_person}}</p>
-            <p><b>Тел:</b> {{ed_center.contact_person.phone_number}}</p>
-            <p><b>Email:</b> {{ed_center.contact_person.email}}</p>
+            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt=""> {{ed_center.contact_person}}</p>
+            <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{ed_center.contact_person.email}}</p>
+            <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{ed_center.contact_person.phone_number}}</p>
         </div>
     </div>
     <div class="dashboard">
@@ -127,16 +127,18 @@
                         <div class="description">Профпроб проведено</div>
                     </div>
                 </div>
-                <div class="data-point">
-                    <div>   
-                        <div class="sum">0</div>
-                        <div class="description">Интенсивов проведено</div>
-                    </div>
-                </div>
+                <div class="line"></div>
                 <div class="data-point">
                     <div>   
                         <div class="sum">0</div>
                         <div class="description">Обучено по коротким программам</div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">0</div>
+                        <div class="description">Интенсивов проведено</div>
                     </div>
                 </div>
             </div>
@@ -144,10 +146,10 @@
         <div class="dashboard-lists">
             <div class="trainers-list">
                 <div class="trainers-list-header">
-                    <h3>Преподователи</h3>
+                    <h2>Преподователи</h2>
                     <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTrainerModal">Добавить преподователя</button>
                 </div>
-                <table class="table table-striped">
+                <table class="table">
                     <thead>
                         <th scope="col">ФИО</th>
                         <th scope="col">Должность</th>
@@ -156,20 +158,22 @@
                     </thead>
                     <tbody>
                         {% for trainer in trainers %}
-                            <td scope="row">{{trainer.user}}</td>
-                            <td scope="row">{{trainer.position}}</td>
-                            <td scope="row">{{trainer.user.email}}</td>
-                            <td scope="row">{{trainer.user.phone_number}}</td>
+                            <tr>
+                                <td scope="row">{{trainer.user}}</td>
+                                <td scope="row">{{trainer.position}}</td>
+                                <td scope="row">{{trainer.user.email}}</td>
+                                <td scope="row">{{trainer.user.phone_number}}</td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>            
             <div class="programs-list">
                 <div class="programs-list-header">
-                    <h3>Программы подготовки</h3>
+                    <h2>Программы подготовки</h2>
                     <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProgramModal">Добавить программу</button>
                 </div>
-                <table class="table table-striped">
+                <table class="table">
                     <thead>
                         <th scope="col">Название</th>
                         <th scope="col">Ссылка</th>
@@ -177,9 +181,11 @@
                     </thead>
                     <tbody>
                         {% for program in programs %}
-                            <td scope="row">{{program.name}}</td>
-                            <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
-                            <td scope="row">{{program.get_program_type_display}}</td>
+                            <tr>
+                                <td scope="row">{{program.name}}</td>
+                                <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
+                                <td scope="row">{{program.get_program_type_display}}</td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>

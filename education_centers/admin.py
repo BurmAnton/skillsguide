@@ -63,6 +63,7 @@ class TrainingProgramAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'competence',
+        'program_type',
         'education_center'
     ]
 

@@ -1,55 +1,83 @@
 .body
+    justify-content: center
+    background-color: #F2F2F2
     color: #394959
     h2 
+        font-size: 22px
         text-align: center
         margin-bottom: 1.5rem
 
 .profile
-    width: 300px
-    padding: 10px 30px
-    background-color: #e9ecf778
+    width: 400px
+    height: fit-content
+    margin: 30px 0px 0px 0px
+    background-color: white
+    padding: 15px 15px 26px 20px
+    border-radius: 8px
+    box-shadow: 4px 4px 4px 0px rgb(0 0 0 / 15%)
     p
         margin-bottom: 5px
     .ed_center-preview
         margin-bottom: 15px
+        .ed_center-name
+            display: flex
+            align-items: flex-start
+            p
+                margin-top: 10px
 .dashboard
-    width: 100%
+    margin-left: 50px
+    margin-top: 0
     .overview
-        padding: 15px 20px
+        margin: auto
+        margin-top: 35px
+        background-color: white
+        width: fit-content
+        padding: 15px 35px
+        border-radius: 8px
+        box-shadow: 4px 4px 4px 0px #00000026
         .overview-data
             display: flex
             flex-direction: row
             flex-wrap: wrap
             justify-content: center
-            gap: 50px
+            gap: 25px
             .data-point
-                width: 310px
-                height: auto
-                padding: 15px 20px
-
-                background-color: #394959
-                color: white
-
-                border-radius: 5px
-                box-shadow: grey 2px 4px 5px 0px
-
                 display: flex
-                justify-content: space-between
+                justify-content: center
+                width: 250px
+                text-align: center
                 .sum
-                    font-size: 56px
+                    font-size: 32px
                 img
                     width: 100px
                     height: 100px
+            .line
+                width: 2px
+                background-color: #39495950           
     .dashboard-lists
         display: flex
-        flex-direction: row
+        flex-direction: column
         justify-content: space-between
-        gap: 15px
-        padding: 30px 15px
-        div
+        gap: 25px
+        padding: 30px 0px
+        >div
             width: 100%
+            background-color: white
+            padding: 15px 35px
+            border-radius: 8px
+            box-shadow: 4px 4px 4px 0px #00000026
             .programs-list-header, .trainers-list-header
                 display: flex
                 justify-content: space-between
-                .btn
+                h2
                     margin-bottom: 10px
+                .btn
+                    width: 200px
+                    height: 30px
+            th
+                color: #394959
+                font-weight: 500 !important
+                border-top: 0
+            tr
+                    color: #394959
+                    font-weight: 300 !important

@@ -6,7 +6,6 @@ from django_admin_listfilter_dropdown.filters import DropdownFilter, ChoiceDropd
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import User, DisabilityType, Parent
-from schedule.models import Bundle
 
 
 @admin.register(User)
