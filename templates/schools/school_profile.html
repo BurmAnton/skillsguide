@@ -12,36 +12,67 @@
 
 {% block body %}
     <div class="card school_profile">
-        <h2>{{school}}</h2>
-        <p><b>Представитель школы:</b> {{contact.user.first_name}} {{contact.user.last_name}}</p>
-        <p><b>Контактный номер:</b> {{contact.user.phone_number}}</p>
-        <p><b>Контактный email:</b> {{contact.user.email}}</p>
-        <div>Учеников зарегестрировано: {{students_count}}</div>
-    </div>
-    <table class="table table-striped">
-        <tr class="sticky-top"> 
-            <th scope="col">Фамилия</th>
-            <th scope="col">Имя</th>
-            <th scope="col">Отчество</th>
-            <th scope="col">Класс</th>
-            <th scope="col">Email</th>
-            <th scope="col">Телефон</th>
-        </tr>
-        {% for student in school_students %}
-            <tr>
-                <td scope="row">{{student.user.last_name}}</td>
-                <td scope="row">{{student.user.first_name}}</td>
-                <td scope="row">{{student.user.middle_name}}</td>
-                <td scope="row">{{student.grade.grade}}{{student.grade.grade_letter}}</td>
-                <td scope="row">{{student.user.email}}</td>
-                <td scope="row">{{student.user.phone_number}}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    
-    {% for grade in grades %}
-        <div>
-            {{grade.grade}}{{grade.grade_letter}} - {{grade.students_count}} учеников
+        <div class="school-name">
+            <p style="width: 200px;">{{school}}</p>
+            <img style="width: 35px; display: none;" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
         </div>
-    {% endfor %}
+        <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{school.address}}</p>
+        <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt="">{{contact.user.first_name}} {{contact.user.last_name}}</p>
+        <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{contact.user.email}}</p>
+        <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{contact.user.phone_number}}</p>
+    </div>
+    <div class="dashboard">
+        <div class="overview">
+            <h2>Показатели</h2>
+            <div class="overview-data">
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">{{students_count}}</div>
+                        <div class="description">Учеников зарегестрировано</div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">0</div>
+                        <div class="description">Групп сформировано</div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="data-point">
+                    <div>   
+                        <div class="sum">0</div>
+                        <div class="description">Проб пройдено</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-lists">
+            <div class="students-list">
+                <div class="students-list-header">
+                    <h2 style="margin: auto">Школьники</h2>
+                </div>
+                <table class="table">
+                    <tr class="sticky-top"> 
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Отчество</th>
+                        <th scope="col">Класс</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Телефон</th>
+                    </tr>
+                    {% for student in school_students %}
+                        <tr>
+                            <td scope="row">{{student.user.last_name}}</td>
+                            <td scope="row">{{student.user.first_name}}</td>
+                            <td scope="row">{{student.user.middle_name}}</td>
+                            <td scope="row">{{student.grade.grade}}{{student.grade.grade_letter}}</td>
+                            <td scope="row">{{student.user.email}}</td>
+                            <td scope="row">{{student.user.phone_number}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,20 +1,110 @@
 .body {
-  display: flex;
+  justify-content: center;
+  background-color: #F2F2F2;
+  color: #394959;
+}
+.body h2 {
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .school_profile {
-  background-color: rgba(233, 236, 247, 0.4705882353);
-  color: #394959;
-  padding: 20px 30px;
-}
-
-table {
-  margin-bottom: 0px !important;
+  width: 400px;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+  margin: 30px 0px 0px 0px;
+  background-color: white;
+  padding: 15px 15px 26px 20px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
 }
-table th {
-  color: #394959 !important;
-  background-color: white !important;
+.school_profile p {
+  margin-bottom: 5px;
+}
+.school_profile .school-name {
+  display: flex;
+  align-items: flex-start;
+}
+.school_profile .school-name p {
+  font-size: 22px;
+  font-weight: 400;
+  margin-top: 10px;
+}
+
+.dashboard {
+  margin-left: 50px;
+  margin-top: 0;
+}
+.dashboard .overview {
+  margin: auto;
+  margin-top: 35px;
+  background-color: white;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 15px 35px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+}
+.dashboard .overview .overview-data {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+.dashboard .overview .overview-data .data-point {
+  display: flex;
+  justify-content: center;
+  width: 250px;
+  text-align: center;
+}
+.dashboard .overview .overview-data .data-point .sum {
+  font-size: 32px;
+}
+.dashboard .overview .overview-data .data-point img {
+  width: 100px;
+  height: 100px;
+}
+.dashboard .overview .overview-data .line {
+  width: 2px;
+  background-color: rgba(57, 73, 89, 0.3137254902);
+}
+.dashboard .dashboard-lists {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 30px 0px;
+}
+.dashboard .dashboard-lists > div {
+  width: 100%;
+  background-color: white;
+  padding: 15px 35px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+}
+.dashboard .dashboard-lists > div .students-list-header {
+  display: flex;
+  justify-content: space-between;
+}
+.dashboard .dashboard-lists > div .students-list-header h2 {
+  margin-bottom: 10px;
+}
+.dashboard .dashboard-lists > div .students-list-header .btn {
+  width: 200px;
+  height: 30px;
+}
+.dashboard .dashboard-lists > div th {
+  color: #394959;
+  font-weight: 500 !important;
+  text-align: center;
+  border-top: 0;
+}
+.dashboard .dashboard-lists > div tr {
+  color: #394959;
+  font-weight: 300 !important;
+  text-align: center;
 }/*# sourceMappingURL=school_profile.css.map */

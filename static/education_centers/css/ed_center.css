@@ -101,9 +101,11 @@
 .dashboard .dashboard-lists > div th {
   color: #394959;
   font-weight: 500 !important;
+  text-align: center;
   border-top: 0;
 }
 .dashboard .dashboard-lists > div tr {
   color: #394959;
   font-weight: 300 !important;
+  text-align: center;
 }/*# sourceMappingURL=ed_center.css.map */
