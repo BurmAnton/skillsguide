@@ -11,7 +11,8 @@ urlpatterns = [
 
     path('import/programs/', views.import_programs, name="import_programs"),
     #ЦО
-    path('dashboard/<int:ed_center_id>', views.ed_center_dashboard, name="ed_center_dashboard"),
+    path('dashboard/<int:ed_center_id>/', views.ed_center_dashboard, name="ed_center_dashboard"),
+    path('dashboard/<int:ed_center_id>/<str:message>', views.ed_center_dashboard, name="ed_center_dashboard"),
     path('trainers/', views.trainers_list, name="trainers_list"),
     path('trainers/add', views.add_trainer, name="add_trainer"),
     path('workshops/', views.workshops_list, name="workshops_list"),

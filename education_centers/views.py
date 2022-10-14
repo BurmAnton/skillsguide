@@ -2,6 +2,7 @@ import secrets
 import string
 import random
 from datetime import date
+from django.db import IntegrityError
 
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
@@ -112,7 +113,7 @@ def import_ed_centers(request):
     })
 
 @login_required
-def ed_center_dashboard(request, ed_center_id):
+def ed_center_dashboard(request, ed_center_id, message=None):
     ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
     if request.user != ed_center.contact_person:
         return HttpResponseRedirect(reverse("login"))
@@ -122,7 +123,8 @@ def ed_center_dashboard(request, ed_center_id):
         'ed_center' : ed_center,
         'programs': TrainingProgram.objects.filter(education_center=ed_center),
         'trainers': Trainer.objects.filter(education_center=ed_center),
-        'disability_types': DisabilityType.objects.all()
+        'disability_types': DisabilityType.objects.all(),
+        'message': message
     })
 
 @login_required
@@ -160,7 +162,13 @@ def add_trainer(request):
     if request.method == "POST":
         email = request.POST["email"]
         password = password_generator()
-        user = User.objects.create_user(email, password)
+        try:
+            user = User.objects.create_user(email, password)
+        except IntegrityError:
+            message = "userDuplicate"
+            education_center = request.POST["education_center"]
+            education_center = get_object_or_404(EducationCenter, id=education_center)
+            return HttpResponseRedirect(reverse('ed_center_dashboard', args=(education_center.id, message)))
         user.first_name = request.POST["name"]
         user.middle_name = request.POST["middle_name"]
         user.last_name = request.POST["last_name"]
@@ -176,8 +184,9 @@ def add_trainer(request):
             position=position,
             education_center=education_center
         )
-        trainer.save()        
-    return HttpResponseRedirect(reverse("login"))
+        trainer.save()
+        message = "userOk"      
+    return HttpResponseRedirect(reverse('ed_center_dashboard', args=(education_center.id, message)))
 
 @login_required
 @csrf_exempt

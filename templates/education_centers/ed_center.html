@@ -149,6 +149,16 @@
                     <h2>Преподователи</h2>
                     <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTrainerModal">Добавить преподователя</button>
                 </div>
+                {% if message == "userOk" %}
+                    <div class="alert alert-success" role="alert">
+                        Преподователь добавлен успешно!
+                    </div>
+                {% elif message == "userDuplicate" %}
+                    <div class="alert alert-danger" role="alert">
+                        Пользователь с данным email уже существует. Если Вы хотите создать для пользователя аккаунт педагога, используйте другой email.
+                    </div>
+                    <p></p>
+                {% endif %}
                 <table class="table">
                     <thead>
                         <th scope="col">ФИО</th>
