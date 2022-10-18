@@ -162,20 +162,43 @@ def add_program(request):
         short_desc = request.POST["short_desc"]
         program_link = request.POST["program_link"]
         program_type = request.POST["program_type"]
-        education_center = request.POST["education_center"]
-        education_center = get_object_or_404(EducationCenter, id=education_center)
         disability_types = request.POST.getlist("disability_types")
-
-        program = TrainingProgram(
-            name=name,
-            short_description=short_desc,
-            program_link=program_link,
-            program_type=program_type,
-            education_center=education_center,
-        )
-        program.save()
+        if 'edit-program' in request.POST:
+            program = get_object_or_404(TrainingProgram, id=request.POST["program_id"])
+            program.name = name
+            program.short_desciption = short_desc
+            program.program_link = program_link
+            program.program_type = program_type
+            program.status = 'CHCK'
+            program.save()
+            for criterion in program.criteria.all():
+                criterion.name = request.POST[f'CriterionName{criterion.id}']
+                criterion.description = request.POST[f'CriterionDesc{criterion.id}']
+                criterion.save()
+        else:
+            education_center = request.POST["education_center"]
+            education_center = get_object_or_404(EducationCenter, id=education_center)
+            program = TrainingProgram(
+                name=name,
+                short_description=short_desc,
+                program_link=program_link,
+                program_type=program_type,
+                education_center=education_center,
+            )
+            program.save()
+        if len(program.criteria.all()) == 0:
+            for i in range(1,6):
+                criterion = Criterion(
+                    name=request.POST[f'CriterionName{i}'],
+                    description=request.POST[f'CriterionDesc{i}'],
+                    program=program,
+                    skill_type='HRD',
+                    grading_system=2
+                )
+                criterion.save()
         program.disability_types.add(*disability_types)
         program.save()
+
     return HttpResponseRedirect(reverse("login"))
 
 def password_generator():

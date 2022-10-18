@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block script %}
+    <script src="{% static 'education_centers/js/ed_center.js' %}" rel="stylesheet"></script>
 {% endblock %}
 
 {% block body %}
@@ -80,6 +81,130 @@
             </div>
         </div>
     </div>
+    {% for program in programs %}
+        <div class="modal fade EditProgramModal" id="EditProgramModal{{program.id}}" tabindex="-1" aria-labelledby="EditProgramModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditProgramLabel">Изменить программу</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'add_program' %}" method="post">
+                        <div class="modal-body">
+                            <div>
+                                <input style="display:none;" type="input" class="form-control" name="program_id"  value={{program.id}}  required>
+                                <div class="form-floating mb-3">
+                                    <input type="input" class="form-control" name="name" id="Name" placeholder="Название программы" value="{{program.name}}" required>
+                                    <label for="Name">Название программы</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="input" class="form-control" name="short_desc" id="ShortDesc" maxlength="256" placeholder="Короткое описание" value="{{program.short_description}}" required>
+                                    <label for="ShortName">Короткое описание</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="input" class="form-control" name="program_link" id="ProgramLink" placeholder="Ссылка на программу" value="{{program.program_link}}" required>
+                                    <label for="ShortName">Ссылка на программу</label>
+                                </div>
+                                <div class="form mb-3">
+                                    <label for="ProgramType">Тип программы</label>
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="program_type" id="ProgramType" required>
+                                        <option class="placeholder">Выберите тип программы</option>
+                                        {% if program.program_type == "SP" %}
+                                            <option selected value="SP">Профпроба</option>
+                                        {% else %}
+                                            <option value="SP">Профпроба</option>
+                                        {% endif %}
+                                        {% if program.program_type == "MP" %}
+                                            <option selected value="MP">Интенсив</option>
+                                        {% else %}
+                                            <option value="MP">Интенсив</option>
+                                        {% endif %}
+                                        {% if program.program_type == "LP" %}
+                                        <option selected value="LP">Обучение</option>
+                                        {% else %}
+                                        <option value="LP">Обучение</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <div class="form mb-3 child-step-hidden" id="form-disability">
+                                    <label for="ProgramType">Нозологии</label>
+                                    <select class="selectpicker" title="Выберите нозологии" data-width="100%" data-live-search="true" name="disability_types" multiple>
+                                        {% for type in disability_types %}
+                                            {% if type in program.disability_types.all %}
+                                                <option selected value="{{type.id}}" class="disability_type" data-school="{{type}}">{{type.name}}</option>
+                                            {% else %}
+                                                <option value="{{type.id}}" class="disability_type" data-school="{{type}}">{{type.name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="criteria">
+                                <p>Ассессмент</p>
+                                {% for criterion in program.criteria.all %}
+                                    <div class="form-floating mb-3">
+                                        <input type="input" class="form-control" name="CriterionName{{criterion.id}}" value="{{criterion.name}}" maxlength="50" placeholder="Название критерия" required>
+                                        <label for="CriterionName{{criterion.id}}">Название критерия</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" name="CriterionDesc{{criterion.id}}" rows="3" required>{{criterion.description}}</textarea>
+                                        <label for="CriterionDesc{{criterion.id}}">Описание критерия</label>
+                                    </div>
+                                {% endfor %}
+                                {% if program.criteria.all|length == 0 %}
+                                    <div class="form-floating mb-3">
+                                        <input type="input" class="form-control" name="CriterionName1" id="CriterionName1" maxlength="50" placeholder="Название критерия" required>
+                                        <label for="Name">Название критерия 1</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" name="CriterionDesc1" id="CriterionDesc1" rows="3" required></textarea>
+                                        <label for="CriterionDesc1">Описание критерия 1</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="input" class="form-control" name="CriterionName2" id="CriterionName2" maxlength="50" placeholder="Название критерия" required>
+                                        <label for="Name">Название критерия 2</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" name="CriterionDesc2" id="CriterionDesc2" rows="3" required></textarea>
+                                        <label for="CriterionDesc2">Описание критерия 2</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="input" class="form-control" name="CriterionName3" id="CriterionName3" maxlength="50" placeholder="Название критерия" required>
+                                        <label for="Name">Название критерия 3</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" name="CriterionDesc3" id="CriterionDesc3" rows="3" required></textarea>
+                                        <label for="CriterionDesc3">Описание критерия 3</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="input" class="form-control" name="CriterionName4" id="CriterionName4" maxlength="50" placeholder="Название критерия" required>
+                                        <label for="Name">Название критерия 4</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" name="CriterionDesc4" id="CriterionDesc4" rows="3" required></textarea>
+                                        <label for="CriterionDesc4">Описание критерия 4</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="input" class="form-control" name="CriterionName5" id="CriterionName5" maxlength="50" placeholder="Название критерия" required>
+                                        <label for="Name">Название критерия 5</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" name="CriterionDesc5" id="CriterionDesc5" rows="3" required></textarea>
+                                        <label for="CriterionDesc5">Описание критерия 5</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" name="edit-program">Сохранить изменения</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
     <div class="modal fade" id="addProgramModal" tabindex="-1" aria-labelledby="addProgramModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -89,39 +214,85 @@
                 </div>
                 <form action="{% url 'add_program' %}" method="post">
                     <div class="modal-body">
-                        <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
-                            
-                        <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="name" id="Name" placeholder="Название программы" required>
-                            <label for="Name">Название программы</label>
+                        <div>
+                            <input style="display:none;" type="input" class="form-control" name="education_center"  value={{ed_center.id}}  required>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="name" id="Name" placeholder="Название программы" value="" required>
+                                <label for="Name">Название программы</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="short_desc" id="ShortDesc" maxlength="256" placeholder="Короткое описание" required>
+                                <label for="ShortName">Короткое описание</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="program_link" id="ProgramLink" placeholder="Ссылка на программу" required>
+                                <label for="ShortName">Ссылка на программу</label>
+                            </div>
+                            <div class="form mb-3">
+                                <label for="ProgramType">Тип программы</label>
+                                <select class="selectpicker" data-width="100%" data-live-search="true" name="program_type" id="ProgramType" required>
+                                    <option class="placeholder">Выберите тип программы</option>
+                                    <option value="SP">Профпроба</option>
+                                    <option value="MP">Интенсив</option>
+                                    <option value="LP">Обучение</option>
+                                </select>
+                            </div>
+                            <div class="form mb-3 child-step-hidden" id="form-disability">
+                                <label for="ProgramType">Нозологии</label>
+                                <select class="selectpicker" title="Выберите нозологии" data-width="100%" data-live-search="true" name="disability_types" multiple>
+                                    {% for type in disability_types %}
+                                        <option value="{{type.id}}" class="disability_type" data-school="{{type}}">{{type.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="short_desc" id="ShortDesc" maxlength="256" placeholder="Короткое описание" required>
-                            <label for="ShortName">Короткое описание</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="program_link" id="ProgramLink" placeholder="Ссылка на программу" required>
-                            <label for="ShortName">Ссылка на программу</label>
-                        </div>
-                        <div class="form mb-3">
-                            <select class="selectpicker" data-width="100%" data-live-search="true" name="program_type" id="ProgramType" required>
-                                <option>Выберите тип программы</option>
-                                <option value="SP">Профпроба</option>
-                                <option value="MP">Интенсив</option>
-                                <option value="LP">Обучение</option>
-                            </select>
-                        </div>
-                        <div class="form mb-3 child-step-hidden" id="form-disability">
-                            <select class="selectpicker" title="Выберите нозологии" data-width="100%" data-live-search="true" name="disability_types" multiple>
-                                {% for type in disability_types %}
-                                    <option value="{{type.id}}" class="disability_type" data-school="{{type}}">{{type.name}}</option>
-                                {% endfor %}
-                            </select>
+                        <div class="criteria">
+                            <p>Ассессмент</p>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="CriterionName1" id="CriterionName1" maxlength="50" placeholder="Название критерия" required>
+                                <label for="Name">Название критерия 1</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" name="CriterionDesc1" id="CriterionDesc1" rows="3" required></textarea>
+                                <label for="CriterionDesc1">Описание критерия 1</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="CriterionName2" id="CriterionName2" maxlength="50" placeholder="Название критерия" required>
+                                <label for="Name">Название критерия 2</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" name="CriterionDesc2" id="CriterionDesc2" rows="3" required></textarea>
+                                <label for="CriterionDesc2">Описание критерия 2</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="CriterionName3" id="CriterionName3" maxlength="50" placeholder="Название критерия" required>
+                                <label for="Name">Название критерия 3</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" name="CriterionDesc3" id="CriterionDesc3" rows="3" required></textarea>
+                                <label for="CriterionDesc3">Описание критерия 3</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="CriterionName4" id="CriterionName4" maxlength="50" placeholder="Название критерия" required>
+                                <label for="Name">Название критерия 4</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" name="CriterionDesc4" id="CriterionDesc4" rows="3" required></textarea>
+                                <label for="CriterionDesc4">Описание критерия 4</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="CriterionName5" id="CriterionName5" maxlength="50" placeholder="Название критерия" required>
+                                <label for="Name">Название критерия 5</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" name="CriterionDesc5" id="CriterionDesc5" rows="3" required></textarea>
+                                <label for="CriterionDesc5">Описание критерия 5</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                            <button type="submit" class="btn btn-primary">Добавить программу</button>
                         </div>
                     </div>
                 </form>
@@ -263,7 +434,7 @@
                     <tbody>
                         {% for program in programs %}
                             <tr>
-                                <td scope="row">{{program.name}}</td>
+                                <td scope="row" data-bs-toggle="modal" data-bs-target="#EditProgramModal{{program.id}}">{{program.name}}</td>
                                 <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
                                 <td scope="row">{{program.get_program_type_display}}</td>
                                 {% if program.status == "CHCK" %}
