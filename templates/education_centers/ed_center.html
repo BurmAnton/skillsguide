@@ -10,6 +10,76 @@
 {% endblock %}
 
 {% block body %}
+    <div class="modal fade" id="editCenterModal" tabindex="-1" aria-labelledby="editCenterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCenterabel">Изменить данные</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'ed_center_dashboard' ed_center.id %}" method="post">
+                    <div class="form">
+                        <div class="School">
+                            <p>Центр обучения</p>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="Name" placeholder="Название ЦО" value="{{ed_center.name}}" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="ShortName" placeholder="Краткое название ЦО" value="{{ed_center.short_name}}" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="INN" placeholder="ИНН ЦО" value="{{ed_center.inn}}" required>
+                            </div>
+                        </div>
+                        <div class="Address">
+                            <p>Адрес</p>
+                            <div class="input-group mb-3">
+                                <select name="City" class="form-select" aria-label="Город" required>
+                                    <option selected value="{{ed_center.address.city.id}}">{{ed_center.address.city.name}}</option>
+                                    {% for city in cities %}
+                                        <option value={{city.id}}>{{city.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="Street" placeholder="Улица" value="{{ed_center.address.street}}" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="BuildingNumber" placeholder="Номер здания" value="{{ed_center.address.building_number}}" required>
+                            </div>
+                        </div>
+                        <div class="ContactPerson">
+                            <p>Представитель ЦО</p>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="LastName" placeholder="Фамилия" value="{{ed_center.contact_person.last_name}}" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="FirstName" placeholder="Имя" value="{{ed_center.contact_person.first_name}}" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="MiddleName" placeholder="Отчество" value="{{ed_center.contact_person.middle_name}}">
+                            </div>
+                        </div>
+                        <div class="Contacts">
+                            <p>Контакты</p>
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" name="Email" placeholder="Email" value="{{ed_center.contact_person.email}}" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="Phone" placeholder="Телефон" value="{{ed_center.contact_person.phone_number}}" maxlength=18 required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <div class="submit">
+                            <input type="submit" value="Сохранить изменения" class="btn btn-primary">   
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="addProgramModal" tabindex="-1" aria-labelledby="addProgramModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -107,7 +177,7 @@
         <div class="ed_center-preview">
             <div class="ed_center-name">
                 <p style="width: 200px;"><b>{{ed_center.name}}</b></p>
-                <img style="width: 35px; display: none;" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+                <img class="edit-icon" data-bs-toggle="modal" data-bs-target="#editCenterModal" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
             </div>
             <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{ed_center.address}}</p>
         </div>
@@ -188,6 +258,7 @@
                         <th scope="col">Название</th>
                         <th scope="col">Ссылка</th>
                         <th scope="col">Тип программы</th>
+                        <th scope="col">Статус</th>
                     </thead>
                     <tbody>
                         {% for program in programs %}
@@ -195,6 +266,13 @@
                                 <td scope="row">{{program.name}}</td>
                                 <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
                                 <td scope="row">{{program.get_program_type_display}}</td>
+                                {% if program.status == "CHCK" %}
+                                <td class="program-check" scope="row">На проверке</td>
+                                {% elif program.status == "PRF" %}
+                                <td class="program-approve" scope="row">Одобрена</td>
+                                {% else %}
+                                <td class="program-denied" scope="row">Отказано</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

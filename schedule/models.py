@@ -1,6 +1,7 @@
 import datetime
 from email.policy import default
 from pyexpat import model
+from tabnanny import verbose
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Sum
 
@@ -26,15 +27,15 @@ class SchoolStudentsGroup(models.Model):
 
 
 class TrainingCycle(models.Model):
-    name = models.CharField("Назывние цикла", max_length=150)
-    
+    name = models.CharField("Название цикла", max_length=150)
+    is_active = models.BooleanField("Текущий цикл", default=True)
     fields_of_activity = models.ManyToManyField(FieldOfActivity, verbose_name="Сферы деятельности", related_name="cycles", blank=True)
     competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="cycles", blank=True)
     programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы", related_name="cycles", blank=True)
     region = models.ForeignKey(Region, verbose_name="Регион", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
     city = models.ForeignKey(City, verbose_name="Населённый пункт", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
     schools = models.ManyToManyField(School, verbose_name="Школы участники", related_name="cycles", blank=True)
-    groups = models.ManyToManyField(SchoolStudentsGroup, verbose_name="Группы", related_name="cycles", blank=False)
+    groups = models.ManyToManyField(SchoolStudentsGroup, verbose_name="Группы", related_name="cycles", blank=True)
     start_date = models.DateField("Дата начала", null=False, blank=False)
     end_date = models.DateField("Дата окончания", null=False, blank=False)
 
@@ -44,6 +45,19 @@ class TrainingCycle(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SchoolQuota(models.Model):
+    training_cycle = models.ForeignKey(TrainingCycle, verbose_name="Цикл", related_name="quotas", on_delete=CASCADE)
+    school = models.OneToOneField(School, verbose_name="Школа", related_name="quota", on_delete=CASCADE)
+    quota = models.IntegerField("Квота школы", null=False, blank=False, default=10)
+
+    class Meta:
+        verbose_name = "Квота"
+        verbose_name_plural = "Квоты"
+
+    def __str__(self):
+        return f'{self.school} ({self.training_cycle}) - {self.quota}'
 
 
 class TrainingStream(models.Model):

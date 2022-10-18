@@ -113,17 +113,44 @@ def import_ed_centers(request):
     })
 
 @login_required
+@csrf_exempt
 def ed_center_dashboard(request, ed_center_id, message=None):
     ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
     if request.user != ed_center.contact_person:
         return HttpResponseRedirect(reverse("login"))
+    if request.method == "POST":
+        city_id = request.POST["City"]
+        city = City.objects.get(id=city_id)
+        street = request.POST["Street"]
+        building_number = request.POST["BuildingNumber"]
 
+        address = Address(
+            city=city,
+            street=street,
+            building_number=building_number
+        )
+        address.save()
+        ed_center.address = address
+        
+        contact_person = ed_center.contact_person
+        contact_person.email = request.POST["Email"]
+        contact_person.first_name = request.POST["FirstName"]
+        contact_person.middle_name = request.POST["MiddleName"]
+        contact_person.last_name = request.POST["LastName"]
+        contact_person.phone_number = request.POST["Phone"]
+        contact_person.save()
+        
+        ed_center.name = request.POST["Name"]
+        ed_center.short_name = request.POST["ShortName"]
+        ed_center.is_trains = True
+        ed_center.save()
 
     return render(request, 'education_centers/ed_center.html', {
         'ed_center' : ed_center,
         'programs': TrainingProgram.objects.filter(education_center=ed_center),
         'trainers': Trainer.objects.filter(education_center=ed_center),
         'disability_types': DisabilityType.objects.all(),
+        'cities': City.objects.all(),
         'message': message
     })
 

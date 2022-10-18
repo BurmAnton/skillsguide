@@ -26,8 +26,12 @@
             <h2>Показатели</h2>
             <div class="overview-data">
                 <div class="data-point">
-                    <div>   
-                        <div class="sum">{{students_count}}</div>
+                    <div>
+                        {% if school.quota.quota != "" %}
+                            <div class="sum">{{students_count}}/{{school.quota.quota}}</div>
+                        {% else %}
+                            <div class="sum">{{students_count}}</div>
+                        {% endif %}
                         <div class="description">Учеников зарегестрировано</div>
                     </div>
                 </div>

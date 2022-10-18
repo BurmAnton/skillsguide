@@ -21,9 +21,16 @@
         margin-bottom: 15px
         .ed_center-name
             display: flex
+            justify-content: space-between
             align-items: flex-start
             p
                 margin-top: 10px
+            .edit-icon
+                width: 35px
+                padding: 2px
+                border-radius: 50px 
+                &:hover
+                    background: #F2F2F2
 .dashboard
     margin-left: 50px
     margin-top: 0
@@ -83,3 +90,53 @@
                 color: #394959
                 font-weight: 300 !important
                 text-align: center
+                .program-check
+                    color: #ffc107
+                    font-weight: 500
+                .program-approve
+                    color: #198754
+                    font-weight: 500
+                .program-denied
+                    color: #dc3545
+                    font-weight: 500
+
+#editCenterModal
+    .modal-content
+        width: fit-content
+        color: #394959
+        h2
+            margin: auto
+            margin-top: 10px
+            margin-bottom: 10px
+        p
+            font-weight: 600
+            text-align: center
+    .form
+        padding: 10px 15px
+        row-gap: 10px
+        column-gap: 20px
+        display: grid
+        grid-template-columns: 350px 350px
+        grid-template-rows: auto auto auto
+        grid-auto-flow: row
+        .School
+            grid-column: 1
+            grid-row: 1
+        .Address
+            grid-column: 2
+            grid-row: 1
+        .ContactPerson
+            grid-column: 1
+            grid-row: 2
+        .Contacts
+            grid-column: 2
+            grid-row: 2
+    .submit
+        input
+            width: 100%
+            background-color: #394959
+            border: 1px solid #394959
+            font-weight: bold
+            &:hover
+                background-color: white
+                color: #394959

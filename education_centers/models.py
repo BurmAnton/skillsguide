@@ -99,16 +99,20 @@ class EducationCenter(models.Model):
 class TrainingProgram(models.Model):
     name = models.CharField("Название программы", max_length=300)
     short_description = models.CharField("Крактое описание", max_length=256, null=True)
-    competence = models.ForeignKey(Competence, verbose_name="Компетенция", on_delete=CASCADE, related_name='programs', null=True)
+    competence = models.ForeignKey(Competence, verbose_name="Компетенция", on_delete=CASCADE, related_name='programs', blank=True, null=True)
     program_link =  models.CharField("Ссылка на программу", max_length=200, blank=False, null=True)
-
     СOMPETENCE_TYPES = (
         ('SP', 'Профпроба'),
         ('MP', 'Интенсив'),
         ('LP', 'Обучение'),
     )
     program_type = models.CharField(max_length=3, choices=СOMPETENCE_TYPES, verbose_name='Тип программы', default='HRD')
-
+    STATUSES = (
+        ('CHCK', 'На проверке'),
+        ('PRF', 'Одобрено'),
+        ('DN', 'Отказано'),
+    )
+    status = models.CharField(max_length=4, choices=STATUSES, verbose_name='Статус', default='CHCK')
     education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="programs", on_delete=CASCADE)
     attendance_limit = models.IntegerField("Максимальное кол-во участников", default=25)
     disability_types = models.ManyToManyField(DisabilityType, verbose_name="ОВЗ", blank=True)

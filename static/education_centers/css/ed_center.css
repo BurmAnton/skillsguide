@@ -28,10 +28,19 @@
 }
 .profile .ed_center-preview .ed_center-name {
   display: flex;
+  justify-content: space-between;
   align-items: flex-start;
 }
 .profile .ed_center-preview .ed_center-name p {
   margin-top: 10px;
+}
+.profile .ed_center-preview .ed_center-name .edit-icon {
+  width: 35px;
+  padding: 2px;
+  border-radius: 50px;
+}
+.profile .ed_center-preview .ed_center-name .edit-icon:hover {
+  background: #F2F2F2;
 }
 
 .dashboard {
@@ -108,4 +117,68 @@
   color: #394959;
   font-weight: 300 !important;
   text-align: center;
+}
+.dashboard .dashboard-lists > div tr .program-check {
+  color: #ffc107;
+  font-weight: 500;
+}
+.dashboard .dashboard-lists > div tr .program-approve {
+  color: #198754;
+  font-weight: 500;
+}
+.dashboard .dashboard-lists > div tr .program-denied {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+#editCenterModal .modal-content {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  color: #394959;
+}
+#editCenterModal .modal-content h2 {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#editCenterModal .modal-content p {
+  font-weight: 600;
+  text-align: center;
+}
+#editCenterModal .form {
+  padding: 10px 15px;
+  row-gap: 10px;
+  -moz-column-gap: 20px;
+       column-gap: 20px;
+  display: grid;
+  grid-template-columns: 350px 350px;
+  grid-template-rows: auto auto auto;
+  grid-auto-flow: row;
+}
+#editCenterModal .form .School {
+  grid-column: 1;
+  grid-row: 1;
+}
+#editCenterModal .form .Address {
+  grid-column: 2;
+  grid-row: 1;
+}
+#editCenterModal .form .ContactPerson {
+  grid-column: 1;
+  grid-row: 2;
+}
+#editCenterModal .form .Contacts {
+  grid-column: 2;
+  grid-row: 2;
+}
+#editCenterModal .submit input {
+  width: 100%;
+  background-color: #394959;
+  border: 1px solid #394959;
+  font-weight: bold;
+}
+#editCenterModal .submit input:hover {
+  background-color: white;
+  color: #394959;
 }/*# sourceMappingURL=ed_center.css.map */

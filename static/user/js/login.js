@@ -447,7 +447,7 @@ function send_reg_info(){
                 console.log(result.message);
                 if (result.message === "Account created successfully."){
                     document.querySelector(".email-login").value = document.querySelector("#Email").value;
-                    document.querySelector("#InputPassword").value = document.querySelector("#InputPasswordReg").value;
+                    document.querySelector("#LoginPassword").value = document.querySelector("#InputPasswordReg").value;
                     document.querySelector(".sign-button").click();
                 } else if (result.message == 'Password mismatch.') {
                     let message = "Введённые пароли не совпадают."
@@ -544,7 +544,7 @@ function passRecovery() {
             if (result.message == 'Password changed') {
                 alert.style.display = 'none';
                 document.querySelector(".email-login").value = document.querySelector(".email-recovery").value;
-                document.querySelector("#InputPassword").value = document.querySelector(".password-recovery").value;
+                document.querySelector("#LoginPassword").value = document.querySelector(".password-recovery").value;
                 document.querySelector(".sign-button").click();
             } else {
                 message = "При попытке смены пароля, произошёл сбой. Попробуйте повторить операцию позже."

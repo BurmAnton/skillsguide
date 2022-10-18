@@ -23,6 +23,7 @@ body {
 }
 
 .sign-card {
+  margin: 15px 0;
   background-color: white;
   display: flex;
   width: 40%;
@@ -72,11 +73,10 @@ body {
     width: 75%;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 500px) {
   .sign-card {
-    width: 100%;
+    width: 402px;
     margin-top: 10px;
-    padding: 10px;
     border: 0;
     border-radius: 0;
   }
@@ -85,6 +85,11 @@ body {
   }
   .sign-card input[type=checkbox] {
     height: 14px;
+  }
+}
+@media (max-width: 374px) {
+  .sign-card {
+    width: 100%;
   }
 }
 .sign-card .pass-recovery {
@@ -102,11 +107,6 @@ body {
 }
 @media (max-width: 600px) {
   .sign-card .pass-rec-form {
-    width: 90%;
-  }
-}
-@media (max-width: 600px) {
-  .sign-card .sign-form {
     width: 90%;
   }
 }
