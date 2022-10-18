@@ -434,7 +434,7 @@
                     <tbody>
                         {% for program in programs %}
                             <tr>
-                                <td scope="row" data-bs-toggle="modal" data-bs-target="#EditProgramModal{{program.id}}">{{program.name}}</td>
+                                <td scope="row" class="program-name" data-bs-toggle="modal" data-bs-target="#EditProgramModal{{program.id}}">{{program.name}}</td>
                                 <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
                                 <td scope="row">{{program.get_program_type_display}}</td>
                                 {% if program.status == "CHCK" %}

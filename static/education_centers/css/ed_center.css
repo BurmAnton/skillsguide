@@ -113,6 +113,11 @@
   text-align: center;
   border-top: 0;
 }
+.dashboard .dashboard-lists > div .program-name {
+  text-decoration: underline;
+  font-weight: 400;
+  cursor: pointer;
+}
 .dashboard .dashboard-lists > div tr {
   color: #394959;
   font-weight: 300 !important;
