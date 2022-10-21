@@ -113,10 +113,16 @@
   text-align: center;
   border-top: 0;
 }
+.dashboard .dashboard-lists > div .program-name-th, .dashboard .dashboard-lists > div .trainer-name-th {
+  text-align: left;
+}
 .dashboard .dashboard-lists > div .program-name {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
+}
+.dashboard .dashboard-lists > div .program-name, .dashboard .dashboard-lists > div .trainer-name {
+  text-align: left;
 }
 .dashboard .dashboard-lists > div tr {
   color: #394959;

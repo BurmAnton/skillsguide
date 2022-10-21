@@ -402,7 +402,7 @@
                 {% endif %}
                 <table class="table">
                     <thead>
-                        <th scope="col">ФИО</th>
+                        <th class="trainer-name-th" scope="col">ФИО</th>
                         <th scope="col">Должность</th>
                         <th scope="col">Email</th>
                         <th scope="col">Телефон</th>
@@ -410,7 +410,7 @@
                     <tbody>
                         {% for trainer in trainers %}
                             <tr>
-                                <td scope="row">{{trainer.user}}</td>
+                                <td class="trainer-name" scope="row">{{trainer.user}}</td>
                                 <td scope="row">{{trainer.position}}</td>
                                 <td scope="row">{{trainer.user.email}}</td>
                                 <td scope="row">{{trainer.user.phone_number}}</td>
@@ -426,7 +426,7 @@
                 </div>
                 <table class="table">
                     <thead>
-                        <th scope="col">Название</th>
+                        <th class="program-name-th" scope="col">Название</th>
                         <th scope="col">Ссылка</th>
                         <th scope="col">Тип программы</th>
                         <th scope="col">Статус</th>
