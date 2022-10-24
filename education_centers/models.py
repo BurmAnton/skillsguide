@@ -26,7 +26,7 @@ class FieldOfActivity(models.Model):
 class Competence(models.Model):
     name = models.CharField("Название компетенции", max_length=200)
     field_of_activity = models.ForeignKey(FieldOfActivity, verbose_name="Сфера деятельности", related_name="competencies", on_delete=CASCADE, null=False, blank=False)
-    description = models.TextField("Описание критерия", null=True, blank=True)
+    description = models.TextField("Описание компетенции", null=True, blank=True)
     #Worldskills
     is_ws = models.BooleanField('Worldskills', default=False)
     СOMPETENCE_BLOCKS = (

@@ -1,0 +1,30 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 50px;
+}
+.body .btn-primary {
+  background-color: #394959 !important;
+  border: 0;
+}
+.body .header {
+  display: flex;
+  justify-content: space-between;
+}
+.body .cycles_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 25px 25px;
+}
+.body .cycles_list .card, .body .cycles_list li {
+  color: #394959;
+  background-color: #e9ecf7;
+}
+.body .cycles_list .card h5, .body .cycles_list li h5 {
+  font-weight: 800;
+}
+.body .cycles_list .card .card-footer, .body .cycles_list li .card-footer {
+  display: flex;
+  justify-content: flex-end;
+}/*# sourceMappingURL=cycles_list.css.map */

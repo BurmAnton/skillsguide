@@ -76,6 +76,7 @@ class TrainingProgramAdmin(admin.ModelAdmin):
         'competence',
         'program_type',
         'education_center',
+        'status',
         'get_criteria'
     ]
     
@@ -83,6 +84,19 @@ class TrainingProgramAdmin(admin.ModelAdmin):
         criteria = len(program.criteria.all())
         return criteria
     get_criteria.short_description='Колво критериев'
+
+    actions = ['approve_status', 'check_status', 'deny_status']
+    def approve_status(self, request, queryset):
+        queryset.update(status='PRF')
+    approve_status.short_description='Изменить статус на "Одобрен"'
+
+    def check_status(self, request, queryset):
+        queryset.update(status='CHCK')
+    check_status.short_description='Изменить статус на "На проверке"'
+
+    def deny_status(self, request, queryset):
+        queryset.update(status='DN')
+    deny_status.short_description='Изменить статус на "Отказано"'
 
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):

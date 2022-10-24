@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 #Models
-from .models import Attendance, Assessment
+from .models import Attendance, Assessment, TrainingCycle, FieldOfActivity
 from users.models import DisabilityType, User
 from regions.models import City
 from schools.models import School, Grade, SchoolContactPersone, SchoolStudent
@@ -36,6 +36,44 @@ def student_profile(request, user_id):
         'school': school
     })
     
+
+@login_required
+@csrf_exempt
+def cycles_list(request):
+    if request.method == 'POST':
+        name = request.POST["name"]
+        fields_of_activity = request.POST.getlist("fields_of_activity")
+        competencies = request.POST.getlist("competencies")
+        programs = request.POST.getlist("programs")
+        schools = request.POST.getlist("schools")
+        city_id = request.POST["city"]
+        city = City.objects.get(id=city_id)
+        start_date = request.POST["start_date"]
+        end_date = request.POST["end_date"]
+        cycle = TrainingCycle(
+            name=name,
+            city=city,
+            start_date=start_date,
+            end_date=end_date
+        )
+        cycle.save()
+        cycle.fields_of_activity.add(*fields_of_activity)
+        cycle.competencies.add(*competencies)
+        cycle.programs.add(*programs)
+        cycle.schools.add(*schools)
+        cycle.save()
+    cycles = TrainingCycle.objects.all()
+
+    return render(request, "schedule/cycles_list.html", {
+        'cycles': cycles,
+        'fields_of_activity': FieldOfActivity.objects.all,
+        'competencies': Competence.objects.all,
+        'programs': TrainingProgram.objects.filter(status='PRF', program_type='SP'),
+        'cities': City.objects.all,
+        'schools': School.objects.all
+    })
+
+
 @login_required
 @csrf_exempt
 def create_cycle(request):

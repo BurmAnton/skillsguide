@@ -17,6 +17,7 @@ class TrainingCycleAdmin(admin.ModelAdmin):
         'city',
         'is_active'
     )
+    filter_horizontal = ('fields_of_activity', 'competencies', 'programs', 'schools', 'groups')
 
 
 @admin.register(SchoolQuota)
