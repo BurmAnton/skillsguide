@@ -26,18 +26,6 @@ class CompetenceAdmin(admin.ModelAdmin):
         'field_of_activity', 
         'is_ws'
     ]
-    
-class CriterionInLine(admin.TabularInline):
-    model = Criterion
-    #form = GradeForm
-    ordering = ("name",)
-    fields = ['name', 'skill_type', 'grading_system']
-
-    def get_extra(self, request, obj=None, **kwargs):
-        extra = 0
-        if obj:
-            return extra
-        return extra
 
 EducationCenterForm = select2_modelform(EducationCenter, attrs={'width': '400px'})
 
@@ -64,6 +52,17 @@ class WorkshopAdmin(admin.ModelAdmin):
     pass
 
 
+class CriterionInLine(admin.TabularInline):
+    model = Criterion
+    ordering = ("name",)
+    fields = ['name', 'skill_type', 'grading_system']
+
+    def get_extra(self, request, obj=None, **kwargs):
+        extra = 0
+        if obj:
+            return extra
+        return extra
+
 TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'})
 
 @admin.register(TrainingProgram)
@@ -71,12 +70,19 @@ class TrainingProgramAdmin(admin.ModelAdmin):
     form = TrainingProgramForm
     search_fields = ['name']
     inlines = [CriterionInLine,]
+    readonly_fields = ['get_criteria',]
     list_display = [
         'name',
         'competence',
         'program_type',
-        'education_center'
+        'education_center',
+        'get_criteria'
     ]
+    
+    def get_criteria(self, program):
+        criteria = len(program.criteria.all())
+        return criteria
+    get_criteria.short_description='Колво критериев'
 
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
