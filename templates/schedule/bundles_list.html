@@ -16,13 +16,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="AddBundleLabel">Создать цикл</h5>
+                    <h5 class="modal-title" id="AddBundleLabel">Создать набор</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{% url 'bundles_list' %}" method="post">
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="name" placeholder="Название цикла" required>
+                            <input type="text" class="form-control" name="name" placeholder="Название набора" required>
                         </div>
                         <div class="form mb-3">
                             <select name="competencies" class="selectpicker" title="Программы" data-width="100%" data-live-search="true" multiple required>
