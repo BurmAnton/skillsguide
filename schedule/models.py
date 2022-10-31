@@ -13,31 +13,39 @@ from schools.models import School
 from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence, Criterion, FieldOfActivity, Lesson
 from regions.models import Region, City
 
-# Create your models here.
-class SchoolStudentsGroup(models.Model):
-    users = models.ManyToManyField(User, verbose_name="Участники группы", blank=True)
-    limit = models.IntegerField("Лимит участников", default=25)
+
+class TrainingBundle(models.Model):
+    name = models.CharField("Название набора", max_length=150)
+    fields_of_activity = models.ManyToManyField(FieldOfActivity, verbose_name="Сферы деятельности", related_name="cycles", blank=True)
+    competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="cycles", blank=True)
 
     class Meta:
-        verbose_name = "Цикл профпроб"
-        verbose_name_plural = "Циклы профпроб"
+        verbose_name = "Набор профпроб"
+        verbose_name_plural = "Наборы профпроб"
 
     def __str__(self):
-        return f'Группа №{self.id}'
+        return self.name
 
 
 class TrainingCycle(models.Model):
     name = models.CharField("Название цикла", max_length=150)
+    bundle = models.ForeignKey(TrainingBundle, verbose_name="Набор профпроб", related_name="cycles", null=False, blank=False, on_delete=CASCADE)
     is_active = models.BooleanField("Текущий цикл", default=True)
-    fields_of_activity = models.ManyToManyField(FieldOfActivity, verbose_name="Сферы деятельности", related_name="cycles", blank=True)
-    competencies = models.ManyToManyField(Competence, verbose_name="Компетенции", related_name="cycles", blank=True)
+    education_centers = models.ManyToManyField(EducationCenter, verbose_name="Ценрты обучения", related_name="cycles", blank=True)
     programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы", related_name="cycles", blank=True)
     region = models.ForeignKey(Region, verbose_name="Регион", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
     city = models.ForeignKey(City, verbose_name="Населённый пункт", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
     schools = models.ManyToManyField(School, verbose_name="Школы участники", related_name="cycles", blank=True)
-    groups = models.ManyToManyField(SchoolStudentsGroup, verbose_name="Группы", related_name="cycles", blank=True)
+    students_limit = models.IntegerField("Лимит участников", null=False, blank=False)
+    group_limit = models.IntegerField("Лимит для группы", null=False, blank=False)
+
     start_date = models.DateField("Дата начала", null=False, blank=False)
-    end_date = models.DateField("Дата окончания", null=False, blank=False)
+    start_time = models.TimeField("Время начала проб", null=True, blank=False)
+    end_date = models.DateField("Дата окончания", null=True, blank=True)
+    is_any_day = models.BooleanField("Любой день недели", default=False)
+    days_of_week = models.CharField("Дни недели", max_length=20, null=True, blank=True)
+    days_per_week = models.IntegerField("Дней в неделю", null=True, blank=True)
+    excluded_dates = models.CharField("Даты исключения", max_length=500, null=True, blank=True)
 
     class Meta:
         verbose_name = "Цикл профпроб"
@@ -62,14 +70,15 @@ class SchoolQuota(models.Model):
 
 class TrainingStream(models.Model):
     cycle = models.ForeignKey(TrainingCycle, verbose_name="Цикл профпроб", related_name="streams", on_delete=models.CASCADE, null=True, blank=False)
-    group = models.ForeignKey(SchoolStudentsGroup, verbose_name="Группы", related_name="streams", on_delete=models.CASCADE, null=True, blank=False)
+    students_limit = models.IntegerField("Лимит участников", default=25)
+    students = models.ManyToManyField(User, verbose_name="Участники потока", blank=True)
 
     class Meta:
         verbose_name = "Учебный поток"
         verbose_name_plural = "Учебные потоки"
 
     def __str__(self):
-        return self.name
+        return f'{self.cycle} ({self.students_limit})'
 
 
 class Training(models.Model):
@@ -77,7 +86,7 @@ class Training(models.Model):
     stream = models.ForeignKey(TrainingStream, verbose_name="Учебный поток", related_name="trainings", on_delete=CASCADE, null=True, blank=False)
     start_date = models.DateField("Дата начала", null=False, blank=False)
     end_date = models.DateField("Дата окончания", null=False, blank=False)
-    group = models.ForeignKey(SchoolStudentsGroup, verbose_name="Группы", related_name="trainings", on_delete=models.CASCADE, null=True, blank=False)
+    stream = models.ForeignKey(TrainingStream, verbose_name="Поток", related_name="trainings", on_delete=models.CASCADE, null=True, blank=False)
 
     class Meta:
         verbose_name = "Расписание обучения"
@@ -108,7 +117,7 @@ class TrainingClass(models.Model):
     is_online = models.BooleanField("Онлайн", default=False)
     workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="classes", on_delete=CASCADE)
     conference = models.ForeignKey(Conference, verbose_name="Конференция", related_name="classes", on_delete=CASCADE)
-    group = models.ForeignKey(SchoolStudentsGroup, verbose_name="Группы", related_name="classes", on_delete=models.CASCADE, null=True, blank=False)
+    stream = models.ForeignKey(TrainingStream, verbose_name="Поток", related_name="classes", on_delete=models.CASCADE, null=True, blank=False)
     
     class Meta:
         verbose_name = "Занятие"

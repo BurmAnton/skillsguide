@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('cycles/', views.cycles_list, name='cycles_list'),
+    path('bundles/', views.bundles_list, name='bundles_list'),
     path('create/cycle/', views.create_cycle, name='create_cycle'),
     #path('bundle/<int:bundle_id>/streams/fill', views.streams_fill, name='streams_fill'),
     #path('bundle/<int:bundle_id>/slots/fill', views.slots_fill, name='slots_fill'),

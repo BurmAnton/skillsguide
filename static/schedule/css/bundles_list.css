@@ -1,0 +1,50 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 50px;
+}
+.body .btn-primary {
+  background-color: #394959 !important;
+  border: 0;
+}
+.body .header {
+  display: flex;
+  justify-content: space-between;
+}
+.body .cycles_list, .body .bundles_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 25px 25px;
+}
+.body .cycles_list .card, .body .cycles_list li, .body .bundles_list .card, .body .bundles_list li {
+  color: #394959;
+  background-color: #e9ecf7;
+}
+.body .cycles_list .card h5, .body .cycles_list li h5, .body .bundles_list .card h5, .body .bundles_list li h5 {
+  font-weight: 800;
+}
+.body .cycles_list .card .card-footer, .body .cycles_list li .card-footer, .body .bundles_list .card .card-footer, .body .bundles_list li .card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.CycleAddStep2 {
+  display: none;
+}
+
+.add-cycle {
+  display: none;
+}
+
+.days_per_week {
+  display: none;
+}
+
+.modal .dropdown-toggle {
+  background-color: white;
+  border: 1px solid #ced4da;
+}
+.modal .dropdown-toggle .placeholder {
+  color: #6c757d;
+}/*# sourceMappingURL=bundles_list.css.map */

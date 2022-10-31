@@ -3,9 +3,15 @@ from django.contrib import admin
 from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, ChoiceDropdownFilter
 
-from .models import Assessment, Attendance, TrainingCycle, SchoolQuota
+from .models import Assessment, Attendance, TrainingBundle, TrainingCycle, SchoolQuota, TrainingStream
 from users.models import User
 
+@admin.register(TrainingBundle)
+class TrainingBundleAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+    )
+    filter_horizontal = ('fields_of_activity', 'competencies')
 
 @admin.register(TrainingCycle)
 class TrainingCycleAdmin(admin.ModelAdmin):
@@ -17,7 +23,12 @@ class TrainingCycleAdmin(admin.ModelAdmin):
         'city',
         'is_active'
     )
-    filter_horizontal = ('fields_of_activity', 'competencies', 'programs', 'schools', 'groups')
+    filter_horizontal = ('education_centers', 'programs', 'schools')
+
+
+@admin.register(TrainingStream)
+class TrainingStreamAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(SchoolQuota)

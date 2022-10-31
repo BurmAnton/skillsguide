@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load schedule_extras %}
+{% block title %}ЦОПП СО | Наборы проб{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/bundles_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'schedule/js/bundles_list.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="modal fade" id="AddBundleModal" tabindex="-1" aria-labelledby="AddBundleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddBundleLabel">Создать цикл</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'bundles_list' %}" method="post">
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="name" placeholder="Название цикла" required>
+                        </div>
+                        <div class="form mb-3">
+                            <select name="competencies" class="selectpicker" title="Программы" data-width="100%" data-live-search="true" multiple required>
+                                {% for competence in competencies %}
+                                    <option value={{competence.id}}>{{competence.name}} ({{competence.field_of_activity}})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <div class="submit">
+                            <input type="submit" value="Добавить набор" class="btn btn-primary">   
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% for bundle in bundles %}
+        <div class="modal fade" id="AddCycleModal{{bundle.id}}" tabindex="-1" aria-labelledby="AddBundleModalLabel{{bundle.id}}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="AddBundleLabel{{bundle.id}}">Создать цикл</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'create_cycle' %}" method="post">
+                        <div class="modal-body">
+                            <input style="display: none;" type="text" class="form-control" name="bundle" placeholder="Название цикла" value="{{bundle.id}}" required>
+                            <div id="Step1{{bundle.id}}" class="CycleAddStep1">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" name="name" placeholder="Название цикла" required>
+                                </div>
+                                {% for competence in bundle.competencies.all %}
+                                    <label for="{{competence}}_programs" class="form-label">{{competence.name}} ({{competence.field_of_activity}})</label>
+                                    <div class="form mb-3">
+                                        <select name="{{competence}}_programs" id="{{competence}}_programs" class="selectpicker" title="Программы" data-width="100%" data-live-search="true" multiple required>
+                                            {% for program in competence.programs.all|in_status:"PRF" %}
+                                                <option value={{program.id}}>{{program.name}} ({{program.education_center}})</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div id="Step2{{bundle.id}}" class="CycleAddStep2">
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control" name="group_limit" placeholder="Лимит группы" min="5" max="30" required>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control" name="students_limit" placeholder="Лимит участников" min="1" required>
+                                </div>
+                                <div class="input mb-3">
+                                    <label for="start_date" class="form-label">Дата начала</label>
+                                    <input type="date" class="form-control" name="start_date" placeholder="Дата начала" aria-label="Дата" required>
+                                </div>
+                                <div class="input mb-3">
+                                    <label for="dates" class="form-label">Даты исключения (через запятую)</label>
+                                    <input type="text" class="form-control dates" name="dates" placeholder=" формат – дд/мм/гг">
+                                </div>
+                                <div>
+                                    <label for="days_selector" class="form-label">Дни проведения</label>
+                                </div>
+                                <div class="input mb-3 days_per_week" id="DaysPerWeek{{bundle.id}}">
+                                    <input type="number" class="form-control" name="days_per_week" placeholder="Дней в неделю" min="1" max="5" default="2">
+                                </div>
+                                <div class="form mb-3 days_of_week" id="DaysOfWeek{{bundle.id}}">
+                                    <select name="days_of_week" class="selectpicker" title="Дни недели" data-width="100%" data-live-search="true" multiple>
+                                            <option value="0">Понедельник</option>
+                                            <option value="1">Вторник</option>
+                                            <option value="2">Среда</option>
+                                            <option value="3">Четверг</option>
+                                            <option value="4">Пятница</option>
+                                            <option value="5">Суббота</option>
+                                            <option value="6">Воскресенье</option>
+                                    </select>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input is_any_day" data-bundleid="{{bundle.id}}" id="IsAnyDay{{bundle.id}}" name="is_any_day" type="checkbox" role="switch">
+                                    <label class="form-check-label" for="is_any_day">Любые дни недели</label>
+                                </div>
+                                <div class="input mb-3">
+                                    <label for="start_time" class="form-label">Время начала проб</label>
+                                    <input type="time" class="form-control" name="start_time" placeholder="Время начало" aria-label="Время" min="8:00" max="19:00" required>
+                                </div>
+                                <div class="form mb-3">
+                                    <select name="city" class="selectpicker" aria-label="Город" data-width="100%" data-live-search="true">
+                                        <option selected>Выберите город</option>
+                                        {% for city in cities %}
+                                            <option value={{city.id}}>{{city.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form mb-3">
+                                    <select name="schools" class="selectpicker" title="Школы" data-width="100%" data-live-search="true" multiple>
+                                        {% for school in schools %}
+                                            <option value={{school.id}}>{{school.name}} ({{school.address.city.name}})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="submit">
+                                <input id="AddCycleSubmit{{bundle.id}}" type="submit" value="Добавить цикл" class="btn btn-primary add-cycle">
+                                <button id="AddCycleNext{{bundle.id}}" data-bundleid="{{bundle.id}}" class="btn btn-primary cycle-next">Далее</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="header">
+        <h2>Наборы профпроб</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddBundleModal">
+            Добавить набор
+        </button>
+    </div>
+    <div class="bundles_list">
+        
+        {% for bundle in bundles %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{bundle.name}}</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for competence in bundle.competencies.all %}
+                            <li class="list-group-item">{{competence.name}} ({{competence.field_of_activity}})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer text-muted">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCycleModal{{bundle.id}}">Добавить цикл</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="header">
+        <h2>Циклы профпроб</h2>
+    </div>
+    <div class="cycles_list">
+
+        {% for cycle in cycles %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{cycle.name}}</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Набор проб: <b>{{cycle.bundle}}</b></li>
+                        <li class="list-group-item">Лимит участников: <b>{{cycle.students_limit}}</b></li>
+                        <li class="list-group-item">Лимит на группу: <b>{{cycle.group_limit}}</b></li>
+                        <li class="list-group-item">Дата начала: <b>{{cycle.start_date}}</b></li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
