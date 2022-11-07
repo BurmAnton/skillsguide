@@ -1,86 +1,17 @@
-{% extends "layout.html" %}
+{% extends "education_centers/ed_center_layout.html" %}
 {% load static %}
 {% block title %}ЦОПП СО | Импорт ЦО{% endblock %}
 
 {% block style %}
-        <link href="{% static 'education_centers/css/ed_center.css' %}" rel="stylesheet">
+    <link href="{% static 'education_centers/css/ed_center_layout.css' %}" rel="stylesheet">
+    <link href="{% static 'education_centers/css/ed_center.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block script %}
     <script src="{% static 'education_centers/js/ed_center.js' %}" rel="stylesheet"></script>
 {% endblock %}
 
-{% block body %}
-    <div class="modal fade" id="editCenterModal" tabindex="-1" aria-labelledby="editCenterModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editCenterabel">Изменить данные</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{% url 'ed_center_dashboard' ed_center.id %}" method="post">
-                    <div class="form">
-                        <div class="School">
-                            <p>Центр обучения</p>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="Name" placeholder="Название ЦО" value="{{ed_center.name}}" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="ShortName" placeholder="Краткое название ЦО" value="{{ed_center.short_name}}" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="INN" placeholder="ИНН ЦО" value="{{ed_center.inn}}" required>
-                            </div>
-                        </div>
-                        <div class="Address">
-                            <p>Адрес</p>
-                            <div class="input-group mb-3">
-                                <select name="City" class="form-select" aria-label="Город" required>
-                                    <option selected value="{{ed_center.address.city.id}}">{{ed_center.address.city.name}}</option>
-                                    {% for city in cities %}
-                                        <option value={{city.id}}>{{city.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="Street" placeholder="Улица" value="{{ed_center.address.street}}" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="BuildingNumber" placeholder="Номер здания" value="{{ed_center.address.building_number}}" required>
-                            </div>
-                        </div>
-                        <div class="ContactPerson">
-                            <p>Представитель ЦО</p>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="LastName" placeholder="Фамилия" value="{{ed_center.contact_person.last_name}}" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="FirstName" placeholder="Имя" value="{{ed_center.contact_person.first_name}}" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="MiddleName" placeholder="Отчество" value="{{ed_center.contact_person.middle_name}}">
-                            </div>
-                        </div>
-                        <div class="Contacts">
-                            <p>Контакты</p>
-                            <div class="input-group mb-3">
-                                <input type="email" class="form-control" name="Email" placeholder="Email" value="{{ed_center.contact_person.email}}" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="Phone" placeholder="Телефон" value="{{ed_center.contact_person.phone_number}}" maxlength=18 required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <div class="submit">
-                            <input type="submit" value="Сохранить изменения" class="btn btn-primary">   
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+{% block dashboard %}
     {% for program in programs %}
         <div class="modal fade EditProgramModal" id="EditProgramModal{{program.id}}" tabindex="-1" aria-labelledby="EditProgramModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -344,111 +275,97 @@
             </div>
         </div>
     </div>
-    <div class="profile">
-        <div class="ed_center-preview">
-            <div class="ed_center-name">
-                <p style="width: 200px;"><b>{{ed_center.name}}</b></p>
-                <img class="edit-icon" data-bs-toggle="modal" data-bs-target="#editCenterModal" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+    <div class="overview">
+        <h2>Показатели</h2>
+        <div class="overview-data">
+            <div class="data-point">
+                <div>   
+                    <div class="sum">0</div>
+                    <div class="description">Профпроб проведено</div>
+                </div>
             </div>
-            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{ed_center.address}}</p>
-        </div>
-        <div class="contact-preview">
-            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt=""> {{ed_center.contact_person}}</p>
-            <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{ed_center.contact_person.email}}</p>
-            <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{ed_center.contact_person.phone_number}}</p>
+            <div class="line"></div>
+            <div class="data-point">
+                <div>   
+                    <div class="sum">0</div>
+                    <div class="description">Обучено по коротким программам</div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="data-point">
+                <div>   
+                    <div class="sum">0</div>
+                    <div class="description">Интенсивов проведено</div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="dashboard">
-        <div class="overview">
-            <h2>Показатели</h2>
-            <div class="overview-data">
-                <div class="data-point">
-                    <div>   
-                        <div class="sum">0</div>
-                        <div class="description">Профпроб проведено</div>
-                    </div>
-                </div>
-                <div class="line"></div>
-                <div class="data-point">
-                    <div>   
-                        <div class="sum">0</div>
-                        <div class="description">Обучено по коротким программам</div>
-                    </div>
-                </div>
-                <div class="line"></div>
-                <div class="data-point">
-                    <div>   
-                        <div class="sum">0</div>
-                        <div class="description">Интенсивов проведено</div>
-                    </div>
-                </div>
+    <div class="dashboard-lists">
+        <div class="trainers-list">
+            <div class="trainers-list-header">
+                <h2>Преподователи</h2>
+                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTrainerModal">Добавить преподователя</button>
             </div>
-        </div>
-        <div class="dashboard-lists">
-            <div class="trainers-list">
-                <div class="trainers-list-header">
-                    <h2>Преподователи</h2>
-                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTrainerModal">Добавить преподователя</button>
+            {% if message == "userOk" %}
+                <div class="alert alert-success" role="alert">
+                    Преподователь добавлен успешно!
                 </div>
-                {% if message == "userOk" %}
-                    <div class="alert alert-success" role="alert">
-                        Преподователь добавлен успешно!
-                    </div>
-                {% elif message == "userDuplicate" %}
-                    <div class="alert alert-danger" role="alert">
-                        Пользователь с данным email уже существует. Если Вы хотите создать для пользователя аккаунт педагога, используйте другой email.
-                    </div>
-                    <p></p>
-                {% endif %}
-                <table class="table">
-                    <thead>
-                        <th class="trainer-name-th" scope="col">ФИО</th>
-                        <th scope="col">Должность</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Телефон</th>
-                    </thead>
-                    <tbody>
-                        {% for trainer in trainers %}
-                            <tr>
-                                <td class="trainer-name" scope="row">{{trainer.user}}</td>
-                                <td scope="row">{{trainer.position}}</td>
-                                <td scope="row">{{trainer.user.email}}</td>
-                                <td scope="row">{{trainer.user.phone_number}}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>            
-            <div class="programs-list">
-                <div class="programs-list-header">
-                    <h2>Программы подготовки</h2>
-                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProgramModal">Добавить программу</button>
+            {% elif message == "userDuplicate" %}
+                <div class="alert alert-danger" role="alert">
+                    Пользователь с данным email уже существует. Если Вы хотите создать для пользователя аккаунт педагога, используйте другой email.
                 </div>
-                <table class="table">
-                    <thead>
-                        <th class="program-name-th" scope="col">Название</th>
-                        <th scope="col">Ссылка</th>
-                        <th scope="col">Тип программы</th>
-                        <th scope="col">Статус</th>
-                    </thead>
-                    <tbody>
-                        {% for program in programs %}
-                            <tr>
-                                <td scope="row" class="program-name" data-bs-toggle="modal" data-bs-target="#EditProgramModal{{program.id}}">{{program.name}}</td>
-                                <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
-                                <td scope="row">{{program.get_program_type_display}}</td>
-                                {% if program.status == "CHCK" %}
+                <p></p>
+            {% endif %}
+            <table class="table">
+                <thead>
+                    <th class="trainer-name-th" scope="col">ФИО</th>
+                    <th scope="col">Должность</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Телефон</th>
+                </thead>
+                <tbody>
+                    {% for trainer in trainers %}
+                        <tr>
+                            <td class="trainer-name" scope="row">{{trainer.user}}</td>
+                            <td scope="row">{{trainer.position}}</td>
+                            <td scope="row">{{trainer.user.email}}</td>
+                            <td scope="row">{{trainer.user.phone_number}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>            
+        <div class="programs-list">
+            <div class="programs-list-header">
+                <h2>Программы подготовки</h2>
+                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProgramModal">Добавить программу</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <th class="program-name-th" scope="col">Название</th>
+                    <th scope="col">Ссылка</th>
+                    <th scope="col">Тип программы</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Расписание</th>
+                </thead>
+                <tbody>
+                    {% for program in programs %}
+                        <tr>
+                            <td scope="row" class="program-name" data-bs-toggle="modal" data-bs-target="#EditProgramModal{{program.id}}">{{program.name}}</td>
+                            <td scope="row"> <a href="{{program.program_link}}" target="_blank">Ссылка</a></td>
+                            <td scope="row">{{program.get_program_type_display}}</td>
+                            {% if program.status == "CHCK" %}
                                 <td class="program-check" scope="row">На проверке</td>
-                                {% elif program.status == "PRF" %}
+                            {% elif program.status == "PRF" %}
                                 <td class="program-approve" scope="row">Одобрена</td>
-                                {% else %}
+                            {% else %}
                                 <td class="program-denied" scope="row">Отказано</td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                            {% endif %}
+                            <td scope="row"><a href="{% url 'program_schedule' ed_center.id program.id %}" target="_blank">Сформировать</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

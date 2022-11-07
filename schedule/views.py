@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 #Models
-from .models import Attendance, Assessment, TrainingBundle, TrainingCycle, FieldOfActivity, TrainingStream
+from .models import Attendance, Assessment, AvailableDate, ProfTest, TrainingBundle, TrainingCycle, FieldOfActivity, TrainingStream
 from users.models import DisabilityType, User
 from regions.models import City
 from schools.models import School, Grade, SchoolContactPersone, SchoolStudent
@@ -64,6 +64,11 @@ def bundles_list(request):
         'schools': School.objects.all
     })
 
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + timedelta(days_ahead)
 
 @login_required
 @csrf_exempt
@@ -126,345 +131,46 @@ def create_cycle(request):
         cycle.save()
 
         steams_count = math.ceil(students_limit / group_limit)
+        excluded_dates = cycle.excluded_dates
+        programs_count = len(cycle.programs.all())
         for i in range(steams_count):
             stream = TrainingStream(
                 cycle=cycle,
                 students_limit=group_limit,
             )
             stream.save()
-            slots = 0
-            #№if any_day == False:
-            #    slot_date = start_date
-            #    while slots < steams_count:
-            #        if slot_date.weekday() in days_of_week and slot_date not in ex_dates:
-             #           slot = TimeSlot(
-              #              stream=stream,
-               #             date=slot_date,
-                #            time=start_time,
-                 #           week_limit=days_count
-                  #      )
-                   #     slot.save()
-                    #    slots += 1
-                    #slot_date += timedelta(days=1)
-            #else:
-             #   slot_date = start_date
-              #  weeks_count = math.ceil(steams_count/days_count)+2
-               # for week_number in range(weeks_count):
-                #    while slot_date.weekday() in [5,6]:
-                 #       slot_date += timedelta(days=1)
-                  #  while slot_date.weekday() != 5:
-                   #     if slot_date not in ex_dates:
-                    #        slot = TimeSlot(
-                     #           stream=stream,
-                      #          date=slot_date,
-                       #         time=start_time,
-                        #        week_number=week_number
-                         #   )
-                        #slot.save()
-                        #slot_date += timedelta(days=1)
-        
-        return HttpResponseRedirect(reverse("bundles_list")) 
-    
-    return HttpResponseRedirect(reverse("login")) 
 
-def streams_fill(bundle_id):
-    bundle = get_object_or_404(Bundle, id=bundle_id)
-    schools = School.objects.filter(bundles=bundle)
-    users = User.objects.filter(school__in=schools, role='ST')
-    for user in users:
-        user.bundles.add(bundle)
-        user.save()
-    if len(schools) != 0:
-        streams = Stream.objects.filter(bundle=bundle)
-        #Первый цикл – наполняем потоки только цельными классами
-        #Второй цикл – распределяем остальных
-        for cycle in range(1,3):
-            for stream in streams:
-                if len(User.objects.filter(school__in=schools, streams=None, role='ST')) != 0:
-                    school_number = 0
-                    while stream.attendance_limit != len(stream.participants.all()):
-                        for school_class in schools[school_number].classes.all():
-                            current_limit = stream.attendance_limit - len(stream.participants.all())
-                            if current_limit == 0:
-                                break
-                            class_students = User.objects.filter(school=schools[school_number], school_class=school_class, streams=None, role='ST')
-                            if len(class_students) <= current_limit:
-                                stream.participants.add(*class_students)
-                            elif cycle == 2:
-                                stream.participants.add(*class_students[0:current_limit-1])
-                            stream.save()
-                        if school_number+1 >= len(schools):
-                            break
-                        else:
-                            school_number += 1
-                else:
-                    break
-
-def slots_fill(bundle_id):
-    bundle = get_object_or_404(Bundle, id=bundle_id)
-    streams = Stream.objects.filter(bundle=bundle)
-    
-    for stream in streams: 
-        slots = TimeSlot.objects.filter(stream=stream).exclude(competence=None).distinct()
-        for slot in slots: 
-            slot.participants.add(*stream.participants.all())
-            slot.save()
-    return HttpResponseRedirect(reverse("login")) 
-
-
-def add_assesment_all():
-    programs = TrainingProgram.objects.all()
-    soft_skills = Criterion.objects.filter(skill_type='SFT')
-    for skill in soft_skills:
-        skill.programs.add(*programs)
-        skill.save()
-    slots = TimeSlot.objects.exclude(program=None).distinct()
-    for slot in slots:
-        for participant in slot.participants.all():
-            attendance = Attendance.objects.filter(user=participant,timeslot=slot)
-            if len(attendance) == 0:
-                attendance = Attendance(
-                    timeslot=slot,
-                    user=participant,
+            for program in cycle.programs.all():
+                test = ProfTest(
+                    ed_center=program.education_center,
+                    program=program,
+                    stream=stream,
+                    start_time=cycle.start_time
                 )
-                attendance.save()
-            for criterion in slot.program.criteria.all():
-                assessment = Assessment.objects.filter(user=participant,timeslot=slot, criterion=criterion)
-                if len(assessment) == 0:
-                    assessment = Assessment(
-                        timeslot=slot,
-                        criterion=criterion,
-                        user=participant,
-                    )
-                    assessment.save()
+                test.save()
 
-@login_required
-@csrf_exempt
-def choose_bundle(request):
-    if request.method == 'POST':
-        bundle = Bundle.objects.filter(id=request.POST["bundle_id"])
-        if len(bundle) != 0:
-            bundle = bundle[0]
-            bundle.participants.add(request.user)
-            bundle.save()
-            streams_fill(bundle.id)
-            slots_fill(bundle.id)
-            add_assesment_all()
-            message = "Registration successful"
-        else:
-            message = "Bundle doesn't exist"
-        
+            available_dates = []
+            slot_date = cycle.start_date
+            if cycle.is_any_day == False:
+                days_of_week = list(map(int, cycle.days_of_week))
+                date_limit = programs_count + 2
+            else:
+                days_of_week = [0, 1, 2, 3, 4]
+                week_count = math.ceil(programs_count/cycle.days_per_week)+1
+                date_limit = (week_count)*5 + len(excluded_dates)
+            while date_limit > len(stream.available_dates.all()):
+                for weekday in days_of_week:
+                    if slot_date not in excluded_dates and slot_date.weekday() in days_of_week:
+                        avaible_date = AvailableDate(
+                            stream=stream, 
+                            date=slot_date,
+                            week_number=week_count
+                        )
+                        avaible_date.save()
+                    slot_date = slot_date + timedelta(1)
+                    if len(stream.available_dates.all()) == date_limit or slot_date.weekday() == 5:
+                        week_count -= 1
+                        break
+
+        return HttpResponseRedirect(reverse("bundles_list")) 
     return HttpResponseRedirect(reverse("login")) 
-
-
-@login_required
-@csrf_exempt
-def change_profile_student(request):
-    if request.method == "POST":
-        user = request.user
-
-        user.email = request.POST["email"]
-        user.email = request.POST["email"]
-        user.phone_number = request.POST["phone"]
-        user.first_name = request.POST['name']
-        user.last_name = request.POST['last_name']
-        user.middle_name = request.POST['middle_name']
-        user.birthday = request.POST['birthday']
-        school_id = request.POST['school']
-        school = School.objects.get(id=school_id)
-        user.school = school
-        grade_number = request.POST['school_class']
-        grade_letter = request.POST['school_class_latter']
-        try:
-            disability_check = request.POST['disability-check']
-        except:
-            disability_check = False
-        if disability_check != False:
-            disability_type = request.POST['disability_type']
-            user.disability_type = DisabilityType.objects.get(id=disability_type)
-        else:
-            user.disability_type = None
-        
-        school_class = Grade.objects.filter(
-                school=school,
-                grade=grade_number,
-                grade_letter=grade_letter
-        )
-        if len(school_class) != 0:
-            school_class = school_class[0]
-        else:
-            school_class = Grade(
-                school=school,
-                grade=int(grade_number),
-                grade_letter=grade_letter.upper()
-            )
-            school_class.save()
-        user.school_class = school_class
-        user.save()
-    return HttpResponseRedirect(reverse("login")) 
-
-
-@login_required
-@csrf_exempt
-def competence_schedule(request, ed_center_id, bundle_id, competence_id):
-    if request.method == 'POST':
-        row_count = int(request.POST["row_count"])
-        for row in range(row_count):
-            stream = Stream.objects.get(id=request.POST[f"id{row}"])
-            program = TrainingProgram.objects.get(id=request.POST[f"program{row}"])
-            start_time = datetime.strptime(request.POST[f"start_time{row}"], "%H:%M").time()
-            trainer = User.objects.get(id=request.POST[f"trainer{row}"])
-            previous_slots = TimeSlot.objects.filter(competence=program.competence, stream=stream)
-            for slot in previous_slots:
-                slot.program = None
-                slot.competence = None
-                slot.trainer = None
-                slot.online = False
-                slot.workshop = None
-                slot.education_center = None
-                slot.save()
-                
-            slot = TimeSlot.objects.get(id=request.POST[f"date{row}"])
-            slot.program = program
-            slot.competence = program.competence
-            slot.trainer = trainer
-            slot.time = start_time
-            slot.education_center = program.education_center
-            if request.POST[f"workshop{row}"] == 'online':
-                slot.online = True
-                slot.workshop = None
-            else:
-                slot.online = False
-                workshop = Workshop.objects.get(id=request.POST[f"workshop{row}"])
-                slot.workshop = workshop
-            slot.save()
-
-    edu_center = EducationCenter.objects.get(id=ed_center_id)
-    bundle = Bundle.objects.get(id=bundle_id)
-    competence = Competence.objects.get(id=competence_id)
-
-    programs = TrainingProgram.objects.filter(bundles=bundle, competence=competence)
-    workshops = Workshop.objects.filter(competence=competence, education_center=edu_center)
-
-    streams = []
-    row_count = 0
-    for stream in Stream.objects.filter(bundle=bundle):
-        timeslot = TimeSlot.objects.filter(competence=competence, stream=stream)
-        free_weeks = set()
-        if len(timeslot) != 0:
-            timeslot = timeslot[0]
-            free_weeks.add(timeslot.week_number)
-        else:
-            timeslot = None
-        if stream.schedule_type == "SDW":
-            stream_slots = TimeSlot.objects.filter(competence=None, stream=stream)
-        else:
-            weeks_count = TimeSlot.objects.filter(competence=None, stream=stream).aggregate(Max('week_number'))['week_number__max']
-            if weeks_count is not None:
-                for week_number in range(weeks_count+1):
-                    week_slots = TimeSlot.objects.exclude(competence=None).filter(stream=stream, week_number=week_number)
-                    if len(week_slots) < stream.week_limit:
-                        free_weeks.add(week_number)
-                stream_slots = TimeSlot.objects.filter(competence=None, stream=stream, week_number__in=free_weeks)
-            else:
-                stream_slots = None
-        streams.append([stream, stream_slots, row_count, timeslot])
-        row_count += 1
-
-    return render(request, 'schedule/competence_schedule.html', {
-        "edu_center": edu_center,
-        "trainers": edu_center.trainers.all(),
-        "bundle": bundle,
-        "competence": competence,
-        "programs": programs,
-        "streams": streams,
-        "row_count": row_count,
-        "workshops": workshops
-    })
-
-
-@login_required
-def bundles(request, ed_center_id):
-    ed_center = EducationCenter.objects.get(id=ed_center_id)
-    bundles = Bundle.objects.filter(edu_centers=ed_center)
-    bundles_list = []
-    for bundle in bundles:
-        programs = TrainingProgram.objects.filter(bundles=bundle, education_center=ed_center)
-        groups = Stream.objects.filter(bundle=bundle)
-        bundles_list.append([bundle,  len(groups), len(programs)])
-
-    return render(request, 'schedule/bundles.html', {
-        "ed_center": ed_center,
-        "bundles": bundles_list
-    })
-
-
-@login_required
-def competencies(request, ed_center_id, bundle_id):
-    ed_center = EducationCenter.objects.get(id=ed_center_id)
-    bundle = Bundle.objects.get(id=bundle_id)
-    programs = TrainingProgram.objects.filter(bundles=bundle, education_center=ed_center)
-    competencies = Competence.objects.filter(bundles=bundle, programs__in=programs)
-    competencies_list = []
-    for competence in competencies:
-        comp_programs = programs.filter(competence=competence)
-        streams = Stream.objects.filter(bundle=bundle)
-        slots = TimeSlot.objects.filter(competence=competence, stream__in=streams)
-        if len(slots) == 0:
-            status = "Не заполненно"
-        elif len(slots) == len(streams):
-            status = "Заполненно"
-        else:
-            status = "Заполненно частично"
-        competencies_list.append([competence, len(comp_programs), len(streams), len(slots), status])
-    return render(request, 'schedule/competencies.html', {
-        "ed_center": ed_center,
-        "bundle": bundle,
-        "competencies": competencies_list
-    })
-
-
-def student_dashboard(request):
-    schools = School.objects.all()
-
-    schools_list = []
-    grades = [0,0,0,0,0,0]
-    count_students = 0
-    start_user = User.objects.get(email='leila12082006@gmail.com')
-    for school in schools:
-        school_list = []
-        school_list.append(school)
-        for i in range(6,12):
-            school_classes = Grade.objects.filter(school=school, grade_number=i)
-            school_students_count = 0
-            if len(school_classes) != 0:
-                for school_class in school_classes:
-                    school_students_count += len(User.objects.filter(school_class=school_class, date_joined__gte=start_user.date_joined))
-                grades[i-6] += school_students_count
-                count_students += school_students_count
-                school_list.append(school_students_count)
-            else:
-                school_list.append(0)
-        school_list.append(len(User.objects.filter(school=school, date_joined__gte=start_user.date_joined)))
-        schools_list.append(school_list)
-    
-    return render(request, 'schedule/dashboard_students.html', {
-        "schools_list": schools_list,
-        "grades": grades,
-        "count_students": count_students
-    })
-
-#Удаление студента со слота
-@login_required
-@csrf_exempt
-def student_dismissal(request):
-    if request.method == "POST":
-        try:
-            school = School.objects.get(id=request.POST["school_id"])
-            participant = User.objects.get(id=request.POST["participant_id"])
-            slot = TimeSlot.objects.get(id=request.POST["slot_id"])
-        except SchoolContactPersone.DoesNotExist:
-            return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))
-        slot.participants.remove(participant)
-        slot.save()
-    return HttpResponseRedirect(reverse("school_profile", args=(school.id,)))

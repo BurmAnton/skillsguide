@@ -1,3 +1,5 @@
+import datetime
+import math
 import secrets
 import string
 import random
@@ -12,7 +14,7 @@ from requests import post
 import education_centers
 
 from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop, Trainer
-from schedule.models import Assessment, Attendance
+from schedule.models import Assessment, Attendance, AvailableDate, ProfTest, Training, TrainingCycle, TrainingStream
 from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -301,6 +303,58 @@ def add_workshop(request):
     return render(request, "education_centers/add_workshop.html",{
         "education_centers": education_centers,
         "competencies": Competence.objects.all(),
+        "message": message
+    })
+
+@login_required
+@csrf_exempt
+def program_schedule(request, ed_center_id, program_id):
+    ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
+    program = get_object_or_404(TrainingProgram, id=program_id)
+    tests = ProfTest.objects.filter(ed_center=ed_center, program=program)
+    message = ""
+    if request.method == "POST":
+        for test in tests:
+            test_date = request.POST[f'test{test.id}_date']
+            if test_date.isnumeric():
+                if test.date != None:
+                    previous_date = AvailableDate.objects.get(
+                        stream=test.stream,
+                        date=test.date
+                    )
+                    previous_date.busy = False
+                    previous_date.save()
+                available_date = get_object_or_404(AvailableDate, id=test_date)
+                test.date = available_date.date
+                available_date.busy = True
+                available_date.save()
+                if test.stream.cycle.is_any_day:
+                    busy_dates = AvailableDate.objects.filter(
+                        stream=test.stream,
+                        busy=True,
+                        week_number=available_date.week_number
+                    )
+                    free_dates = AvailableDate.objects.filter(
+                        stream=test.stream, 
+                        busy=False,  
+                        week_number=available_date.week_number)
+                    if len(busy_dates) >= test.stream.cycle.days_per_week:
+                        for date in free_dates:
+                            date.is_unavailable = True
+                            date.save()
+                    else:
+                        for date in free_dates:
+                            date.is_unavailable = False
+                            date.save()
+            test.start_time = request.POST[f'test{test.id}_start_time']
+            trainer_id = request.POST[f'test{test.id}_trainer']
+            test.trainer = get_object_or_404(Trainer, id=trainer_id)
+            test.save()
+        message = "TestsAdded"
+    return render(request, "education_centers/program_schedule.html",{
+        "ed_center": ed_center,
+        "program": program,
+        "tests": tests,
         "message": message
     })
 

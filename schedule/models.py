@@ -1,5 +1,6 @@
 import datetime
 from email.policy import default
+import json
 from pyexpat import model
 from tabnanny import verbose
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -10,7 +11,7 @@ from django.db.models.deletion import CASCADE, DO_NOTHING
 
 from users.models import User
 from schools.models import School
-from education_centers.models import EducationCenter, TrainingProgram, Workshop, Competence, Criterion, FieldOfActivity, Lesson
+from education_centers.models import EducationCenter, Trainer, TrainingProgram, Workshop, Competence, Criterion, FieldOfActivity, Lesson
 from regions.models import Region, City
 
 
@@ -73,12 +74,28 @@ class TrainingStream(models.Model):
     students_limit = models.IntegerField("Лимит участников", default=25)
     students = models.ManyToManyField(User, verbose_name="Участники потока", blank=True)
 
+
     class Meta:
         verbose_name = "Учебный поток"
         verbose_name_plural = "Учебные потоки"
 
     def __str__(self):
-        return f'{self.cycle} ({self.students_limit})'
+        return f'{self.cycle} ({self.id})'
+
+
+class AvailableDate(models.Model):
+    stream = models.ForeignKey(TrainingStream, verbose_name="Поток", related_name="available_dates", on_delete=models.CASCADE, null=True, blank=False)
+    date = models.DateField("Доступная дата", null=False, blank=False)
+    week_number = models.IntegerField("Номер недели", null=True, blank=True)
+    busy = models.BooleanField("Занят", default=False)
+    is_unavailable = models.BooleanField("Недоступно", default=False)
+
+    class Meta:
+        verbose_name = "Доступная дата"
+        verbose_name_plural = "Доступные даты"
+
+    def __str__(self):
+        return f'{self.date} ({self.stream})'
 
 
 class Training(models.Model):
@@ -105,6 +122,26 @@ class Conference(models.Model):
     class Meta:
         verbose_name = "Данные для подключения"
         verbose_name_plural = "Данные для подключения"
+
+
+class ProfTest(models.Model):
+    ed_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="tests", on_delete=CASCADE)
+    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="tests", on_delete=CASCADE)
+    stream = models.ForeignKey(TrainingStream, verbose_name="Учебный поток", related_name="tests", on_delete=CASCADE, null=True, blank=False)
+    date = models.DateField("Дата начала", null=True, blank=True)
+    start_time = models.TimeField("Время начала", null=True, blank=True)
+    
+    trainer = models.ForeignKey(Trainer, verbose_name="Преподователь", related_name="tests", on_delete=models.CASCADE, null=True, blank=True)
+    is_online = models.BooleanField("Онлайн", default=False)
+    workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="tests", on_delete=CASCADE, null=True)
+    conference = models.ForeignKey(Conference, verbose_name="Конференция", related_name="tests", on_delete=CASCADE, null=True)
+
+    class Meta:
+        verbose_name = "Профпроба"
+        verbose_name_plural = "Профпробы"
+
+    def __str__(self):
+        return f'{self.program.name}({self.start_time} {self.date})'
 
 
 class TrainingClass(models.Model):
