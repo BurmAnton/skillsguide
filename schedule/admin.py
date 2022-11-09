@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from easy_select2 import select2_modelform
-from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, ChoiceDropdownFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, RelatedDropdownFilter
 
 from .models import Assessment, Attendance, Training, TrainingBundle, TrainingCycle, SchoolQuota, TrainingStream, ProfTest, AvailableDate
 from users.models import User
@@ -25,17 +25,30 @@ class TrainingCycleAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('education_centers', 'programs', 'schools')
 
-@admin.register(AvailableDate)
-class AvailableDateAdmin(admin.ModelAdmin):
-    pass
-
 @admin.register(TrainingStream)
 class TrainingStreamAdmin(admin.ModelAdmin):
-    pass
+     list_display = (
+        'cycle',
+        'id'
+     )
 
 @admin.register(ProfTest)
 class ProfTestAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['program', 'trainer']
+    list_filter = (
+        ('program', RelatedOnlyDropdownFilter),
+        ('ed_center', RelatedOnlyDropdownFilter),
+        ('date', DropdownFilter), 
+        ('start_time', DropdownFilter)
+     )
+    list_display = (
+        'program',
+        'ed_center',
+        'date',
+        'start_time',
+        'stream',
+        'trainer'
+    )
 
 @admin.register(SchoolQuota)
 class SchoolQuotaAdmin(admin.ModelAdmin):

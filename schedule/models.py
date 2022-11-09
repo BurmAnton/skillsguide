@@ -80,7 +80,7 @@ class TrainingStream(models.Model):
         verbose_name_plural = "Учебные потоки"
 
     def __str__(self):
-        return f'{self.cycle} ({self.id})'
+        return f'{self.cycle} (id - {self.id})'
 
 
 class AvailableDate(models.Model):
@@ -128,7 +128,7 @@ class ProfTest(models.Model):
     ed_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="tests", on_delete=CASCADE)
     program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="tests", on_delete=CASCADE)
     stream = models.ForeignKey(TrainingStream, verbose_name="Учебный поток", related_name="tests", on_delete=CASCADE, null=True, blank=False)
-    date = models.DateField("Дата начала", null=True, blank=True)
+    date = models.DateField("Дата проведения", null=True, blank=True)
     start_time = models.TimeField("Время начала", null=True, blank=True)
     
     trainer = models.ForeignKey(Trainer, verbose_name="Преподователь", related_name="tests", on_delete=models.CASCADE, null=True, blank=True)
