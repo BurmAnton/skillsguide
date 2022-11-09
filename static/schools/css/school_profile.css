@@ -1,8 +1,11 @@
 .body {
-  justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   background-color: #F2F2F2;
   color: #394959;
 }
+
 .body h2 {
   font-size: 22px;
   text-align: center;
@@ -18,15 +21,23 @@
   background-color: white;
   padding: 15px 15px 26px 20px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000015;
+          box-shadow: 4px 4px 4px 0px #00000015;
 }
+
 .school_profile p {
   margin-bottom: 5px;
 }
+
 .school_profile .school-name {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
+
 .school_profile .school-name p {
   font-size: 22px;
   font-weight: 400;
@@ -37,6 +48,7 @@
   margin-left: 50px;
   margin-top: 0;
 }
+
 .dashboard .overview {
   margin: auto;
   margin-top: 35px;
@@ -46,65 +58,112 @@
   width: fit-content;
   padding: 15px 35px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
 }
+
 .dashboard .overview .overview-data {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   gap: 25px;
 }
+
 .dashboard .overview .overview-data .data-point {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   width: 250px;
   text-align: center;
 }
+
 .dashboard .overview .overview-data .data-point .sum {
   font-size: 32px;
 }
+
 .dashboard .overview .overview-data .data-point img {
   width: 100px;
   height: 100px;
 }
+
 .dashboard .overview .overview-data .line {
   width: 2px;
-  background-color: rgba(57, 73, 89, 0.3137254902);
+  background-color: #39495950;
 }
+
 .dashboard .dashboard-lists {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   gap: 25px;
   padding: 30px 0px;
 }
+
 .dashboard .dashboard-lists > div {
   width: 100%;
   background-color: white;
   padding: 15px 35px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
 }
+
 .dashboard .dashboard-lists > div .students-list-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
+
 .dashboard .dashboard-lists > div .students-list-header h2 {
   margin-bottom: 10px;
 }
+
 .dashboard .dashboard-lists > div .students-list-header .btn {
   width: 200px;
   height: 30px;
 }
+
+.dashboard .dashboard-lists > div .save_schedule {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
 .dashboard .dashboard-lists > div th {
   color: #394959;
   font-weight: 500 !important;
   text-align: center;
   border-top: 0;
 }
+
 .dashboard .dashboard-lists > div tr {
   color: #394959;
   font-weight: 300 !important;
   text-align: center;
-}/*# sourceMappingURL=school_profile.css.map */
+}
+/*# sourceMappingURL=school_profile.css.map */

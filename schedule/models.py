@@ -10,7 +10,7 @@ from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
 
 from users.models import User
-from schools.models import School
+from schools.models import School, SchoolStudent
 from education_centers.models import EducationCenter, Trainer, TrainingProgram, Workshop, Competence, Criterion, FieldOfActivity, Lesson
 from regions.models import Region, City
 
@@ -72,7 +72,7 @@ class SchoolQuota(models.Model):
 class TrainingStream(models.Model):
     cycle = models.ForeignKey(TrainingCycle, verbose_name="Цикл профпроб", related_name="streams", on_delete=models.CASCADE, null=True, blank=False)
     students_limit = models.IntegerField("Лимит участников", default=25)
-    students = models.ManyToManyField(User, verbose_name="Участники потока", blank=True)
+    students = models.ManyToManyField(SchoolStudent, verbose_name="Участники потока", related_name="streams", blank=True)
 
 
     class Meta:

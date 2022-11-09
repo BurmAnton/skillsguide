@@ -176,3 +176,9 @@ def create_cycle(request):
 
         return HttpResponseRedirect(reverse("bundles_list")) 
     return HttpResponseRedirect(reverse("login")) 
+
+def stream_schedule(request, stream_id):
+    stream = get_object_or_404(TrainingStream, id=stream_id)
+    return render(request, "schedule/stream_schedule.html", {
+        'stream': stream
+    })

@@ -37,7 +37,7 @@
                             <td scope="row">
                                 <div class="form mb-3">
                                     <select class="selectpicker" data-width="100%" data-live-search="true" name="test{{test.id}}_date" required>
-                                        {% if test.date != None %}
+                                        {% if test.streams != None %}
                                             <option value="{{test.date}}">{{test.date}}</option>
                                         {% endif %}
                                         <option value="None">Дата не указана</option>

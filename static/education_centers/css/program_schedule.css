@@ -3,32 +3,49 @@
   background-color: white;
   padding: 15px 35px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
 }
+
 .programs-list .programs-list-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
+
 .programs-list .programs-list-header h2 {
   margin-bottom: 10px;
 }
+
 .programs-list .programs-list-header .btn {
   width: 200px;
   height: 30px;
 }
+
 .programs-list th {
   color: #394959;
   font-weight: 500 !important;
   text-align: center;
   border-top: 0;
 }
+
 .programs-list .cycle_name {
   text-align: left;
 }
+
 .programs-list td div {
   margin: 0 !important;
 }
+
 .programs-list .save_schedule {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: flex-end;
-}/*# sourceMappingURL=program_schedule.css.map */
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+/*# sourceMappingURL=program_schedule.css.map */

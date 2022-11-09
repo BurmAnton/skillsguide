@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
-from schedule.models import TrainingCycle
+from schedule.models import TrainingCycle, TrainingStream
 
 from users.models import User
 from regions.models import City, TerAdministration, Address
@@ -19,8 +19,24 @@ from users.mailing import send_mail
 from . import imports
 
 #ЛК школы
+@csrf_exempt
 def school_profile(request, school_id):
     school = get_object_or_404(School, id=school_id)
+    message = ""
+    if request.method == "POST":
+        message = "Success"
+        for student in school.students.all():
+            stream = request.POST[f'student{student.id}_stream']
+            if stream == "None":
+                student.streams.clear()
+            elif stream != "Selected":
+                stream = get_object_or_404(TrainingStream, id=stream)
+                if len(stream.students.all()) < stream.students_limit:
+                    student.streams.clear()
+                    student.streams.add(stream)
+                else:
+                    message = "StreamOverFlow"
+            student.save()
     try:
         contact = SchoolContactPersone.objects.get(school=school.id)
     except SchoolContactPersone.DoesNotExist:
@@ -30,7 +46,6 @@ def school_profile(request, school_id):
     grades = Grade.objects.filter(school=school, is_graduated=False).annotate(students_count = Count('students'))
 
     cycles = TrainingCycle.objects.filter(schools=school)
-    
     return render(request, "schools/school_profile.html",{
         "cities": City.objects.all(),
         "school": school,
@@ -38,7 +53,8 @@ def school_profile(request, school_id):
         "school_students": school.students.all(),
         'grades': grades,
         'contact': contact,
-        "cycles": cycles
+        "cycles": cycles,
+        "message": message
     })
 
 # Изменение данных школы/конт. лица

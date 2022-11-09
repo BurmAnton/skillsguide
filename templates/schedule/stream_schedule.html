@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load schedule_extras %}
+{% block title %}ЦОПП СО | Наборы проб{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schedule/css/bundles_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'schedule/js/bundles_list.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="header">
+        <h2>Цикл "{{stream.cycle}}", расписание потока №{{stream.id}}</h2>
+    </div>
+    <div class="bundles_list">
+        {% for test in stream.tests.all %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{test.program}}</h5>
+                    <ul class="list-group list-group-flush">
+                        {% if stream.date == None %}
+                            <li class="list-group-item">Дата проведения: -</li>
+                        {% else %}
+                            <li class="list-group-item">Дата проведения: {{stream.date}}</li>
+                        {% endif %}
+                        <li class="list-group-item">Время начала: {{stream.start_time}}</li>
+                        <li class="list-group-item">Преподователь: {{stream.trainer}}</li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

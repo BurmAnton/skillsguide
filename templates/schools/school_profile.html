@@ -52,11 +52,22 @@
             </div>
         </div>
         <div class="dashboard-lists">
+            
             <div class="students-list">
                 <div class="students-list-header">
                     <h2 style="margin: auto">Ученики</h2>
                 </div>
-                <table class="table">
+                <form action="{% url 'school_profile' school.id %}" method="post">
+                    <table class="table">
+                    {% if message == "Success" %}
+                        <div class="alert alert-success" role="alert">
+                            Ученики записаны успешно!
+                        </div>
+                    {% elif message == "StreamOverFlow" %}
+                        <div class="alert alert-danger" role="alert">
+                            Части учеников не хватило мест на потоке, запишите их на другой свободный поток! 
+                        </div>
+                    {% endif %}
                     <tr class="sticky-top"> 
                         <th scope="col">Фамилия</th>
                         <th scope="col">Имя</th>
@@ -64,7 +75,9 @@
                         <th scope="col">Класс</th>
                         <th scope="col">Email</th>
                         <th scope="col">Телефон</th>
+                        <th scope="col">Поток</th>
                     </tr>
+                    
                     {% for student in school_students %}
                         <tr>
                             <td scope="row">{{student.user.last_name}}</td>
@@ -73,9 +86,32 @@
                             <td scope="row">{{student.grade.grade}}{{student.grade.grade_letter}}</td>
                             <td scope="row">{{student.user.email}}</td>
                             <td scope="row">{{student.user.phone_number}}</td>
+                            <td scope="row">
+                                <div class="form mb-3">
+                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="student{{student.id}}_stream" required>
+                                        {% if student.streams.all.count == 0 %}
+                                            <option value="None">—</option>
+                                        {% else %}
+                                            <option value="Selected">{{student.streams.all.0.id}}</option>
+                                            <option value="None">—</option>
+                                        {% endif %}
+                                        {% for cycle in cycles %}
+                                            {% for stream in cycle.streams.all %}
+                                                {% if stream.students.all.count < stream.students_limit %}
+                                                    <option value="{{stream.id}}">{{stream.id}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
+                <div class="save_schedule">
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                </div>
+            </form>
             </div>
             <div class="streams-list">
                 <div class="streams-list-header">
@@ -92,7 +128,11 @@
                         {% for stream in cycle.streams.all %}
                             <tr>
                                 <td scope="row">{{stream.cycle.name}}</td>
-                                <td scope="row">{{stream.id}}</td>
+                                <td scope="row">
+                                    <a href="{% url 'stream_schedule' stream.id %}" target="_blank">
+                                        {{stream.id}}
+                                    </a>
+                                </td>
                                 <td scope="row">{{stream.cycle.start_date}}</td>
                                 <td scope="row">{{stream.cycle.end_date}}</td>
                                 <td scope="row">{{stream.students.all.count}}/{{stream.students_limit}}</td>

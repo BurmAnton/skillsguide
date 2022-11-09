@@ -6,88 +6,130 @@
   width: fit-content;
   padding: 15px 35px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
 }
+
 .overview .overview-data {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   gap: 25px;
 }
+
 .overview .overview-data .data-point {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   width: 250px;
   text-align: center;
 }
+
 .overview .overview-data .data-point .sum {
   font-size: 32px;
 }
+
 .overview .overview-data .data-point img {
   width: 100px;
   height: 100px;
 }
+
 .overview .overview-data .line {
   width: 2px;
-  background-color: rgba(57, 73, 89, 0.3137254902);
+  background-color: #39495950;
 }
 
 .dashboard-lists {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   gap: 25px;
   padding: 30px 0px;
 }
+
 .dashboard-lists > div {
   width: 100%;
   background-color: white;
   padding: 15px 35px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
 }
+
 .dashboard-lists > div .programs-list-header, .dashboard-lists > div .trainers-list-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
+
 .dashboard-lists > div .programs-list-header h2, .dashboard-lists > div .trainers-list-header h2 {
   margin-bottom: 10px;
 }
+
 .dashboard-lists > div .programs-list-header .btn, .dashboard-lists > div .trainers-list-header .btn {
   width: 200px;
   height: 30px;
 }
+
 .dashboard-lists > div th {
   color: #394959;
   font-weight: 500 !important;
   text-align: center;
   border-top: 0;
 }
+
 .dashboard-lists > div .program-name-th, .dashboard-lists > div .trainer-name-th {
   text-align: left;
 }
+
 .dashboard-lists > div .program-name {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
 }
+
 .dashboard-lists > div .program-name, .dashboard-lists > div .trainer-name {
   text-align: left;
 }
+
 .dashboard-lists > div tr {
   color: #394959;
   font-weight: 300 !important;
   text-align: center;
 }
+
 .dashboard-lists > div tr .program-check {
   color: #ffc107;
   font-weight: 500;
 }
+
 .dashboard-lists > div tr .program-approve {
   color: #198754;
   font-weight: 500;
 }
+
 .dashboard-lists > div tr .program-denied {
   color: #dc3545;
   font-weight: 500;
@@ -97,6 +139,7 @@
   background-color: white;
   border: 1px solid #ced4da;
 }
+
 .dropdown-toggle .placeholder {
   color: #6c757d;
 }
@@ -104,24 +147,34 @@
 #addProgramModal .modal-content, .EditProgramModal .modal-content {
   width: 700px;
 }
+
 #addProgramModal .modal-content .modal-body, .EditProgramModal .modal-content .modal-body {
   padding: 15px 64px;
 }
+
 #addProgramModal .modal-content .criteria, .EditProgramModal .modal-content .criteria {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
-  -moz-column-gap: 20px;
-       column-gap: 20px;
-  justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-column-gap: 20px;
+          column-gap: 20px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
+
 #addProgramModal .modal-content .criteria p, .EditProgramModal .modal-content .criteria p {
   width: 100%;
   text-align: center;
   font-size: 20px;
 }
+
 #addProgramModal .modal-content .criteria textarea, .EditProgramModal .modal-content .criteria textarea {
   width: 300px;
 }
+
 #addProgramModal .modal-content .criteria input, .EditProgramModal .modal-content .criteria input {
   width: 250px;
 }
@@ -132,48 +185,69 @@
   width: fit-content;
   color: #394959;
 }
+
 #editCenterModal .modal-content h2 {
   margin: auto;
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 #editCenterModal .modal-content p {
   font-weight: 600;
   text-align: center;
 }
+
 #editCenterModal .form {
   padding: 10px 15px;
   row-gap: 10px;
-  -moz-column-gap: 20px;
-       column-gap: 20px;
+  -webkit-column-gap: 20px;
+          column-gap: 20px;
+  display: -ms-grid;
   display: grid;
-  grid-template-columns: 350px 350px;
-  grid-template-rows: auto auto auto;
+  -ms-grid-columns: 350px 350px;
+      grid-template-columns: 350px 350px;
+  -ms-grid-rows: auto auto auto;
+      grid-template-rows: auto auto auto;
   grid-auto-flow: row;
 }
+
 #editCenterModal .form .School {
+  -ms-grid-column: 1;
   grid-column: 1;
+  -ms-grid-row: 1;
   grid-row: 1;
 }
+
 #editCenterModal .form .Address {
+  -ms-grid-column: 2;
   grid-column: 2;
+  -ms-grid-row: 1;
   grid-row: 1;
 }
+
 #editCenterModal .form .ContactPerson {
+  -ms-grid-column: 1;
   grid-column: 1;
+  -ms-grid-row: 2;
   grid-row: 2;
 }
+
 #editCenterModal .form .Contacts {
+  -ms-grid-column: 2;
   grid-column: 2;
+  -ms-grid-row: 2;
   grid-row: 2;
 }
+
 #editCenterModal .submit input {
   width: 100%;
   background-color: #394959;
   border: 1px solid #394959;
   font-weight: bold;
 }
+
 #editCenterModal .submit input:hover {
   background-color: white;
   color: #394959;
-}/*# sourceMappingURL=ed_center.css.map */
+}
+/*# sourceMappingURL=ed_center.css.map */
