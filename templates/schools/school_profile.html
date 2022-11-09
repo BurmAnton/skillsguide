@@ -77,6 +77,31 @@
                     {% endfor %}
                 </table>
             </div>
+            <div class="streams-list">
+                <div class="streams-list-header">
+                    <h2 style="margin: auto">Потоки профпроб</h2>
+                </div>
+                <table class="table">
+                    <tr class="sticky-top"> 
+                        <th scope="col">Набор проб</th>
+                        <th scope="col">Номер потока</th>
+                        <th scope="col">Дата начала</th>
+                        <th scope="col">Дата окончания</th>
+                    </tr>
+                    {% for cycle in cycles %}
+                        {% for stream in cycle.streams.all %}
+                            <tr>
+                                <td scope="row">{{stream.cycle.name}}</td>
+                                <td scope="row">{{stream.id}}</td>
+                                <td scope="row">{{stream.cycle.start_date}}</td>
+                                <td scope="row">{{stream.cycle.end_date}}</td>
+                                <td scope="row">{{stream.students.all.count}}/{{stream.students_limit}}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+            </div>
         </div>
+        
     </div>
 {% endblock %}

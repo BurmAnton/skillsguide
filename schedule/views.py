@@ -87,6 +87,7 @@ def create_cycle(request):
                 education_centers.append(program.education_center)
 
         start_date = datetime.strptime(request.POST["start_date"],"%Y-%m-%d")
+        end_date = datetime.strptime(request.POST["end_date"],"%Y-%m-%d")
         try:
             is_any_day = request.POST["is_any_day"]
             is_any_day = True
@@ -116,6 +117,7 @@ def create_cycle(request):
             group_limit=group_limit,
             start_date=start_date,
             start_time=start_time,
+            end_date=end_date,
             excluded_dates=excluded_dates,
             is_any_day=is_any_day
         )
@@ -158,7 +160,7 @@ def create_cycle(request):
                 days_of_week = [0, 1, 2, 3, 4]
                 week_count = math.ceil(programs_count/cycle.days_per_week)+1
                 date_limit = (week_count)*5 + len(excluded_dates)
-            while date_limit > len(stream.available_dates.all()):
+            while slot_date < end_date:
                 for weekday in days_of_week:
                     if slot_date not in excluded_dates and slot_date.weekday() in days_of_week:
                         avaible_date = AvailableDate(
@@ -168,7 +170,7 @@ def create_cycle(request):
                         )
                         avaible_date.save()
                     slot_date = slot_date + timedelta(1)
-                    if len(stream.available_dates.all()) == date_limit or slot_date.weekday() == 5:
+                    if slot_date < end_date or slot_date.weekday() == 5:
                         week_count -= 1
                         break
 

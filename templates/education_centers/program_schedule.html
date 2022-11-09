@@ -40,6 +40,7 @@
                                         {% if test.date != None %}
                                             <option value="{{test.date}}">{{test.date}}</option>
                                         {% endif %}
+                                        <option value="None">Дата не указана</option>
                                         {% if test.stream.cycle.is_any_day == True %}
                                             {% for available_date in test.stream.available_dates.all|filter_unavailable %}
                                                 <option value="{{available_date.id}}">{{available_date.date}}</option>

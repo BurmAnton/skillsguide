@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
+from schedule.models import TrainingCycle
 
 from users.models import User
 from regions.models import City, TerAdministration, Address
@@ -27,6 +28,8 @@ def school_profile(request, school_id):
     
     students_count = len(school.students.all())
     grades = Grade.objects.filter(school=school, is_graduated=False).annotate(students_count = Count('students'))
+
+    cycles = TrainingCycle.objects.filter(schools=school)
     
     return render(request, "schools/school_profile.html",{
         "cities": City.objects.all(),
@@ -34,7 +37,8 @@ def school_profile(request, school_id):
         "students_count": students_count,
         "school_students": school.students.all(),
         'grades': grades,
-        'contact': contact
+        'contact': contact,
+        "cycles": cycles
     })
 
 # Изменение данных школы/конт. лица

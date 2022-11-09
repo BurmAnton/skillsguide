@@ -316,7 +316,9 @@ def program_schedule(request, ed_center_id, program_id):
     if request.method == "POST":
         for test in tests:
             test_date = request.POST[f'test{test.id}_date']
-            if test_date.isnumeric():
+            if test_date == "None":
+                test.date = None
+            elif test_date.isnumeric():
                 if test.date != None:
                     previous_date = AvailableDate.objects.get(
                         stream=test.stream,
