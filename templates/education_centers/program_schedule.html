@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'education_centers/js/ed_center.js' %}" rel="stylesheet"></script>
+    <script src="{% static 'education_centers/js/program_schedule.js' %}" rel="stylesheet"></script>
 {% endblock %}
 
 {% block dashboard %}
@@ -26,6 +26,8 @@
             <table class="table">
                 <thead>
                     <th scope="col" class="cycle_name">Цикл</th>
+                    <th scope="col">Онлайн</th>
+                    <th scope="col">Адрес/Ссылка</th>
                     <th scope="col">Дата</th>
                     <th scope="col">Время начала</th>
                     <th scope="col">Преподователь</th>
@@ -34,6 +36,41 @@
                     {% for test in tests %}
                         <tr>
                             <td scope="row" class="cycle_name">{{test.stream.cycle.name}}</td>
+                            <td scope="row">
+                                <div class="form-check">
+                                    {% if test.conference != None %}
+                                        <input class="form-check-input is_online" data-testid="{{test.id}}" name="test{{test.id}}_is_online" type="checkbox" checked>
+                                    {% else %}
+                                        <input class="form-check-input is_online" data-testid="{{test.id}}" name="test{{test.id}}_is_online" type="checkbox">
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td scope="row">
+                                <div class="form mb-3 test{{test.id}}_workshop">
+                                        <select class="selectpicker" data-width="100%" data-live-search="true" name="test{{test.id}}_workshop" required>
+                                        {% if test.workshop != None %}
+                                            <option value="{{test.workshop.id}}">{{test.workshop}}</option>
+                                        {% else %}
+                                            <option value="None">—</option>
+                                        {% endif %}
+                                        {% for workshop in workshops %}
+                                            <option value="{{workshop.id}}">{{workshop}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form mb-3 test{{test.id}}_conference">
+                                        <select class="selectpicker" data-width="100%" data-live-search="true" name="test{{test.id}}_conference" required>
+                                        {% if test.conference != None %}
+                                            <option value="{{test.conference.id}}">{{test.conference.name}}</option>
+                                        {% else %}
+                                            <option value="None">—</option>
+                                        {% endif %}
+                                        {% for conference in conferences %}
+                                            <option value="{{conference.id}}">{{conference.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
                             <td scope="row">
                                 <div class="form mb-3">
                                     <select class="selectpicker" data-width="100%" data-live-search="true" name="test{{test.id}}_date" required>
@@ -50,7 +87,6 @@
                                                 <option value="{{available_date.id}}">{{available_date.date}}</option>
                                             {% endfor %}
                                         {% endif %}
-
                                     </select>
                                 </div>
                             </td>

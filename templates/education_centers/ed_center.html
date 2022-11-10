@@ -275,6 +275,102 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addWorkshopModal" tabindex="-1" aria-labelledby="addWorkshopModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addWorkshopLabel">Добавить преподователя</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'add_workshop' %}" method="post">
+                    <div class="modal-body">
+                        <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
+                        <div class="form mb-3">
+                            <label for="ProgramType">Компетенция</label>
+                            <select class="selectpicker" title="Выберите компетенцию" data-width="100%" data-live-search="true" name="competence">
+                                {% for competence in competencies %}
+                                    <option value="{{competence.id}}">{{competence.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form mb-3">
+                            <label for="ProgramType">Населённый пункт</label>
+                            <select class="selectpicker" title="Выберите нас. пункт" data-width="100%" data-live-search="true" name="city">
+                                {% for city in cities %}
+                                    <option value="{{city.id}}">{{city.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="street" placeholder="Улица" required>
+                            <label for="street">Улица</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="building_number" placeholder="Дом">
+                            <label for="building_number">Дом</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="floor"  placeholder="Этаж" required>
+                            <label for="floor">Этаж</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="apartment" placeholder="Аудитория" required>
+                            <label for="apartment">Аудитория</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="description" placeholder="Комментарий" required>
+                            <label for="description">Комментарий</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Добавить мастерскую</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addConferenceModal" tabindex="-1" aria-labelledby="addConferenceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addConferenceLabel">Добавить преподователя</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'add_conference' %}" method="post">
+                    <div class="modal-body">
+                        <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="name" placeholder="Название" required>
+                            <label for="name">Название</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="invite_link" placeholder="Ссылка на конференцию" required>
+                            <label for="invite_link">Ссылка на конференцию</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="Identifier" placeholder="Идентификатор">
+                            <label for="Identifier">Идентификатор</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="access_code"  placeholder="Код доступа" required>
+                            <label for="access_code">Код доступа</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="instruction" placeholder="Инструкция" required>
+                            <label for="instruction">Инструкция</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Добавить конференцию</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="overview">
         <h2>Показатели</h2>
         <div class="overview-data">
@@ -362,6 +458,62 @@
                                 <td class="program-denied" scope="row">Отказано</td>
                             {% endif %}
                             <td scope="row"><a href="{% url 'program_schedule' ed_center.id program.id %}" target="_blank">Сформировать</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="workshops-list">
+            <div class="workshops-list-header">
+                <h2>Мастерские</h2>
+                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addWorkshopModal">Добавить мастерскую</button>
+            </div>
+            {% if message == "WorkshopOk" %}
+                <div class="alert alert-success" role="alert">
+                    Мастерская добавлена успешно!
+                </div>
+            {% endif %}
+            <table class="table">
+                <thead>
+                    <th class="program-name-th" scope="col">Компетенция</th>
+                    <th scope="col">Адрес</th>
+                    <th scope="col">Комментарий</th>
+                </thead>
+                <tbody>
+                    {% for workshop in workshops %}
+                        <tr>
+                            <td scope="row" class="program-name" data-bs-toggle="modal" data-bs-target="#EditWorkshopModal{{workshop.id}}">{{workshop.competence}}</td>
+                            <td scope="row">{{workshop.adress}}</td>
+                            <td scope="row">{{workshop.description}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="conferences-list">
+            <div class="conferences-list-header">
+                <h2>Конференции</h2>
+                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addConferenceModal">Добавить ссылку</button>
+            </div>
+            {% if message == "ConferenceAdded" %}
+                <div class="alert alert-success" role="alert">
+                    Конференция добавлена успешно!
+                </div>
+            {% endif %}
+            <table class="table">
+                <thead>
+                    <th class="program-name-th" scope="col">Название ссылки</th>
+                    <th scope="col">Ссылка на конференцию</th>
+                    <th scope="col">Идентификатор</th>
+                    <th scope="col">Код доступа</th>
+                </thead>
+                <tbody>
+                    {% for conference in conferences %}
+                        <tr>
+                            <td scope="row" class="program-name">{{conference.name}}</td>
+                            <td scope="row">{{conference.invite_link}}</td>
+                            <td scope="row">{{conference.Identifier}}</td>
+                            <td scope="row">{{conference.access_code}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

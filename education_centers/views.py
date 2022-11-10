@@ -14,7 +14,7 @@ from requests import post
 import education_centers
 
 from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop, Trainer
-from schedule.models import Assessment, Attendance, AvailableDate, ProfTest, Training, TrainingCycle, TrainingStream
+from schedule.models import Assessment, Attendance, AvailableDate, Conference, ProfTest, Training, TrainingCycle, TrainingStream
 from .forms import ImportDataForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -149,10 +149,13 @@ def ed_center_dashboard(request, ed_center_id, message=None):
 
     return render(request, 'education_centers/ed_center.html', {
         'ed_center' : ed_center,
+        'competencies': Competence.objects.all(),
         'programs': TrainingProgram.objects.filter(education_center=ed_center),
         'trainers': Trainer.objects.filter(education_center=ed_center),
         'disability_types': DisabilityType.objects.all(),
         'cities': City.objects.all(),
+        'workshops': Workshop.objects.filter(education_center=ed_center),
+        'conferences': Conference.objects.filter(education_center=ed_center),
         'message': message
     })
 
@@ -242,6 +245,67 @@ def add_trainer(request):
 
 @login_required
 @csrf_exempt
+def add_workshop(request):
+    if request.method == "POST":
+        education_center = request.POST["education_center"]
+        education_center = get_object_or_404(EducationCenter, id=education_center)
+        
+        city = request.POST["city"]
+        city = get_object_or_404(City, id=city)
+        street = request.POST["street"]
+        building_number = request.POST["building_number"]
+        floor = int(request.POST["floor"])
+        apartment = request.POST["apartment"]
+        adress = Address(
+            city=city,
+            street=street,
+            building_number=building_number,
+            floor=floor,
+            apartment=apartment
+        )
+        adress.save()
+
+        description = request.POST["description"]
+        competence = request.POST["competence"]
+        competence = get_object_or_404(Competence, id=competence)
+        workshop = Workshop(
+            education_center=education_center,
+            competence=competence,
+            adress=adress,
+            description=description
+        )
+        workshop.save()
+
+        message = "WorkshopAdded"      
+    return HttpResponseRedirect(reverse('ed_center_dashboard', args=(education_center.id, message)))
+
+@login_required
+@csrf_exempt
+def add_conference(request):
+    if request.method == "POST":
+        education_center = request.POST["education_center"]
+        education_center = get_object_or_404(EducationCenter, id=education_center)
+        
+        name = request.POST["name"]
+        invite_link = request.POST["invite_link"]
+        Identifier = request.POST["Identifier"]
+        access_code = request.POST["access_code"]
+        instruction = request.POST["instruction"]
+        conference = Conference(
+            name=name,
+            invite_link=invite_link,
+            access_code=access_code,
+            Identifier=Identifier,
+            instruction=instruction,
+            education_center=education_center
+        )
+        conference.save()
+
+        message = "ConferenceAdded"      
+    return HttpResponseRedirect(reverse('ed_center_dashboard', args=(education_center.id, message)))
+
+@login_required
+@csrf_exempt
 def import_programs(request):
     if request.method == "POST":
         form = ImportDataForm(request.POST, request.FILES)
@@ -278,32 +342,6 @@ def workshops_list(request):
     return render(request, "education_centers/workshops_list.html",{
         "education_center": education_center,
         "workshops": education_center.workshops.all()
-    })
-
-@login_required
-@csrf_exempt
-def add_workshop(request):
-    message = ""
-    if request.method == "POST":
-        adress = request.POST["adress"]
-        education_center = EducationCenter.objects.get(id=request.POST["education_center"])
-        competence = Competence.objects.get(id=request.POST["competence"]) 
-        description = request.POST["description"]
-        
-        workshop = Workshop(
-            adress=adress,
-            education_center=education_center,
-            competence=competence,
-            description=description
-        )
-        workshop.save()
-        message="Мастерская добавлена"
-    
-    education_centers = EducationCenter.objects.filter(contact_person=request.user)
-    return render(request, "education_centers/add_workshop.html",{
-        "education_centers": education_centers,
-        "competencies": Competence.objects.all(),
-        "message": message
     })
 
 @login_required
@@ -351,11 +389,31 @@ def program_schedule(request, ed_center_id, program_id):
             test.start_time = request.POST[f'test{test.id}_start_time']
             trainer_id = request.POST[f'test{test.id}_trainer']
             test.trainer = get_object_or_404(Trainer, id=trainer_id)
+            try:
+                is_online = request.POST[f'test{test.id}_is_online']
+                is_online = True
+            except:
+                is_online = False
+            conference = request.POST[f'test{test.id}_conference']
+            workshop = request.POST[f'test{test.id}_workshop']
+            if is_online and conference != 'None':
+                conference = get_object_or_404(Conference, id=conference)
+                test.conference = conference
+                test.workshop = None
+            elif workshop != 'None':
+                workshop = get_object_or_404(Workshop, id=workshop)
+                test.workshop = workshop
+                test.conference = None
+            else:
+                test.workshop = None
+                test.conference = None
             test.save()
         message = "TestsAdded"
     return render(request, "education_centers/program_schedule.html",{
         "ed_center": ed_center,
         "program": program,
+        "workshops": ed_center.workshops.all(),
+        "conferences": ed_center.conferences.all(),
         "tests": tests,
         "message": message
     })

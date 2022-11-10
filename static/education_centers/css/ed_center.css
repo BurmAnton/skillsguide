@@ -75,7 +75,7 @@
           box-shadow: 4px 4px 4px 0px #00000026;
 }
 
-.dashboard-lists > div .programs-list-header, .dashboard-lists > div .trainers-list-header {
+.dashboard-lists > div .programs-list-header, .dashboard-lists > div .trainers-list-header, .dashboard-lists > div .workshops-list-header, .dashboard-lists > div .conferences-list-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -84,11 +84,11 @@
           justify-content: space-between;
 }
 
-.dashboard-lists > div .programs-list-header h2, .dashboard-lists > div .trainers-list-header h2 {
+.dashboard-lists > div .programs-list-header h2, .dashboard-lists > div .trainers-list-header h2, .dashboard-lists > div .workshops-list-header h2, .dashboard-lists > div .conferences-list-header h2 {
   margin-bottom: 10px;
 }
 
-.dashboard-lists > div .programs-list-header .btn, .dashboard-lists > div .trainers-list-header .btn {
+.dashboard-lists > div .programs-list-header .btn, .dashboard-lists > div .trainers-list-header .btn, .dashboard-lists > div .workshops-list-header .btn, .dashboard-lists > div .conferences-list-header .btn {
   width: 200px;
   height: 30px;
 }

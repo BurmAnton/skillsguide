@@ -114,6 +114,8 @@ class Training(models.Model):
 
 
 class Conference(models.Model):
+    education_center = models.ForeignKey(EducationCenter, verbose_name="Центр обучения", related_name="conferences", on_delete=CASCADE)
+    name = models.CharField("Название", max_length=70)
     invite_link = models.URLField("Ссылка на конференцию", null=False, blank=False)
     Identifier = models.CharField("Идентификатор", max_length=150, null=False, blank=False)
     access_code = models.CharField("Код доступа", max_length=150, null=False, blank=False)
