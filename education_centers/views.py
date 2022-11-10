@@ -282,6 +282,7 @@ def add_workshop(request):
 @login_required
 @csrf_exempt
 def add_conference(request):
+    message = ""
     if request.method == "POST":
         education_center = request.POST["education_center"]
         education_center = get_object_or_404(EducationCenter, id=education_center)

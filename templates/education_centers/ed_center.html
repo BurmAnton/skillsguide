@@ -295,7 +295,7 @@
                         </div>
                         <div class="form mb-3">
                             <label for="ProgramType">Населённый пункт</label>
-                            <select class="selectpicker" title="Выберите нас. пункт" data-width="100%" data-live-search="true" name="city">
+                            <select class="selectpicker" title="Выберите нас. пункт" data-width="100%" data-live-search="true" name="city" required>
                                 {% for city in cities %}
                                     <option value="{{city.id}}">{{city.name}}</option>
                                 {% endfor %}
@@ -306,11 +306,11 @@
                             <label for="street">Улица</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="building_number" placeholder="Дом">
+                            <input type="input" class="form-control" name="building_number" placeholder="Дом" required>
                             <label for="building_number">Дом</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="floor"  placeholder="Этаж" required>
+                            <input type="number" class="form-control" name="floor"  placeholder="Этаж" required>
                             <label for="floor">Этаж</label>
                         </div>
                         <div class="form-floating mb-3">
@@ -318,7 +318,7 @@
                             <label for="apartment">Аудитория</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="description" placeholder="Комментарий" required>
+                            <input type="input" class="form-control" name="description" placeholder="Комментарий">
                             <label for="description">Комментарий</label>
                         </div>
                     </div>
@@ -354,11 +354,11 @@
                             <label for="Identifier">Идентификатор</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="access_code"  placeholder="Код доступа" required>
+                            <input type="input" class="form-control" name="access_code"  placeholder="Код доступа">
                             <label for="access_code">Код доступа</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="input" class="form-control" name="instruction" placeholder="Инструкция" required>
+                            <input type="input" class="form-control" name="instruction" placeholder="Инструкция">
                             <label for="instruction">Инструкция</label>
                         </div>
                     </div>
