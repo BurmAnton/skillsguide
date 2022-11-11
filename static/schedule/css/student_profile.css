@@ -37,9 +37,7 @@
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-}
-
-.shedule_list .card-test .card {
+  border: 0 !important;
   border-radius: 6px;
   -webkit-box-shadow: 5px 4px 12px 1px;
           box-shadow: 5px 4px 12px 1px;
