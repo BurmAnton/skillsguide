@@ -11,6 +11,47 @@
 {% endblock %}
 
 {% block body %}
+{% for test in tests %}
+    <div class="modal fade TestModal" id="TestModal{{test.id}}" tabindex="-1" aria-labelledby="TestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TestLabel">{{test.program}} (Поток №{{test.stream.id}})</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                        <ul class="list-group">
+                            <li class="list-group-item"><b>Центр обучения:</b> {{test.ed_center.short_name}}</li>
+                            <li class="list-group-item"><b>Преподователь:</b> {{test.trainer}}</li>
+                            <li class="list-group-item"><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</li>
+                            {% if test.conference != None %}
+                                <li class="list-group-item">
+                                    <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
+                                    {% if test.conference != None %}
+                                        <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
+                                    {% endif %}
+                                    {% if test.conference != None %}
+                                        <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
+                                    {% endif %}
+                                    {% if test.conference != None %}
+                                        <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
+                                    {% endif %}
+                                </li>
+                            {% elif test.workshop != None %}
+                                <li class="list-group-item">
+                                    <b>Адрес:</b> {{test.workshop.adress}}
+                                    <p>
+                                        <b>Подсказка:</b> {{test.workshop.description}}
+                                    </p>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        <div class="modal-footer">
+                            <p></p><p></p>
+                        </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
     <div class="card school_profile">
         <div class="school-name">
             <p style="width: 200px;">{{school}}</p>
@@ -52,7 +93,31 @@
             </div>
         </div>
         <div class="dashboard-lists">
-            
+            {% if tests.all.count != 0 %}
+                <div class="schedule-list">
+                    <div class="schedule-list-header">
+                        <h2 style="margin: auto">Расписание (ближайщие 2 недели)</h2>
+                    </div>
+                    <table class="table">
+                        <tr> 
+                            <th scope="col">ID пробы</th>
+                            <th scope="col">Поток</th>
+                            <th scope="col">Программа</th>
+                            <th scope="col" class="nowrap">Центр обучения</th>
+                            <th scope="col" class="nowrap">Дата и время</th>
+                        </tr>
+                        {% for test in tests %}
+                            <tr>
+                                <td scope="row" class="nowrap test" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
+                                <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
+                                <td scope="row" class="nowrap">{{test.program}}</td>
+                                <td scope="row" class="nowrap">{{test.ed_center.short_name}}</td>
+                                <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
             <div class="students-list">
                 <div class="students-list-header">
                     <h2 style="margin: auto">Ученики</h2>
@@ -68,7 +133,7 @@
                             Части учеников не хватило мест на потоке, запишите их на другой свободный поток! 
                         </div>
                     {% endif %}
-                    <tr class="sticky-top"> 
+                    <tr> 
                         <th scope="col">Фамилия</th>
                         <th scope="col">Имя</th>
                         <th scope="col">Отчество</th>
@@ -142,6 +207,5 @@
                 </table>
             </div>
         </div>
-        
     </div>
 {% endblock %}

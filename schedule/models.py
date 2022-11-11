@@ -135,8 +135,8 @@ class ProfTest(models.Model):
     
     trainer = models.ForeignKey(Trainer, verbose_name="Преподователь", related_name="tests", on_delete=models.CASCADE, null=True, blank=True)
     is_online = models.BooleanField("Онлайн", default=False)
-    workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="tests", on_delete=CASCADE, null=True)
-    conference = models.ForeignKey(Conference, verbose_name="Конференция", related_name="tests", on_delete=CASCADE, null=True)
+    workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="tests", on_delete=CASCADE, null=True, blank=True)
+    conference = models.ForeignKey(Conference, verbose_name="Конференция", related_name="tests", on_delete=CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = "Профпроба"

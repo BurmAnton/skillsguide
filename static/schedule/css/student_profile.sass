@@ -6,34 +6,31 @@
     display: flex
     justify-content: center
 
-.card
-    color: #394959
-    padding-top: 0px
-    border: 0px
-    box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, .2)
-    .btn-primary
-        background-color: #426cf8
-        border: 0px
-        border-radius: 0px 0px 5px px
-    .btn-outline-primary
-        border-color: #394959
-        color: #394959
-        background-color: white
-    img
-        object-fit: cover
-        display: block
-        width: auto
-        height: auto
-        max-width: 100%
-        max-height: 150px
-
-    .card-title
+.shedule_list
+    .header
+        width: 100%
+        font-size: 24px
         text-align: center
-        font-weight: bold
-    p
-        margin-bottom: 3px
-    a
-        color: #778899
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    gap: 25px
+    .card-test
+        width: fit-content
+        .card
+            border-radius: 6px
+            box-shadow: 5px 4px 12px 1px
+        .card, li
+            color: #394959
+            font-size: 14px
+            min-width: 250px
+            max-width: 320px
+            h5
+                font-weight: 600
+                font-size: 16px
+            .card-footer
+                display: flex
+                justify-content: flex-end
 
 .bundle-card
     .card-body, .list-group-item

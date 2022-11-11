@@ -12,6 +12,10 @@
   margin-bottom: 1.5rem;
 }
 
+.modal .list-group-item {
+  color: #394959;
+}
+
 .school_profile {
   width: 400px;
   height: -webkit-fit-content;
@@ -104,6 +108,7 @@
 }
 
 .dashboard .dashboard-lists {
+  max-width: 950px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -165,5 +170,15 @@
   color: #394959;
   font-weight: 300 !important;
   text-align: center;
+}
+
+.dashboard .dashboard-lists > div .nowrap {
+  white-space: nowrap;
+}
+
+.dashboard .dashboard-lists > div .test {
+  text-decoration: underline;
+  font-weight: 400;
+  cursor: pointer;
 }
 /*# sourceMappingURL=school_profile.css.map */

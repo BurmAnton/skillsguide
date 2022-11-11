@@ -30,11 +30,16 @@ def student_profile(request, user_id):
     student = get_object_or_404(SchoolStudent, user=user)
     school = student.school
 
+    streams = TrainingStream.objects.filter(students=student)
+    two_weeks = datetime.today() + timedelta(14)
+    tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks)
+
     return render(request, "schedule/student_profile.html",{
         'page_name': 'Личный кабинет',
         'user': user,
         'student': student,
-        'school': school
+        'school': school,
+        'tests': tests
     })
 
 @login_required

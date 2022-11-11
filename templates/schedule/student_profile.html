@@ -18,7 +18,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Изменить данные профиля</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{% url 'change_profile_student' %}" method="post">
+                <form method="post">
                     <div class="modal-body">
                         <div class="form-floating mb-3">
                             <input type="input" class="form-control" name="name" id="Name" placeholder="Имя" value="{{user.first_name}}" required>
@@ -121,13 +121,45 @@
                                 </div>-->
                             </div>
                         </div>
-                        <div class="col-7">
-                            <div class="alert alert-success" role="alert">
-                                <h4 class="alert-heading">Регистрация завершена!</h4>
-                                <p>На данный момент Вам не доступно ни одного мероприятия профвыбора, мы уведомим Вас и представителя школы на почту о начале цикла мероприятий 22-23 учебного года.</p>
-                                <hr>
-                                <p class="mb-0">На данный момент на сайте проводятся технические работы!</p>
-                            </div>
+                        <div class="col-7 shedule_list">
+                            <div class="header">Расписание (ближайщие 2 недели)</div>
+                            {% for test in tests %}
+                                <div class="card card-test">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{test.program}}</h5>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><b>Центр обученимя:</b> {{test.ed_center.short_name}}</li>
+                                            {% if test.date == None %}
+                                                <li class="list-group-item"><b>Дата проведения:</b> -</li>
+                                            {% else %}
+                                                <li class="list-group-item"><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</li>
+                                            {% endif %}
+                                            {% if test.conference != None %}
+                                                <li class="list-group-item">
+                                                    <h5>Данные для подключения</h5>
+                                                    <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
+                                                    {% if test.conference != None %}
+                                                        <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
+                                                    {% endif %}
+                                                    {% if test.conference != None %}
+                                                        <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
+                                                    {% endif %}
+                                                    {% if test.conference != None %}
+                                                        <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
+                                                    {% endif %}
+                                                </li>
+                                            {% elif test.workshop != None %}
+                                                <li class="list-group-item">
+                                                    <b>Адрес:</b> {{test.workshop.adress}}
+                                                    <p>
+                                                        <b>Подсказка:</b> {{test.workshop.description}}
+                                                    </p>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                 </div>
             </div>

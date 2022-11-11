@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import secrets
 import string
 
@@ -8,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
-from schedule.models import TrainingCycle, TrainingStream
+from schedule.models import ProfTest, TrainingCycle, TrainingStream
 
 from users.models import User
 from regions.models import City, TerAdministration, Address
@@ -46,12 +47,16 @@ def school_profile(request, school_id):
     grades = Grade.objects.filter(school=school, is_graduated=False).annotate(students_count = Count('students'))
 
     cycles = TrainingCycle.objects.filter(schools=school)
+    streams = TrainingStream.objects.filter(students__in=school.students.all())
+    two_weeks = datetime.today() + timedelta(14)
+    tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks)
     return render(request, "schools/school_profile.html",{
         "cities": City.objects.all(),
         "school": school,
         "students_count": students_count,
         "school_students": school.students.all(),
         'grades': grades,
+        'tests': tests,
         'contact': contact,
         "cycles": cycles,
         "message": message
