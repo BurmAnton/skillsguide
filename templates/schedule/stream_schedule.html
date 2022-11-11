@@ -21,13 +21,34 @@
                 <div class="card-body">
                     <h5 class="card-title">{{test.program}}</h5>
                     <ul class="list-group list-group-flush">
-                        {% if stream.date == None %}
-                            <li class="list-group-item">Дата проведения: -</li>
+                        <li class="list-group-item"><b>Центр обученимя:</b> {{test.ed_center.short_name}}</li>
+                        {% if test.date == None %}
+                            <li class="list-group-item"><b>Дата проведения:</b> -</li>
                         {% else %}
-                            <li class="list-group-item">Дата проведения: {{stream.date}}</li>
+                            <li class="list-group-item"><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</li>
                         {% endif %}
-                        <li class="list-group-item">Время начала: {{stream.start_time}}</li>
-                        <li class="list-group-item">Преподователь: {{stream.trainer}}</li>
+                        {% if test.conference != None %}
+                            <li class="list-group-item">
+                                <h5>Данные для подключения</h5>
+                                <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
+                                {% if test.conference != None %}
+                                    <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
+                                {% endif %}
+                                {% if test.conference != None %}
+                                    <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
+                                {% endif %}
+                                {% if test.conference != None %}
+                                    <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
+                                {% endif %}
+                            </li>
+                        {% elif test.workshop != None %}
+                            <li class="list-group-item">
+                                <b>Адрес:</b> {{test.workshop.adress}}
+                                <p>
+                                    <b>Подсказка:</b> {{test.workshop.description}}
+                                </p>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

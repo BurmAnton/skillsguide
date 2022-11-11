@@ -21,9 +21,6 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  font-size: 20px;
-  margin-bottom: 25px;
-  color: #394959;
 }
 
 .body .cycles_list, .body .bundles_list {
@@ -38,22 +35,13 @@
   gap: 25px 25px;
 }
 
-.body .cycles_list .card, .body .bundles_list .card {
-  border-radius: 6px;
-  -webkit-box-shadow: 5px 4px 12px 1px;
-          box-shadow: 5px 4px 12px 1px;
-}
-
 .body .cycles_list .card, .body .cycles_list li, .body .bundles_list .card, .body .bundles_list li {
   color: #394959;
-  font-size: 14px;
-  min-width: 300px;
-  max-width: 400px;
+  background-color: #e9ecf7;
 }
 
 .body .cycles_list .card h5, .body .cycles_list li h5, .body .bundles_list .card h5, .body .bundles_list li h5 {
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 800;
 }
 
 .body .cycles_list .card .card-footer, .body .cycles_list li .card-footer, .body .bundles_list .card .card-footer, .body .bundles_list li .card-footer {
@@ -85,4 +73,4 @@
 .modal .dropdown-toggle .placeholder {
   color: #6c757d;
 }
-/*# sourceMappingURL=bundles_list.css.map */
+/*# sourceMappingURL=stream_schedule.css.map */
