@@ -3,7 +3,7 @@ import math
 import secrets
 import string
 import random
-from datetime import date
+from datetime import date, timedelta
 from django.db import IntegrityError
 
 from django.urls import reverse
@@ -146,9 +146,13 @@ def ed_center_dashboard(request, ed_center_id, message=None):
         ed_center.short_name = request.POST["ShortName"]
         ed_center.is_trains = True
         ed_center.save()
+    
+    two_weeks = datetime.datetime.today() + timedelta(14)
+    tests = ProfTest.objects.filter(ed_center=ed_center, date__gte=datetime.datetime.today(), date__lte=two_weeks)
 
     return render(request, 'education_centers/ed_center.html', {
         'ed_center' : ed_center,
+        'tests': tests,
         'competencies': Competence.objects.all(),
         'programs': TrainingProgram.objects.filter(education_center=ed_center),
         'trainers': Trainer.objects.filter(education_center=ed_center),

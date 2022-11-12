@@ -104,7 +104,7 @@
   text-align: left;
 }
 
-.dashboard-lists > div .program-name {
+.dashboard-lists > div .program-name, .dashboard-lists > div .schedule {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
@@ -177,6 +177,10 @@
 
 #addProgramModal .modal-content .criteria input, .EditProgramModal .modal-content .criteria input {
   width: 250px;
+}
+
+#TestModal {
+  font-family: 'Roboto', sans-serif;
 }
 
 #editCenterModal .modal-content {

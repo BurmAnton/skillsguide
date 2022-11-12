@@ -136,6 +136,52 @@
             </div>
         </div>
     {% endfor %}
+    {% for test in tests %}
+        <div class="modal fade TestModal" id="TestModal{{test.id}}" tabindex="-1" aria-labelledby="TestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="TestLabel">{{test.program}} (Поток №{{test.stream.id}})</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><b>Преподователь:</b> {{test.trainer}}</p>
+                        {% if test.conference != None %}
+                            <div>
+                                <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
+                                {% if test.conference != None %}
+                                    <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
+                                {% endif %}
+                                {% if test.conference != None %}
+                                    <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
+                                {% endif %}
+                                {% if test.conference != None %}
+                                    <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
+                                {% endif %}
+                            </div>
+                        {% elif test.workshop != None %}
+                            <div>
+                                <b>Адрес:</b> {{test.workshop.adress}}
+                                <p>
+                                    <b>Подсказка:</b> {{test.workshop.description}}
+                                </p>
+                            </div>
+                        {% endif %}
+                        
+                    </div>
+                    <ul class="list-group">
+                        <p><b>Участники пробы:</b></p>
+                        {% for student in test.stream.students.all %}
+                            <li class="list-group-item">{{student}}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="modal-footer">
+                        <p></p><p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
     <div class="modal fade" id="addProgramModal" tabindex="-1" aria-labelledby="addProgramModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -279,7 +325,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addWorkshopLabel">Добавить преподователя</h5>
+                    <h5 class="modal-title" id="addWorkshopLabel">Добавить мастерскую</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{% url 'add_workshop' %}" method="post">
@@ -397,6 +443,32 @@
         </div>
     </div>
     <div class="dashboard-lists">
+        <div class="schedule-list">
+            <div class="schedule-list-header">
+                <h2>Расписание (ближайщие 2 недели)</h2>
+            </div>
+            <table class="table">
+                <thead>
+                    <th class="schedule-name-th" scope="col">ID пробы</th>
+                    <th scope="col">Поток</th>
+                    <th scope="col">Программа</th>
+                    <th scope="col">Преподователь</th> 
+                    <th scope="col">Дата и время</th>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                        <tr>
+                            <td scope="row" class="nowrap schedule" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
+                            <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
+                            <td scope="row" class="nowrap">{{test.program}}</td>
+                            <td scope="row" class="nowrap">{{test.trainer}}</td>
+                            <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
         <div class="trainers-list">
             <div class="trainers-list-header">
                 <h2>Преподователи</h2>
