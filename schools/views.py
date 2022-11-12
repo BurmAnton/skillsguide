@@ -49,7 +49,7 @@ def school_profile(request, school_id):
     cycles = TrainingCycle.objects.filter(schools=school)
     streams = TrainingStream.objects.filter(students__in=school.students.all())
     two_weeks = datetime.today() + timedelta(14)
-    tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks)
+    tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks).order_by('date', 'start_time')
     return render(request, "schools/school_profile.html",{
         "cities": City.objects.all(),
         "school": school,

@@ -148,7 +148,11 @@ def ed_center_dashboard(request, ed_center_id, message=None):
         ed_center.save()
     
     two_weeks = datetime.datetime.today() + timedelta(14)
-    tests = ProfTest.objects.filter(ed_center=ed_center, date__gte=datetime.datetime.today(), date__lte=two_weeks)
+    tests = ProfTest.objects.filter(
+        ed_center=ed_center, 
+        date__gte=datetime.datetime.today(), 
+        date__lte=two_weeks
+        ).order_by('date', 'start_time')
 
     return render(request, 'education_centers/ed_center.html', {
         'ed_center' : ed_center,
