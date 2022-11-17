@@ -43,3 +43,51 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return  f"Склал №{self.id} ({self.address})"
+
+
+class Category(models.Model):
+    category_name = models.CharField("Название", max_length=100, null=False, blank=False)
+    #icon
+    parent_category = models.ForeignKey(
+        'self', 
+        verbose_name="Родительская категория",
+        null=True, 
+        blank=True,
+        on_delete=models.CASCADE
+    )
+    description = models.CharField("Краткое описание", max_length=100, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+    def __str__(self):
+        return  f"Склал №{self.id} ({self.address})"
+
+
+class Brand(models.Model):
+    pass
+
+
+class Product(models.Model):
+    barcode = models.CharField("Штрихкод", max_length=30, null=False, blank=False)
+    product_name = models.CharField("Название", max_length=100, null=False, blank=False)
+    brand = models.ForeignKey(Brand, verbose_name="Бренд", related_name="products", null=False, blank=False)
+    description = models.TextField("Описание", null=True, blank=True)
+    #images
+    length = models.FloatField("Длина", null=True, blank=True)
+    width = models.FloatField("Ширина", null=True, blank=True)
+    depth = models.FloatField("Глубина", null=True, blank=True)
+    weight = models.FloatField("Вес", null=True, blank=True)
+
+
+    class Meta:
+        verbose_name = "Товар"
+        verbose_name_plural = "Товары"
+
+    def __str__(self):
+        return  f"{self.product_name} ({self.barcode})"
+
+
+class TechSpec(models.Model):
+    pass
