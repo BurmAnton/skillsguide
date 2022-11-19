@@ -158,7 +158,8 @@ class Lesson(models.Model):
 class Criterion(models.Model):
     name = models.CharField("Назывние критерия", max_length=50)
     description = models.TextField("Описание критерия", null=True, blank=True)
-    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="criteria", on_delete=CASCADE)
+    program = models.ForeignKey(TrainingProgram, verbose_name="Программа", related_name="criteria", on_delete=CASCADE, null=True, blank=True)
+    soft_programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы", related_name="soft_criteria", blank=True)
     СOMPETENCE_TYPES = (
         ('SFT', 'SoftSkill'),
         ('HRD', 'HardSkill'),

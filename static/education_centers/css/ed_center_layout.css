@@ -1,49 +1,87 @@
 .body {
-  justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   background-color: #F2F2F2;
   color: #394959;
 }
+
 .body h2 {
   font-size: 22px;
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.profile {
+.body a {
+  color: #394959;
+  text-decoration: underline;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #394959 !important;
+  border-color: #394959 !important;
+}
+
+.side-menu {
   width: 400px;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
+  gap: 15px;
   margin: 30px 0px 0px 0px;
+}
+
+.side-menu > div {
   background-color: white;
   padding: 15px 15px 26px 20px;
   border-radius: 8px;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 4px 4px 4px 0px #00000015;
+          box-shadow: 4px 4px 4px 0px #00000015;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
-.profile p {
+
+.side-menu .profile p {
   margin-bottom: 5px;
 }
-.profile .ed_center-preview {
+
+.side-menu .profile .ed_center-preview {
   margin-bottom: 15px;
 }
-.profile .ed_center-preview .ed_center-name {
+
+.side-menu .profile .ed_center-preview .ed_center-name {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
-.profile .ed_center-preview .ed_center-name p {
+
+.side-menu .profile .ed_center-preview .ed_center-name p {
   margin-top: 10px;
 }
-.profile .ed_center-preview .ed_center-name .edit-icon {
+
+.side-menu .profile .ed_center-preview .ed_center-name .edit-icon {
   width: 35px;
   padding: 2px;
   border-radius: 50px;
 }
-.profile .ed_center-preview .ed_center-name .edit-icon:hover {
+
+.side-menu .profile .ed_center-preview .ed_center-name .edit-icon:hover {
   background: #F2F2F2;
+}
+
+.side-menu .nav-menu {
+  margin-top: 15px;
+  max-height: 200px;
 }
 
 .dashboard {
   margin-left: 50px;
   margin-top: 35px;
-}/*# sourceMappingURL=ed_center_layout.css.map */
+}
+/*# sourceMappingURL=ed_center_layout.css.map */

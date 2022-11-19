@@ -78,18 +78,30 @@
             </div>
         </div>
     </div>
-    <div class="profile">
-        <div class="ed_center-preview">
-            <div class="ed_center-name">
-                <p><b>{{ed_center.name}}</b></p>
-                <img class="edit-icon" data-bs-toggle="modal" data-bs-target="#editCenterModal" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+    <div class="side-menu">
+        <div class="profile">
+            <div class="ed_center-preview">
+                <div class="ed_center-name">
+                    <p><b>{{ed_center.name}}</b></p>
+                    <img class="edit-icon" data-bs-toggle="modal" data-bs-target="#editCenterModal" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+                </div>
+                <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{ed_center.address}}</p>
             </div>
-            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{ed_center.address}}</p>
+            <div class="contact-preview">
+                <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt=""> {{ed_center.contact_person}}</p>
+                <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{ed_center.contact_person.email}}</p>
+                <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{ed_center.contact_person.phone_number}}</p>
+            </div>
         </div>
-        <div class="contact-preview">
-            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt=""> {{ed_center.contact_person}}</p>
-            <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{ed_center.contact_person.email}}</p>
-            <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{ed_center.contact_person.phone_number}}</p>
+        <div class="nav-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'ed_center_dashboard' ed_center.id %}" aria-current="page">Профиль</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'tests_list' ed_center.id %}" aria-current="page">Прошедшие пробы</a>
+                </li>
+            </ul>
         </div>
     </div>
     <div class='dashboard'>

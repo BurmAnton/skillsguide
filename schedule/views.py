@@ -187,3 +187,41 @@ def stream_schedule(request, stream_id):
     return render(request, "schedule/stream_schedule.html", {
         'stream': stream
     })
+
+def add_soft_skills(request):
+    programs = TrainingProgram.objects.all()
+    criteria = Criterion.objects.filter(skill_type="SFT")
+    for program in programs:
+        program.soft_criteria.add(*criteria)
+        program.save()
+    return HttpResponseRedirect(reverse("login"))
+
+def fill_test(request):
+    streams = TrainingStream.objects.all()
+    for stream in streams:
+        for test in stream.tests.all():
+            test.students.add(*stream.students.all())
+            test.save()
+            for student in test.students.all():
+                for criterion in test.program.criteria.all():
+                    assessment = Assessment(
+                        test=test,
+                        student=student,
+                        criterion=criterion
+                    )
+                    assessment.save()
+                for criterion in test.program.soft_criteria.all():
+                    assessment = Assessment(
+                        test=test,
+                        student=student,
+                        criterion=criterion
+                    )
+                    assessment.save()
+                
+                attendance = Attendance(
+                    test=test,
+                    student=student
+                )
+                attendance.save()
+
+    return HttpResponseRedirect(reverse("login"))

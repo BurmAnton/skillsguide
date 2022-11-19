@@ -15,3 +15,10 @@ def filter_busy(dates):
 def filter_unavailable(dates):
     return dates.filter(busy=False, is_unavailable=False)
 
+@register.filter
+def filter_ass(test_ass, student):
+    return test_ass.filter(student=student)
+
+@register.filter
+def get_attendance(test_attendance, student):
+    return test_attendance.get(student=student).is_attend

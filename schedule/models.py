@@ -104,7 +104,7 @@ class Training(models.Model):
     start_date = models.DateField("Дата начала", null=False, blank=False)
     end_date = models.DateField("Дата окончания", null=False, blank=False)
     stream = models.ForeignKey(TrainingStream, verbose_name="Поток", related_name="trainings", on_delete=models.CASCADE, null=True, blank=False)
-
+    
     class Meta:
         verbose_name = "Расписание обучения"
         verbose_name_plural = "Расписания обучения"
@@ -134,6 +134,8 @@ class ProfTest(models.Model):
     start_time = models.TimeField("Время начала", null=True, blank=True)
     
     trainer = models.ForeignKey(Trainer, verbose_name="Преподователь", related_name="tests", on_delete=models.CASCADE, null=True, blank=True)
+    students = models.ManyToManyField(SchoolStudent, verbose_name="Участники потока", related_name="tests", blank=True)
+
     is_online = models.BooleanField("Онлайн", default=False)
     workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="tests", on_delete=CASCADE, null=True, blank=True)
     conference = models.ForeignKey(Conference, verbose_name="Конференция", related_name="tests", on_delete=CASCADE, null=True, blank=True)
@@ -167,10 +169,11 @@ class TrainingClass(models.Model):
     
 
 class Assessment(models.Model):
-    timeslot = models.ForeignKey(Training, verbose_name="Расписание обучения", related_name="assessment", on_delete=models.CASCADE)
-    grade = models.IntegerField("Оценка", null=True, blank=True)
+    test = models.ForeignKey(ProfTest, verbose_name="Проба", related_name="assessment", on_delete=models.CASCADE)
+    student = models.ForeignKey(SchoolStudent, verbose_name="Участник", related_name="assessment", on_delete=models.CASCADE)
+
     criterion = models.ForeignKey(Criterion, verbose_name="Критерий", related_name="assessment", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, verbose_name="Участник", related_name="assessment", on_delete=models.CASCADE)
+    grade = models.IntegerField("Оценка", null=True, blank=True)
 
     class Meta:
         verbose_name = "Ассессмент"
@@ -178,9 +181,9 @@ class Assessment(models.Model):
 
 
 class Attendance(models.Model):
-    training_class = models.ForeignKey(TrainingClass, verbose_name="Слот", related_name="attendance", on_delete=models.CASCADE)
+    test = models.ForeignKey(ProfTest, verbose_name="Проба", related_name="attendance", on_delete=models.CASCADE)
+    student = models.ForeignKey(SchoolStudent, verbose_name="Участник", related_name="attendance", on_delete=models.CASCADE)
     is_attend = models.BooleanField("Посетил", default=False)
-    user = models.ForeignKey(User, verbose_name="Участник", related_name="attendance", on_delete=models.CASCADE)
     
     class Meta:
         verbose_name = "Посещаемость"

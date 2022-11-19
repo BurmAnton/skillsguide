@@ -1,5 +1,6 @@
 {% extends "education_centers/ed_center_layout.html" %}
 {% load static %}
+{% load schedule_extras %}
 {% block title %}ЦОПП СО | Импорт ЦО{% endblock %}
 
 {% block style %}
@@ -167,16 +168,19 @@
                                 </p>
                             </div>
                         {% endif %}
-                        
+                        <ul class="list-group">
+                            <p><b>Участники пробы:</b></p>
+                            {% for student in test.students.all %}
+                                    <li class="list-group-item students-list-modal">
+                                        {{student}}
+                                    </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <ul class="list-group">
-                        <p><b>Участники пробы:</b></p>
-                        {% for student in test.stream.students.all %}
-                            <li class="list-group-item">{{student}}</li>
-                        {% endfor %}
-                    </ul>
                     <div class="modal-footer">
-                        <p></p><p></p>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -457,6 +461,7 @@
                 </thead>
                 <tbody>
                     {% for test in tests %}
+                        {% if test.students.all.count != 0 %}
                         <tr>
                             <td scope="row" class="nowrap schedule" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
                             <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
@@ -464,10 +469,10 @@
                             <td scope="row" class="nowrap">{{test.trainer}}</td>
                             <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
-            
         </div>
         <div class="trainers-list">
             <div class="trainers-list-header">

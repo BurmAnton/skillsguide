@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
-from schedule.models import ProfTest, TrainingCycle, TrainingStream
+from schedule.models import Assessment, Attendance, ProfTest, TrainingCycle, TrainingStream
 
 from users.models import User
 from regions.models import City, TerAdministration, Address
@@ -25,23 +25,54 @@ def school_profile(request, school_id):
     school = get_object_or_404(School, id=school_id)
     message = ""
     if request.method == "POST":
-        message = "Success"
-        for student in school.students.all():
-            stream = request.POST[f'student{student.id}_stream']
-            if stream == "None":
-                student.streams.clear()
-            elif stream != "Selected":
-                stream = get_object_or_404(TrainingStream, id=stream)
-                if len(stream.students.all()) < stream.students_limit:
+        if 'exclude-student' in request.POST:
+            student_id = request.POST[f'student_id']
+            student = SchoolStudent.objects.get(id=student_id)
+            test_id = request.POST[f'test_id']
+            test = ProfTest.objects.get(id=test_id)
+            test.students.remove(student)
+            test.save()
+        else:
+            message = "Success"
+            for student in school.students.all():
+                stream = request.POST[f'student{student.id}_stream']
+                if stream == "None":
                     student.streams.clear()
-                    student.streams.add(stream)
-                else:
-                    message = "StreamOverFlow"
-            student.save()
-    try:
-        contact = SchoolContactPersone.objects.get(school=school.id)
-    except SchoolContactPersone.DoesNotExist:
-        contact = None
+                elif stream != "Selected":
+                    stream = get_object_or_404(TrainingStream, id=stream)
+                    if len(stream.students.all()) < stream.students_limit:
+                        student.streams.clear()
+                        student.tests.clear()
+                        Assessment.objects.filter(student=student).delete()
+                        Attendance.objects.filter(student=student).delete()
+                        student.streams.add(stream)
+                    else:
+                        message = "StreamOverFlow"
+                student.save()
+                if stream != "None" and stream != "Selected":
+                    for test in stream.tests.all():
+                        test.students.add(*stream.students.all())
+                        test.save()
+                        for criterion in test.program.criteria.all():
+                            assessment = Assessment(
+                                test=test,
+                                student=student,
+                                criterion=criterion
+                            )
+                            assessment.save()
+                        for criterion in test.program.soft_criteria.all():
+                            assessment = Assessment(
+                                test=test,
+                                student=student,
+                                criterion=criterion
+                            )
+                            assessment.save()
+                            attendance = Attendance(
+                                test=test,
+                                student=student
+                            )
+                            attendance.save()
+    contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
     students_count = len(school.students.all())
     grades = Grade.objects.filter(school=school, is_graduated=False).annotate(students_count = Count('students'))

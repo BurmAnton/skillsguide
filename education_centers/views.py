@@ -169,6 +169,46 @@ def ed_center_dashboard(request, ed_center_id, message=None):
 
 @login_required
 @csrf_exempt
+def tests_list(request, ed_center_id):
+    ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
+    tests = ProfTest.objects.filter(
+        ed_center=ed_center, 
+        date__lte=datetime.datetime.today()
+    ).order_by('date', 'start_time')
+
+    return render(request, 'education_centers/tests_list.html', {
+        'ed_center' : ed_center,
+        'tests': tests,
+    })
+
+@login_required
+@csrf_exempt
+def test_assessment(request, ed_center_id, test_id):
+    ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
+    test = get_object_or_404(ProfTest, id=test_id)
+    if request.method == "POST":
+        for attendance in test.attendance.all():
+            try:
+                is_attend = request.POST[f'attendance_{attendance.student.id}']
+                is_attend = True
+            except: 
+                is_attend = False
+            attendance.is_attend = is_attend
+            attendance.save()
+            if is_attend:
+                for assessment in test.assessment.filter(student=attendance.student):
+                    grade = request.POST[f'assessment_{assessment.id}']
+                    if grade != "—":
+                        assessment.grade = int(grade)
+                        assessment.save()
+
+    return render(request, 'education_centers/test_assessment.html', {
+        'ed_center' : ed_center,
+        'test': test
+    })
+
+@login_required
+@csrf_exempt
 def add_program(request):
     if request.method == "POST":
         name = request.POST["name"]
@@ -188,6 +228,9 @@ def add_program(request):
                 criterion.name = request.POST[f'CriterionName{criterion.id}']
                 criterion.description = request.POST[f'CriterionDesc{criterion.id}']
                 criterion.save()
+            soft_criteria = Criterion.objects.filter(skill_type="SFT")
+            program.soft_criteria.add(*soft_criteria)
+            program.save()
         else:
             education_center = request.POST["education_center"]
             education_center = get_object_or_404(EducationCenter, id=education_center)
@@ -199,16 +242,18 @@ def add_program(request):
                 education_center=education_center,
             )
             program.save()
-        if len(program.criteria.all()) == 0:
-            for i in range(1,6):
-                criterion = Criterion(
-                    name=request.POST[f'CriterionName{i}'],
-                    description=request.POST[f'CriterionDesc{i}'],
-                    program=program,
-                    skill_type='HRD',
-                    grading_system=2
-                )
-                criterion.save()
+            criteria = Criterion.objects.filter(skill_type="SFT")
+            program.soft_criteria.add(*criteria)
+            if len(program.criteria.all()) == 0:
+                for i in range(1,6):
+                    criterion = Criterion(
+                        name=request.POST[f'CriterionName{i}'],
+                        description=request.POST[f'CriterionDesc{i}'],
+                        program=program,
+                        skill_type='HRD',
+                        grading_system=2
+                    )
+                    criterion.save()
         program.disability_types.add(*disability_types)
         program.save()
 

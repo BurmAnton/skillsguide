@@ -1,0 +1,90 @@
+{% extends "education_centers/ed_center_layout.html" %}
+{% load static %}
+{% load schedule_extras %}
+{% block title %}ЦОПП СО | Импорт ЦО{% endblock %}
+
+{% block style %}
+    <link href="{% static 'education_centers/css/ed_center_layout.css' %}" rel="stylesheet">
+    <link href="{% static 'education_centers/css/test_assessment.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <!--<script src="{% static 'education_centers/js/ed_center.js' %}" rel="stylesheet"></script>-->
+{% endblock %}
+
+{% block dashboard %}
+    <div class="dashboard-lists">
+        <div>
+            <a href="{% url 'tests_list' ed_center.id %}">
+                <button class="btn btn-primary btn-sm">Назад</button>
+            </a>
+        </div>
+        <div class="tests-list">
+            <div class="tests-list-header">
+                <h2>Проба "{{test.program}}" №{{test.id}}</h2>
+            </div>
+            <form action="{% url 'test_assessment' ed_center.id test.id %}" method="post">
+                <table class="table">
+                    <thead>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">Посещ.</th>
+                        {% for criterion in test.program.criteria.all %}
+                            <th scope="col">{{criterion.name}}</th>
+                        {% endfor %}
+                        {% for criterion in test.program.soft_criteria.all %}
+                            <th scope="col">{{criterion.name}}</th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                        {% for student in test.students.all %}
+                            <input style="display:none;" type="input" class="form-control" name="student_{{student.id}}" value="{{student.id}}" required>
+                            <tr>
+                                <td scope="row" class="nowrap">{{student.user.first_name}} {{student.user.last_name}}</td>
+                                <td scope="row" class="nowrap">
+                                    <div style="display: flex;justify-content: center;" class="form-check">
+                                        {% if test.attendance.all|get_attendance:student %}
+                                            <input class="form-check-input" type="checkbox" name="attendance_{{student.id}}" checked>
+                                        {% else %}
+                                            <input class="form-check-input" type="checkbox" name="attendance_{{student.id}}">
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                {% for assessment in test.assessment.all|filter_ass:student %}
+                                    <td scope="row" class="nowrap">
+                                        <div class="form mb-3">
+                                            <select class="selectpicker" data-width="100%" data-live-search="true" name="assessment_{{assessment.id}}" required>
+                                                {% if assessment.criterion.skill_type == "HRD" %}
+                                                    {% if assessment.grade == 0 %}
+                                                        <option value="{{assessment.grade}}">Нет</option>
+                                                    {% elif assessment.grade == 1 %}
+                                                        <option value="{{assessment.grade}}">Да</option>
+                                                    {% else %}
+                                                        <option>—</option>
+                                                    {% endif %}
+                                                        <option value="0">Нет</option>
+                                                        <option value="1">Да</option>
+                                                {% else %}
+                                                    {% if assessment.grade != None %}
+                                                        <option value="{{assessment.grade}}">{{assessment.grade}}</option>
+                                                    {% else %}
+                                                        <option>—</option>
+                                                    {% endif %}
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="save-assessment">
+                    <button class="btn btn-outline-success">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

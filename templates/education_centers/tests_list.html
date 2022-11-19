@@ -1,0 +1,49 @@
+{% extends "education_centers/ed_center_layout.html" %}
+{% load static %}
+{% load schedule_extras %}
+{% block title %}ЦОПП СО | Импорт ЦО{% endblock %}
+
+{% block style %}
+    <link href="{% static 'education_centers/css/ed_center_layout.css' %}" rel="stylesheet">
+    <link href="{% static 'education_centers/css/tests_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <!--<script src="{% static 'education_centers/js/ed_center.js' %}" rel="stylesheet"></script>-->
+{% endblock %}
+
+{% block dashboard %}
+    <div class="dashboard-lists">
+        <div class="tests-list">
+            <div class="tests-list-header">
+                <h2>Прошедшие пробы</h2>
+            </div>
+            <table class="table">
+                <thead>
+                    <th class="tests-name-th" scope="col">ID пробы</th>
+                    <th scope="col">Поток</th>
+                    <th scope="col">Программа</th>
+                    <th scope="col">Преподователь</th> 
+                    <th scope="col">Дата и время</th>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                        {% if test.students.all.count != 0 %}
+                        <tr>
+                            <td scope="row" class="nowrap tests-cell">
+                                <a href="{% url 'test_assessment' ed_center.id test.id %}">
+                                    {{test.id}}
+                                </a>
+                            </td>
+                            <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
+                            <td scope="row" class="nowrap">{{test.program}}</td>
+                            <td scope="row" class="nowrap">{{test.trainer}}</td>
+                            <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

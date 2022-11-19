@@ -48,7 +48,7 @@ class User(AbstractUser):
     def __str__(self):
         if self.last_name == None or self.first_name == None:
             return f'{self.email}'
-        if self.middle_name == None:
+        if self.middle_name == None or len(self.middle_name) == 0:
             return f'{self.first_name} {self.last_name}'
         return f'{self.first_name} {self.middle_name} {self.last_name}'
         

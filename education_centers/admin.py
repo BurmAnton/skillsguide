@@ -52,16 +52,6 @@ class WorkshopAdmin(admin.ModelAdmin):
     pass
 
 
-class CriterionInLine(admin.TabularInline):
-    model = Criterion
-    ordering = ("name",)
-    fields = ['name', 'skill_type', 'grading_system']
-
-    def get_extra(self, request, obj=None, **kwargs):
-        extra = 0
-        if obj:
-            return extra
-        return extra
 
 TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'})
 
@@ -69,7 +59,6 @@ TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'
 class TrainingProgramAdmin(admin.ModelAdmin):
     form = TrainingProgramForm
     search_fields = ['name']
-    inlines = [CriterionInLine,]
     readonly_fields = ['get_criteria',]
     list_display = [
         'name',

@@ -14,6 +14,8 @@ urlpatterns = [
     path('<int:ed_center_id>/', views.ed_center_dashboard, name="ed_center_dashboard"),
     path('<int:ed_center_id>/<str:message>', views.ed_center_dashboard, name="ed_center_dashboard"),
     path('<int:ed_center_id>/program/<int:program_id>', views.program_schedule, name="program_schedule"),
+    path('<int:ed_center_id>/tests/', views.tests_list, name="tests_list"),
+    path('<int:ed_center_id>/test/<int:test_id>/assessments', views.test_assessment, name="test_assessment"),
 
     path('trainers/', views.trainers_list, name="trainers_list"),
     path('trainers/add', views.add_trainer, name="add_trainer"),

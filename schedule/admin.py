@@ -62,16 +62,14 @@ class SchoolQuotaAdmin(admin.ModelAdmin):
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
     list_display = (
-        'user',
+        'student',
         'criterion',
         'grade',
-        'timeslot'
     )
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'user',
+        'student',
         'is_attend'
     )
