@@ -56,6 +56,7 @@ CriterionForm = select2_modelform(Criterion, attrs={'width': '400px'})
 class CriterionInline(admin.TabularInline):
     form = CriterionForm
     model = Criterion
+    fields = ['name', 'skill_type']
 
 
 TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'})
