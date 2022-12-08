@@ -66,6 +66,7 @@ AssessmentForm = select2_modelform(Assessment, attrs={'width': '400px'})
 class AssessmentAdmin(admin.ModelAdmin):
     form = AssessmentForm
 
+    search_fields = ['test__program__name', 'criterion__name', 'student__user__first_name', 'student__user__last_name', 'student__user__middle_name']
     list_display = (
         'student',
         'criterion',

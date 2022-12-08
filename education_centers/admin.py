@@ -53,7 +53,7 @@ class WorkshopAdmin(admin.ModelAdmin):
 
 CriterionForm = select2_modelform(Criterion, attrs={'width': '400px'})
 
-class CriterionInline(admin.StackedInline):
+class CriterionInline(admin.TabularInline):
     form = CriterionForm
     model = Criterion
 
