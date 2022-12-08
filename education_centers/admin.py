@@ -51,6 +51,11 @@ class CriterionAdmin(admin.ModelAdmin):
 class WorkshopAdmin(admin.ModelAdmin):
     pass
 
+CriterionForm = select2_modelform(Criterion, attrs={'width': '400px'})
+
+class CriterionInline(admin.StackedInline):
+    form = CriterionForm
+    model = Criterion
 
 
 TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'})
@@ -58,6 +63,7 @@ TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'
 @admin.register(TrainingProgram)
 class TrainingProgramAdmin(admin.ModelAdmin):
     form = TrainingProgramForm
+    inlines = [CriterionInline,]
     search_fields = ['name']
     readonly_fields = ['get_criteria',]
     list_display = [

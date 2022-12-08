@@ -31,6 +31,7 @@ class TrainingStreamAdmin(admin.ModelAdmin):
         'cycle',
         'id'
      )
+     filter_horizontal = ('students',)
 
 @admin.register(ProfTest)
 class ProfTestAdmin(admin.ModelAdmin):
@@ -49,6 +50,7 @@ class ProfTestAdmin(admin.ModelAdmin):
         'stream',
         'trainer'
     )
+    filter_horizontal = ('students',)
 
 @admin.register(SchoolQuota)
 class SchoolQuotaAdmin(admin.ModelAdmin):
@@ -58,9 +60,12 @@ class SchoolQuotaAdmin(admin.ModelAdmin):
         'quota'
     )    
 
+AssessmentForm = select2_modelform(Assessment, attrs={'width': '400px'})
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
+    form = AssessmentForm
+
     list_display = (
         'student',
         'criterion',

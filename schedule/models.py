@@ -134,7 +134,7 @@ class ProfTest(models.Model):
     start_time = models.TimeField("Время начала", null=True, blank=True)
     
     trainer = models.ForeignKey(Trainer, verbose_name="Преподователь", related_name="tests", on_delete=models.CASCADE, null=True, blank=True)
-    students = models.ManyToManyField(SchoolStudent, verbose_name="Участники потока", related_name="tests", blank=True)
+    students = models.ManyToManyField(SchoolStudent, verbose_name="Участники пробы", related_name="tests", blank=True)
 
     is_online = models.BooleanField("Онлайн", default=False)
     workshop = models.ForeignKey(Workshop, verbose_name="Мастерская", related_name="tests", on_delete=CASCADE, null=True, blank=True)
