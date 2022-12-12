@@ -60,6 +60,7 @@ class SchoolQuotaAdmin(admin.ModelAdmin):
         'quota'
     )    
 
+
 AssessmentForm = select2_modelform(Assessment, attrs={'width': '400px'})
 
 @admin.register(Assessment)
@@ -72,6 +73,7 @@ class AssessmentAdmin(admin.ModelAdmin):
         'criterion',
         'grade',
     )
+
 
 AttendanceForm = select2_modelform(Attendance, attrs={'width': '400px'})
 
@@ -87,3 +89,4 @@ class AttendanceAdmin(admin.ModelAdmin):
         'test',
         'is_attend'
     )
+

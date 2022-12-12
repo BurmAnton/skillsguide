@@ -172,7 +172,9 @@ class Criterion(models.Model):
         verbose_name_plural = "Критерии оценки"
 
     def __str__(self):
-        return self.name
+        if self.program is not None:
+            return f'{self.name} ({self.program.name})'
+        return f'{self.name}'
 
 
 class Faculty(models.Model):
