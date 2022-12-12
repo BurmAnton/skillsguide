@@ -67,11 +67,11 @@ def school_profile(request, school_id):
                                 criterion=criterion
                             )
                             assessment.save()
-                            attendance = Attendance(
-                                test=test,
-                                student=student
-                            )
-                            attendance.save()
+                        attendance = Attendance(
+                            test=test,
+                            student=student
+                        )
+                        attendance.save()
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
     students_count = len(school.students.all())

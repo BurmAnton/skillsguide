@@ -196,6 +196,24 @@ def add_soft_skills(request):
         program.save()
     return HttpResponseRedirect(reverse("login"))
 
+def fix_attendance(request):
+    tests = ProfTest.objects.all()
+    for test in tests:
+        for student in test.students.all:
+            assessments = Attendance.objects.filter(test=test, student=student)
+            if len(assessments) > 1:
+                for assessment in assessments:
+                    if assessment.is_attend == False:
+                        assessment.delete()
+                assessments = Attendance.objects.filter(test=test, student=student)
+                if len(assessments) == 0:
+                    assessment = Attendance(
+                        test=test, 
+                        student=student
+                    )
+                    assessment.save()
+    return HttpResponseRedirect(reverse("login"))
+
 def fill_test(request):
     streams = TrainingStream.objects.all()
     for stream in streams:

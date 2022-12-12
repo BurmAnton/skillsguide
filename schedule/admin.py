@@ -75,6 +75,7 @@ class AssessmentAdmin(admin.ModelAdmin):
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
+    list_filter = ('is_attend',)
     list_display = (
         'student',
         'is_attend'
