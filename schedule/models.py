@@ -145,7 +145,7 @@ class ProfTest(models.Model):
         verbose_name_plural = "Профпробы"
 
     def __str__(self):
-        return f'{self.program.name}({self.start_time} {self.date})'
+        return f'{self.program.name} ({self.start_time} {self.date})'
 
 
 class TrainingClass(models.Model):

@@ -199,7 +199,7 @@ def add_soft_skills(request):
 def fix_attendance(request):
     tests = ProfTest.objects.all()
     for test in tests:
-        for student in test.students.all:
+        for student in test.students.all():
             assessments = Attendance.objects.filter(test=test, student=student)
             if len(assessments) > 1:
                 for assessment in assessments:

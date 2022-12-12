@@ -73,10 +73,17 @@ class AssessmentAdmin(admin.ModelAdmin):
         'grade',
     )
 
+AttendanceForm = select2_modelform(Attendance, attrs={'width': '400px'})
+
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
-    list_filter = ('is_attend',)
+    form = AttendanceForm
+    list_filter = ( 
+        ('test', RelatedOnlyDropdownFilter),
+        'is_attend',
+        )
     list_display = (
         'student',
+        'test',
         'is_attend'
     )
