@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django_admin_listfilter_dropdown.filters import DropdownFilter, ChoiceDropdownFilter, RelatedOnlyDropdownFilter
+from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 from .models import School, Grade, SchoolContactPersone, SchoolStudent
 
@@ -19,12 +21,20 @@ class GradeInLine(admin.TabularInline):
 # Register your models here.
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ('name', 'inn', 'ter_administration', 'address', 'get_students_count')
+    list_display = ('name', 'get_inn', 'ter_administration', 'address', 'get_students_count')
     search_fields = ('name', 'inn', 'address__city__name')
     list_filter = (
         ('ter_administration', RelatedOnlyDropdownFilter), 
     )
     inlines = [GradeInLine,]
+
+    def get_inn(self, school):
+        school_url = reverse("school_profile", args=[school.id])
+        school_inn = school.inn
+        school_link = f'<a href="{school_url}" target="_blank">{school_inn}</a>'
+        return mark_safe(school_link)
+    get_inn.short_description = 'ИНН'
+    get_inn.admin_order_field = 'inn'
 
     def get_students_count(self, school):
         students_count = len(school.students.all())

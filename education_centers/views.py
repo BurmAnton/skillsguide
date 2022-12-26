@@ -118,7 +118,7 @@ def import_ed_centers(request):
 @csrf_exempt
 def ed_center_dashboard(request, ed_center_id, message=None):
     ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
-    if request.user != ed_center.contact_person:
+    if request.user != ed_center.contact_person and request.user.is_superuser == False:
         return HttpResponseRedirect(reverse("login"))
     if request.method == "POST":
         city_id = request.POST["City"]

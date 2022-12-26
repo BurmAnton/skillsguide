@@ -1,6 +1,7 @@
 from dataclasses import fields
 from django.contrib import admin
-
+from django.utils.safestring import mark_safe
+from django.urls import reverse
 from easy_select2 import select2_modelform
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, ChoiceDropdownFilter
 from openpyxl import Workbook
@@ -36,10 +37,18 @@ class EducationCenterAdmin(admin.ModelAdmin):
     search_fields = ['name', 'short_name']
     list_display = [
         'short_name',
-        'name',
+        'get_name',
         'address',
         'is_trains'
     ]
+
+    def get_name(self, ed_center):
+        ed_center_url = reverse("ed_center_dashboard", args=[ed_center.id])
+        ed_center_name = ed_center.name
+        ed_center_link = f'<a href="{ed_center_url}" target="_blank">{ed_center_name}</a>'
+        return mark_safe(ed_center_link)
+    get_name.short_description = 'Полное название'
+    get_name.admin_order_field = 'name'
 
 
 @admin.register(Criterion)
