@@ -1,0 +1,22 @@
+{% extends "schools/school_layout.html" %}
+{% load static %}
+{% block title %}Мой Выбор | Классы{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schools/css/grades_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block dashboard %}
+    <h2>Список классов</h2>
+    <div class="grades-list">
+        {% for grade in grades %}
+            <a class="grade-card" href="{% url 'grade' school.id grade.id %}">
+                <p class="grade">{{grade.grade}}{{grade.grade_letter}} класс</p>
+                <p>Учеников в классе: {{grade.students.all|length}}</p>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

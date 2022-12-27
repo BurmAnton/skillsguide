@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load admin_urls %}
+{% block title %}{% endblock %}
+
+{% block head %}
+    <link href="{% static 'schools/css/school_layout.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class='side-menu'>
+        <div class="card school_profile">
+            <div class="school-name">
+                <p>{{school}}</p>
+                <img class="edit-icon" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+            </div>
+            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{school.address}}</p>
+            <div class="contact-data">
+                <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt="">{{contact.user.first_name}} {{contact.user.last_name}}</p>
+                <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{contact.user.email}}</p>
+                <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{contact.user.phone_number}}</p>    
+            </div>
+        </div>
+        <div class="nav-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'school_profile' school.id %}" aria-current="page">Профиль</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'grades_list' school.id %}" aria-current="page">Классы</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class='dashboard'>
+        {% block dashboard %}
+        {% endblock %}
+    </div>
+{% endblock %}

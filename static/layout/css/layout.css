@@ -300,4 +300,9 @@ body {
   height: 40px;
   width: 40px;
 }
+
+.btn-primary {
+  background-color: #394959 !important;
+  border-color: #394959 !important;
+}
 /*# sourceMappingURL=layout.css.map */

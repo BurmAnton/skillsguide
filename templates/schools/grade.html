@@ -1,0 +1,43 @@
+{% extends "schools/school_layout.html" %}
+{% load static %}
+{% block title %}Мой Выбор | Класс{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schools/css/grade.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block dashboard %}
+    <div class="back-btn">
+        
+    </div>
+    <div class="students-list">
+        <h2>
+            {{grade.grade}}{{grade.grade_letter}} класс
+            <a href="{% url 'grades_list' school.id %}">
+                <button class="btn btn-primary btn-sm">Назад</button>
+            </a>
+        </h2>
+        <table class="table">
+            <tr> 
+                <th scope="col">Фамилия</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Отчество</th>
+                <th scope="col">Email</th>
+                <th scope="col">Телефон</th>
+            </tr>
+            
+            {% for student in grade.students.all %}
+                <tr>
+                    <td scope="row">{{student.user.last_name}}</td>
+                    <td scope="row">{{student.user.first_name}}</td>
+                    <td scope="row">{{student.user.middle_name}}</td>
+                    <td scope="row">{{student.user.email}}</td>
+                    <td scope="row">{{student.user.phone_number}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

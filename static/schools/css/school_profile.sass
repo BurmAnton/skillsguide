@@ -1,104 +1,76 @@
-.body
-    justify-content: center
-    background-color: #F2F2F2
-    color: #394959
-    h2 
-        font-size: 22px
-        text-align: center
-        margin-bottom: 1.5rem
 .modal .list-group-item
     color: #394959
 .students-list-modal
     display: flex
     justify-content: space-between
-
-
-.school_profile
-    width: 400px
-    height: fit-content
-    margin: 30px 0px 0px 0px
+    
+.overview
+    margin: auto
     background-color: white
-    padding: 15px 15px 26px 20px
+    width: fit-content
+    padding: 15px 35px
     border-radius: 8px
-    box-shadow: 4px 4px 4px 0px #00000015 
-    p
-        margin-bottom: 5px
-    .school-name
+    box-shadow: 4px 4px 4px 0px #00000026
+    .overview-data
         display: flex
-        align-items: flex-start
-        p
-            font-size: 22px
-            font-weight: 400
-            margin-top: 10px
-.dashboard
-    margin-left: 50px
-    margin-top: 0
-    .overview
-        margin: auto
-        margin-top: 35px
+        flex-direction: row
+        flex-wrap: wrap
+        justify-content: center
+        gap: 25px
+        .data-point
+            display: flex
+            justify-content: center
+            width: 250px
+            text-align: center
+            .sum
+                font-size: 32px
+            img
+                width: 100px
+                height: 100px
+        .line
+            width: 2px
+            background-color: #39495950           
+.dashboard-lists
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    gap: 25px
+    padding: 30px 0px
+    >div
+        width: 100%
         background-color: white
-        width: fit-content
         padding: 15px 35px
         border-radius: 8px
         box-shadow: 4px 4px 4px 0px #00000026
-        .overview-data
+        .students-list-header
             display: flex
-            flex-direction: row
-            flex-wrap: wrap
-            justify-content: center
-            gap: 25px
-            .data-point
-                display: flex
-                justify-content: center
-                width: 250px
-                text-align: center
-                .sum
-                    font-size: 32px
-                img
-                    width: 100px
-                    height: 100px
-            .line
-                width: 2px
-                background-color: #39495950           
-    .dashboard-lists
-        max-width: 950px
-        display: flex
-        flex-direction: column
-        justify-content: space-between
-        gap: 25px
-        padding: 30px 0px
-        >div
-            width: 100%
-            background-color: white
-            padding: 15px 35px
-            border-radius: 8px
-            box-shadow: 4px 4px 4px 0px #00000026
-            .students-list-header
-                display: flex
-                justify-content: space-between
-                h2
-                    margin-bottom: 10px
-                .btn
-                    width: 200px
-                    height: 30px
-            .save_schedule
-                display: flex
-                justify-content: flex-end
+            justify-content: space-between
+            h2
+                margin-bottom: 10px
+            .btn
+                width: 200px
+                height: 30px
+        .save_schedule
+            display: flex
+            justify-content: flex-end
 
-            th
-                color: #394959
-                font-weight: 500 !important
-                text-align: center
-                border-top: 0
-            tr
-                color: #394959
-                font-weight: 300 !important
-                text-align: center
-            .nowrap
-                white-space: nowrap
-            .test
-                text-decoration: underline
-                font-weight: 400
-                cursor: pointer
-
-            
+        th
+            color: #394959
+            font-weight: 500 !important
+            text-align: center
+            border-top: 0
+        tr
+            color: #394959
+            font-weight: 300 !important
+            text-align: center
+        .nowrap
+            white-space: nowrap
+        .test
+            text-decoration: underline
+            font-weight: 400
+            cursor: pointer
+        .empty-schedule
+            margin: 130px
+            font-size: 18px
+            text-align: center
+                        

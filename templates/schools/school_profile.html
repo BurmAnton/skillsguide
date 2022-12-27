@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "schools/school_layout.html" %}
 {% load static %}
 {% block title %}ЦОПП СО | Личный кабинет{% endblock %}
 
@@ -7,10 +7,9 @@
 {% endblock %}
 
 {% block script %}
-
 {% endblock %}
 
-{% block body %}
+{% block dashboard %}
 {% for test in tests %}
     <div class="modal fade TestModal" id="TestModal{{test.id}}" tabindex="-1" aria-labelledby="TestModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -64,52 +63,42 @@
         </div>
     </div>
 {% endfor %}
-    <div class="card school_profile">
-        <div class="school-name">
-            <p style="width: 200px;">{{school}}</p>
-            <img style="width: 35px; display: none;" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
-        </div>
-        <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{school.address}}</p>
-        <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt="">{{contact.user.first_name}} {{contact.user.last_name}}</p>
-        <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{contact.user.email}}</p>
-        <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{contact.user.phone_number}}</p>
-    </div>
-    <div class="dashboard">
-        <div class="overview">
-            <h2>Показатели</h2>
-            <div class="overview-data">
-                <div class="data-point">
-                    <div>
-                        {% if school.quota.quota != "" %}
-                            <div class="sum">{{students_count}}/{{school.quota.quota}}</div>
-                        {% else %}
-                            <div class="sum">{{students_count}}</div>
-                        {% endif %}
-                        <div class="description">Учеников зарегестрировано</div>
-                    </div>
+    <div class="overview">
+        <h2>Показатели</h2>
+        <div class="overview-data">
+            <div class="data-point">
+                <div>
+                    {% if school.quota.quota != "" %}
+                        <div class="sum">{{students_count}}/{{school.quota.quota}}</div>
+                    {% else %}
+                        <div class="sum">{{students_count}}</div>
+                    {% endif %}
+                    <div class="description">Учеников зарегестрировано</div>
                 </div>
-                <div class="line"></div>
-                <div class="data-point">
-                    <div>   
-                        <div class="sum">0</div>
-                        <div class="description">Групп сформировано</div>
-                    </div>
+            </div>
+            <div class="line"></div>
+            <div class="data-point">
+                <div>   
+                    <div class="sum">0</div>
+                    <div class="description">Групп сформировано</div>
                 </div>
-                <div class="line"></div>
-                <div class="data-point">
-                    <div>   
-                        <div class="sum">0</div>
-                        <div class="description">Проб пройдено</div>
-                    </div>
+            </div>
+            <div class="line"></div>
+            <div class="data-point">
+                <div>   
+                    <div class="sum">0</div>
+                    <div class="description">Проб пройдено</div>
                 </div>
             </div>
         </div>
-        <div class="dashboard-lists">
-            {% if tests.all.count != 0 %}
-                <div class="schedule-list">
-                    <div class="schedule-list-header">
-                        <h2 style="margin: auto">Расписание (ближайщие 2 недели)</h2>
-                    </div>
+    </div>
+    <div class="dashboard-lists">
+        
+            <div class="schedule-list">
+                <div class="schedule-list-header">
+                    <h2 style="margin: auto">Расписание (ближайщие 2 недели)</h2>
+                </div>
+                {% if tests.all.count != 0 %}
                     <table class="table">
                         <tr> 
                             <th scope="col">ID пробы</th>
@@ -128,96 +117,40 @@
                             </tr>
                         {% endfor %}
                     </table>
-                </div>
-            {% endif %}
-            <div class="students-list">
-                <div class="students-list-header">
-                    <h2 style="margin: auto">Ученики</h2>
-                </div>
-                <form action="{% url 'school_profile' school.id %}" method="post">
-                    <table class="table">
-                    {% if message == "Success" %}
-                        <div class="alert alert-success" role="alert">
-                            Ученики записаны успешно!
-                        </div>
-                    {% elif message == "StreamOverFlow" %}
-                        <div class="alert alert-danger" role="alert">
-                            Части учеников не хватило мест на потоке, запишите их на другой свободный поток! 
-                        </div>
-                    {% endif %}
-                    <tr> 
-                        <th scope="col">Фамилия</th>
-                        <th scope="col">Имя</th>
-                        <th scope="col">Отчество</th>
-                        <th scope="col">Класс</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Телефон</th>
-                        <th scope="col">Поток</th>
-                    </tr>
-                    
-                    {% for student in school_students %}
+                {% else %}
+                    <div class="empty-schedule">
+                        <p>Профпроб на ближайщие 2 недели не запланировано.</p>
+                    </div>
+                {% endif %}
+            </div>
+        <!--   
+        <div class="streams-list">
+            <div class="streams-list-header">
+                <h2 style="margin: auto">Потоки профпроб</h2>
+            </div>
+            <table class="table">
+                <tr class="sticky-top"> 
+                    <th scope="col">Набор проб</th>
+                    <th scope="col">Номер потока</th>
+                    <th scope="col">Дата начала</th>
+                    <th scope="col">Дата окончания</th>
+                </tr>
+                {% for cycle in cycles %}
+                    {% for stream in cycle.streams.all %}
                         <tr>
-                            <td scope="row">{{student.user.last_name}}</td>
-                            <td scope="row">{{student.user.first_name}}</td>
-                            <td scope="row">{{student.user.middle_name}}</td>
-                            <td scope="row">{{student.grade.grade}}{{student.grade.grade_letter}}</td>
-                            <td scope="row">{{student.user.email}}</td>
-                            <td scope="row">{{student.user.phone_number}}</td>
+                            <td scope="row">{{stream.cycle.name}}</td>
                             <td scope="row">
-                                <div class="form mb-3">
-                                    <select class="selectpicker" data-width="100%" data-live-search="true" name="student{{student.id}}_stream" required>
-                                        {% if student.streams.all.count == 0 %}
-                                            <option value="None">—</option>
-                                        {% else %}
-                                            <option value="Selected">{{student.streams.all.0.id}}</option>
-                                            <option value="None">—</option>
-                                        {% endif %}
-                                        {% for cycle in cycles %}
-                                            {% for stream in cycle.streams.all %}
-                                                {% if stream.students.all.count < stream.students_limit %}
-                                                    <option value="{{stream.id}}">{{stream.id}}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                                <a href="{% url 'stream_schedule' stream.id %}" target="_blank">
+                                    {{stream.id}}
+                                </a>
                             </td>
+                            <td scope="row">{{stream.cycle.start_date}}</td>
+                            <td scope="row">{{stream.cycle.end_date}}</td>
+                            <td scope="row">{{stream.students.all.count}}/{{stream.students_limit}}</td>
                         </tr>
                     {% endfor %}
-                </table>
-                <div class="save_schedule">
-                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
-                </div>
-            </form>
-            </div>
-            <div class="streams-list">
-                <div class="streams-list-header">
-                    <h2 style="margin: auto">Потоки профпроб</h2>
-                </div>
-                <table class="table">
-                    <tr class="sticky-top"> 
-                        <th scope="col">Набор проб</th>
-                        <th scope="col">Номер потока</th>
-                        <th scope="col">Дата начала</th>
-                        <th scope="col">Дата окончания</th>
-                    </tr>
-                    {% for cycle in cycles %}
-                        {% for stream in cycle.streams.all %}
-                            <tr>
-                                <td scope="row">{{stream.cycle.name}}</td>
-                                <td scope="row">
-                                    <a href="{% url 'stream_schedule' stream.id %}" target="_blank">
-                                        {{stream.id}}
-                                    </a>
-                                </td>
-                                <td scope="row">{{stream.cycle.start_date}}</td>
-                                <td scope="row">{{stream.cycle.end_date}}</td>
-                                <td scope="row">{{stream.students.all.count}}/{{stream.students_limit}}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
+                {% endfor %}
+            </table>
+        </div>-->
     </div>
 {% endblock %}

@@ -1,17 +1,3 @@
-.body {
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  background-color: #F2F2F2;
-  color: #394959;
-}
-
-.body h2 {
-  font-size: 22px;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
 .modal .list-group-item {
   color: #394959;
 }
@@ -25,46 +11,8 @@
           justify-content: space-between;
 }
 
-.school_profile {
-  width: 400px;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-  margin: 30px 0px 0px 0px;
-  background-color: white;
-  padding: 15px 15px 26px 20px;
-  border-radius: 8px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000015;
-          box-shadow: 4px 4px 4px 0px #00000015;
-}
-
-.school_profile p {
-  margin-bottom: 5px;
-}
-
-.school_profile .school-name {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-}
-
-.school_profile .school-name p {
-  font-size: 22px;
-  font-weight: 400;
-  margin-top: 10px;
-}
-
-.dashboard {
-  margin-left: 50px;
-  margin-top: 0;
-}
-
-.dashboard .overview {
+.overview {
   margin: auto;
-  margin-top: 35px;
   background-color: white;
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -75,7 +23,7 @@
           box-shadow: 4px 4px 4px 0px #00000026;
 }
 
-.dashboard .overview .overview-data {
+.overview .overview-data {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -91,7 +39,7 @@
   gap: 25px;
 }
 
-.dashboard .overview .overview-data .data-point {
+.overview .overview-data .data-point {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -102,22 +50,21 @@
   text-align: center;
 }
 
-.dashboard .overview .overview-data .data-point .sum {
+.overview .overview-data .data-point .sum {
   font-size: 32px;
 }
 
-.dashboard .overview .overview-data .data-point img {
+.overview .overview-data .data-point img {
   width: 100px;
   height: 100px;
 }
 
-.dashboard .overview .overview-data .line {
+.overview .overview-data .line {
   width: 2px;
   background-color: #39495950;
 }
 
-.dashboard .dashboard-lists {
-  max-width: 950px;
+.dashboard-lists {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -132,7 +79,7 @@
   padding: 30px 0px;
 }
 
-.dashboard .dashboard-lists > div {
+.dashboard-lists > div {
   width: 100%;
   background-color: white;
   padding: 15px 35px;
@@ -141,7 +88,7 @@
           box-shadow: 4px 4px 4px 0px #00000026;
 }
 
-.dashboard .dashboard-lists > div .students-list-header {
+.dashboard-lists > div .students-list-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -150,16 +97,16 @@
           justify-content: space-between;
 }
 
-.dashboard .dashboard-lists > div .students-list-header h2 {
+.dashboard-lists > div .students-list-header h2 {
   margin-bottom: 10px;
 }
 
-.dashboard .dashboard-lists > div .students-list-header .btn {
+.dashboard-lists > div .students-list-header .btn {
   width: 200px;
   height: 30px;
 }
 
-.dashboard .dashboard-lists > div .save_schedule {
+.dashboard-lists > div .save_schedule {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -168,26 +115,32 @@
           justify-content: flex-end;
 }
 
-.dashboard .dashboard-lists > div th {
+.dashboard-lists > div th {
   color: #394959;
   font-weight: 500 !important;
   text-align: center;
   border-top: 0;
 }
 
-.dashboard .dashboard-lists > div tr {
+.dashboard-lists > div tr {
   color: #394959;
   font-weight: 300 !important;
   text-align: center;
 }
 
-.dashboard .dashboard-lists > div .nowrap {
+.dashboard-lists > div .nowrap {
   white-space: nowrap;
 }
 
-.dashboard .dashboard-lists > div .test {
+.dashboard-lists > div .test {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
+}
+
+.dashboard-lists > div .empty-schedule {
+  margin: 130px;
+  font-size: 18px;
+  text-align: center;
 }
 /*# sourceMappingURL=school_profile.css.map */

@@ -1,0 +1,48 @@
+.back-btn {
+  margin-bottom: 5px;
+}
+
+.students-list {
+  width: 100%;
+  background-color: white;
+  padding: 15px 35px;
+  border-radius: 8px;
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
+}
+
+.students-list .students-list-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.students-list h2 {
+  margin-bottom: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.students-list th {
+  color: #394959;
+  font-weight: 500 !important;
+  text-align: left;
+  border-top: 0;
+}
+
+.students-list tr {
+  color: #394959;
+  font-weight: 300 !important;
+  text-align: left;
+}
+/*# sourceMappingURL=grade.css.map */
