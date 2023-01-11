@@ -3,23 +3,15 @@
 {% block title %}Мой Выбор | Пробы{% endblock %}
 
 {% block style %}
-        <link href="{% static 'schools/css/grade.css' %}" rel="stylesheet">
+        <link href="{% static 'schools/css/tests_list.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block script %}
 {% endblock %}
 
 {% block dashboard %}
-    <div class="back-btn">
-        
-    </div>
-    <div class="students-list">
-        <h2>
-            Профпробы
-            <a href="{% url 'grades_list' school.id %}">
-                <button class="btn btn-primary btn-sm">Назад</button>
-            </a>
-        </h2>
+    <div class="tests-list">
+        <h2>Профпробы</h2>
         <table class="table">
             <tr> 
                 <th scope="col">ID пробы</th>

@@ -1,0 +1,87 @@
+{% extends "schools/school_layout.html" %}
+{% load static %}
+{% load schedule_extras %}
+{% block title %}Мой Выбор | Запись{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schools/css/streams_enroll.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block dashboard %}
+    <div class="streams-list-hdr">
+        <a href="{% url 'grade' school.id grade.id %}">
+            <button class="btn btn-primary btn-sm">Назад</button>
+        </a>
+        <h2>Запись на профпробы ({{grade.grade}}{{grade.grade_letter}})</h2>
+    </div>
+    <div class="cycles-list">
+        {% for cycle in cycles %}
+            {% if cycle|check_cycle %}
+                <h3>{{cycle.name}}</h3>
+                <div class="streams-list">
+                    {% for stream in cycle.streams.all %}
+                        {% if stream.students.all.count < stream.students_limit %}
+                            <div class="modal fade stream-modal" id="StreamModal{{stream.id}}" tabindex="-1" aria-labelledby="StreamModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Запись на поток №{{stream.id}}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="" method="post">
+                                            <div class="modal-body">
+                                                <input style="display:none;" type="input" class="form-control" name="stream_id" value="{{stream.id}}">
+                                                <div class="form mb-3 child-step-hidden" id="form-disability">
+                                                    <select class="selectpicker" title="Выберите учеников" data-width="100%" data-live-search="true" name="students" multiple>
+                                                        {% for student in students %}
+                                                            <option value="{{student.id}}">{{student.user}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="d-grid gap-2">
+                                                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stream-card">
+                                <div class="card-hdr">
+                                    <span>Поток №{{stream.id}}</span>
+                                    <span>{{stream.students.all.count}}/{{stream.students_limit}}</span>
+                                </div>
+                                <table class="table">
+                                    <thead> 
+                                        <th scope="col">Проба</th>
+                                        <th scope="col" class="test-date">Дата и время</th>
+                                    </thead>
+                                    {% for test in stream.tests.all %}
+                                        <tr>
+                                            <td scope="row">{{test.program.name}}</td>
+                                            {% if test.date is not None %}
+                                                <td scope="row" class="test-date">{{test.start_time}} {{test.date|date:"d/m/y"}} г.</td>
+                                            {% else %}
+                                                <td scope="row" class="test-date">Уточняется</td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                                <div class="enroll">
+                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#StreamModal{{stream.id}}">
+                                        Записать
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

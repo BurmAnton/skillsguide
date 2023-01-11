@@ -1,0 +1,47 @@
+{% extends "schools/school_layout.html" %}
+{% load static %}
+{% block title %}Мой Выбор | Циклы{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schools/css/streams_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block dashboard %}
+    <div class="streams-list-hdr">
+        <h2>Профпробы</h2>
+    </div>
+    <div class="cycles-list">
+        {% for cycle in cycles %}
+            <h3>{{cycle.name}}</h3>
+            <div class="streams-list">
+                {% for stream in cycle.streams.all %}
+                    <div class="stream-card">
+                        <div class="card-hdr">
+                            <span>Поток №{{stream.id}}</span>
+                            <span>{{stream.students.all.count}}/{{stream.students_limit}}</span>
+                        </div>
+                        <table class="table">
+                            <thead> 
+                                <th scope="col">Проба</th>
+                                <th scope="col" class="test-date">Дата и время</th>
+                            </thead>
+                            {% for test in stream.tests.all %}
+                                <tr>
+                                    <td scope="row">{{test.program.name}}</td>
+                                    {% if test.date is not None %}
+                                        <td scope="row" class="test-date">{{test.start_time}} {{test.date|date:"d/m/y"}} г.</td>
+                                    {% else %}
+                                        <td scope="row" class="test-date">Уточняется</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

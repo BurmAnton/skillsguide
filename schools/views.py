@@ -21,6 +21,7 @@ from . import imports
 
 #ЛК школы
 @csrf_exempt
+@login_required
 def school_profile(request, school_id):
     school = get_object_or_404(School, id=school_id)
     message = ""
@@ -32,46 +33,6 @@ def school_profile(request, school_id):
             test = ProfTest.objects.get(id=test_id)
             test.students.remove(student)
             test.save()
-        else:
-            message = "Success"
-            for student in school.students.all():
-                stream = request.POST[f'student{student.id}_stream']
-                if stream == "None":
-                    student.streams.clear()
-                elif stream != "Selected":
-                    stream = get_object_or_404(TrainingStream, id=stream)
-                    if len(stream.students.all()) < stream.students_limit:
-                        student.streams.clear()
-                        student.tests.clear()
-                        Assessment.objects.filter(student=student).delete()
-                        Attendance.objects.filter(student=student).delete()
-                        student.streams.add(stream)
-                    else:
-                        message = "StreamOverFlow"
-                student.save()
-                if stream != "None" and stream != "Selected":
-                    for test in stream.tests.all():
-                        test.students.add(*stream.students.all())
-                        test.save()
-                        for criterion in test.program.criteria.all():
-                            assessment = Assessment(
-                                test=test,
-                                student=student,
-                                criterion=criterion
-                            )
-                            assessment.save()
-                        for criterion in test.program.soft_criteria.all():
-                            assessment = Assessment(
-                                test=test,
-                                student=student,
-                                criterion=criterion
-                            )
-                            assessment.save()
-                        attendance = Attendance(
-                            test=test,
-                            student=student
-                        )
-                        attendance.save()
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
     students = school.students.all()
@@ -112,7 +73,57 @@ def grade(request, school_id, grade_id):
     return render(request, "schools/grade.html",{
         "school": school,
         'contact': contact,
+        "grade": grade
+    })
+
+@csrf_exempt
+@login_required
+def streams_enroll(request, school_id, grade_id):
+    school = get_object_or_404(School, id=school_id)
+    contact = get_object_or_404(SchoolContactPersone, school=school.id)
+    grade = get_object_or_404(Grade, id=grade_id)
+    message = "-"
+    if request.method == "POST":
+        stream_id = request.POST['stream_id']
+        stream = get_object_or_404(TrainingStream, id=stream_id)
+        students = request.POST.getlist("students")
+        stream.students.add(*students)
+        stream.save()
+        for student_id in students:
+            student = get_object_or_404(SchoolStudent, id=student_id)
+            for test in stream.tests.all():
+                test.students.add(*stream.students.all())
+                test.save()
+                for criterion in test.program.criteria.all():
+                    assessment = Assessment(
+                        test=test,
+                        student=student,
+                        criterion=criterion
+                    )
+                    assessment.save()
+                for criterion in test.program.soft_criteria.all():
+                    assessment = Assessment(
+                        test=test,
+                        student=student,
+                        criterion=criterion
+                    )
+                    assessment.save()
+                attendance = Attendance(
+                    test=test,
+                    student=student
+                )
+                attendance.save()
+        message = "Success"
+    cycles = TrainingCycle.objects.filter(schools=school)
+    students = SchoolStudent.objects.filter(school=school, streams=None)
+
+    return render(request, "schools/streams_enroll.html",{
+        "school": school,
+        'contact': contact,
         "grade": grade,
+        "students": students,
+        "cycles": cycles,
+        "message": message
     })
 
 @login_required
@@ -127,6 +138,19 @@ def school_tests_list(request, school_id):
         "school": school,
         'contact': contact,
         "tests": tests,
+    })
+
+@login_required
+def streams_list(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    contact = get_object_or_404(SchoolContactPersone, school=school.id)
+
+    cycles = TrainingCycle.objects.filter(schools=school)
+
+    return render(request, "schools/streams_list.html",{
+        "school": school,
+        'contact': contact,
+        "cycles": cycles,
     })
 
 # Изменение данных школы/конт. лица

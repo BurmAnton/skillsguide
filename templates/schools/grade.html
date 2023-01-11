@@ -27,8 +27,8 @@
                 <th scope="col">Отчество</th>
                 <th scope="col">Email</th>
                 <th scope="col">Телефон</th>
+                <th scope="col">Поток</th>
             </tr>
-            
             {% for student in grade.students.all %}
                 <tr>
                     <td scope="row">{{student.user.last_name}}</td>
@@ -36,8 +36,18 @@
                     <td scope="row">{{student.user.middle_name}}</td>
                     <td scope="row">{{student.user.email}}</td>
                     <td scope="row">{{student.user.phone_number}}</td>
+                    {% if student.streams.all.count > 0 %}
+                        <td scope="row">поток №{{student.streams.all.0.id}}</td>
+                    {% else %}
+                        <td scope="row">-</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
+        <div class="enroll">
+            <a href="{% url 'streams_enroll' school.id grade.id %}" class="btn btn-success">
+                Записать на пробы
+            </a>
+        </div>
     </div>
 {% endblock %}

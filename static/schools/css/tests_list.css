@@ -1,0 +1,39 @@
+.back-btn {
+  margin-bottom: 5px;
+}
+
+.tests-list {
+  width: 100%;
+  background-color: white;
+  padding: 15px 35px;
+  border-radius: 8px;
+  -webkit-box-shadow: 4px 4px 4px 0px #00000015;
+          box-shadow: 4px 4px 4px 0px #00000015;
+}
+
+.tests-list h2 {
+  margin-bottom: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tests-list th {
+  color: #394959;
+  font-weight: 500 !important;
+  text-align: left;
+  border-top: 0;
+}
+
+.tests-list tr {
+  color: #394959;
+  font-weight: 300 !important;
+  text-align: left;
+}
+/*# sourceMappingURL=tests_list.css.map */

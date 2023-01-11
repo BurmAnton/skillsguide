@@ -381,11 +381,72 @@
             </div>
         </div>
     </div>
+    {% for workshop in workshops %}
+        <div class="modal fade" id="EditWorkshopModal{{workshop.id}}" tabindex="-1" aria-labelledby="editWorkshopModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editWorkshopLabel">Изменить мастерскую</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'add_workshop' %}" method="post">
+                        <div class="modal-body">
+                            <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
+                            <input style="display:none;" type="input" class="form-control" name="workshop" value={{workshop.id}} required>
+                            <div class="form mb-3">
+                                <label for="ProgramType">Компетенция</label>
+                                <select class="selectpicker" title="Выберите компетенцию" data-width="100%" data-live-search="true" name="competence">
+                                    <option selected value="{{workshop.competence.id}}">{{workshop.competence.name}}</option>
+                                    {% for competence in competencies %}
+                                        <option value="{{competence.id}}">{{competence.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form mb-3">
+                                <label for="ProgramType">Населённый пункт</label>
+                                <select class="selectpicker" title="Выберите нас. пункт" data-width="100%" data-live-search="true" name="city" required>
+                                    <option selected value="{{workshop.adress.city.id}}">{{workshop.adress.city.name}}</option>
+                                    {% for city in cities %}
+                                        <option value="{{city.id}}">{{city.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="street" placeholder="Улица" value="{{workshop.adress.street}}" required>
+                                <label for="street">Улица</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="building_number" placeholder="Дом" value="{{workshop.adress.building_number}}" required>
+                                <label for="building_number">Дом</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" name="floor"  placeholder="Этаж" value="{{workshop.adress.floor}}" required>
+                                <label for="floor">Этаж</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="apartment" placeholder="Аудитория" value="{{workshop.adress.apartment}}" required>
+                                <label for="apartment">Аудитория</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="description" placeholder="Комментарий" value="{{workshop.description}}">
+                                <label for="description">Комментарий</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" name="edit-program">Сохранить изменения</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
     <div class="modal fade" id="addConferenceModal" tabindex="-1" aria-labelledby="addConferenceModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addConferenceLabel">Добавить преподователя</h5>
+                    <h5 class="modal-title" id="addConferenceLabel">Добавить конференцию</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{% url 'add_conference' %}" method="post">
@@ -421,6 +482,49 @@
             </div>
         </div>
     </div>
+    {% for conference in conferences %}
+        <div class="modal fade" id="EditConferenceModal{{program.id}}" tabindex="-1" aria-labelledby="EditConferenceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditConferenceLabel">Изменить конференцию</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'add_conference' %}" method="post">
+                        <div class="modal-body">
+                            <input style="display:none;" type="input" class="form-control" name="education_center" value={{ed_center.id}} required>
+                            <input style="display:none;" type="input" class="form-control" name="conference" value={{conference.id}} required>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="name" placeholder="Название" value="{{conference.name}}"  required>
+                                <label for="name">Название</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="invite_link" placeholder="Ссылка на конференцию" value="{{conference.invite_link}}" required>
+                                <label for="invite_link">Ссылка на конференцию</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="Identifier" value="{{conference.Identifier}}" placeholder="Идентификатор">
+                                <label for="Identifier">Идентификатор</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="access_code" value="{{conference.access_code}}" placeholder="Код доступа">
+                                <label for="access_code">Код доступа</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="input" class="form-control" name="instruction" value="{{conference.instruction}}" placeholder="Инструкция">
+                                <label for="instruction">Инструкция</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" name="edit-conference">Сохранить изменения</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
     <div class="overview">
         <h2>Показатели</h2>
         <div class="overview-data">
@@ -545,9 +649,14 @@
                 <h2>Мастерские</h2>
                 <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#addWorkshopModal">Добавить мастерскую</button>
             </div>
-            {% if message == "WorkshopOk" %}
+            {% if message == "WorkshopAdded" %}
                 <div class="alert alert-success" role="alert">
                     Мастерская добавлена успешно!
+                </div>
+            {% endif %}
+            {% if message == "WorkshopEdited" %}
+                <div class="alert alert-success" role="alert">
+                    Мастерская изменена успешно!
                 </div>
             {% endif %}
             <table class="table">
@@ -577,6 +686,11 @@
                     Конференция добавлена успешно!
                 </div>
             {% endif %}
+            {% if message == "ConferenceEdited" %}
+                <div class="alert alert-success" role="alert">
+                    Конференция изменена успешно!
+                </div>
+            {% endif %}
             <table class="table">
                 <thead>
                     <th class="program-name-th" scope="col">Название ссылки</th>
@@ -587,7 +701,7 @@
                 <tbody>
                     {% for conference in conferences %}
                         <tr>
-                            <td scope="row" class="program-name">{{conference.name}}</td>
+                            <td scope="row" class="program-name" data-bs-toggle="modal" data-bs-target="#EditConferenceModal{{program.id}}">{{conference.name}}</td>
                             <td scope="row">{{conference.invite_link}}</td>
                             <td scope="row">{{conference.Identifier}}</td>
                             <td scope="row">{{conference.access_code}}</td>

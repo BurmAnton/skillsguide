@@ -74,7 +74,6 @@ class TrainingStream(models.Model):
     students_limit = models.IntegerField("Лимит участников", default=25)
     students = models.ManyToManyField(SchoolStudent, verbose_name="Участники потока", related_name="streams", blank=True)
 
-
     class Meta:
         verbose_name = "Учебный поток"
         verbose_name_plural = "Учебные потоки"

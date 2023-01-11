@@ -45,4 +45,13 @@
   font-weight: 300 !important;
   text-align: left;
 }
+
+.students-list .enroll {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
+}
 /*# sourceMappingURL=grade.css.map */

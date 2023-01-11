@@ -30,7 +30,10 @@
                     <a class="nav-link active" href="{% url 'grades_list' school.id %}" aria-current="page">Классы</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'school_tests_list' school.id %}" aria-current="page">Пробы</a>
+                    <a class="nav-link active" href="{% url 'school_tests_list' school.id %}" aria-current="page">Расписание проб</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'streams_list' school.id %}" aria-current="page">Запись на потоки</a>
                 </li>
             </ul>
         </div>

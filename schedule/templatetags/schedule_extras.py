@@ -22,3 +22,10 @@ def filter_ass(test_ass, student):
 @register.filter
 def get_attendance(test_attendance, student):
     return test_attendance.get(student=student).is_attend
+
+@register.filter
+def check_cycle(cycle):
+    for stream in cycle.streams.all():
+        if stream.students_limit > stream.students.all().count():
+            return True
+    return False

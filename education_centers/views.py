@@ -309,27 +309,34 @@ def add_workshop(request):
         building_number = request.POST["building_number"]
         floor = int(request.POST["floor"])
         apartment = request.POST["apartment"]
-        adress = Address(
+        address, is_new = Address.objects.get_or_create(
             city=city,
             street=street,
             building_number=building_number,
             floor=floor,
             apartment=apartment
         )
-        adress.save()
-
         description = request.POST["description"]
         competence = request.POST["competence"]
-        competence = get_object_or_404(Competence, id=competence)
-        workshop = Workshop(
-            education_center=education_center,
-            competence=competence,
-            adress=adress,
-            description=description
-        )
-        workshop.save()
-
-        message = "WorkshopAdded"      
+        competence= get_object_or_404(Competence, id=competence)
+        if 'edit-program' in request.POST:
+            workshop_id = request.POST["workshop"]
+            workshop = get_object_or_404(Workshop, id=workshop_id)
+            workshop.education_center=education_center
+            workshop.competence=competence
+            workshop.adress=address
+            workshop.description=description
+            workshop.save()
+            message = "WorkshopEdited"
+        else:
+            workshop = Workshop(
+                education_center=education_center,
+                competence=competence,
+                adress=address,
+                description=description
+            )
+            workshop.save()
+            message = "WorkshopAdded"
     return HttpResponseRedirect(reverse('ed_center_dashboard', args=(education_center.id, message)))
 
 @login_required
@@ -345,17 +352,26 @@ def add_conference(request):
         Identifier = request.POST["Identifier"]
         access_code = request.POST["access_code"]
         instruction = request.POST["instruction"]
-        conference = Conference(
-            name=name,
-            invite_link=invite_link,
-            access_code=access_code,
-            Identifier=Identifier,
-            instruction=instruction,
-            education_center=education_center
-        )
-        conference.save()
-
-        message = "ConferenceAdded"      
+        if 'edit-conference' in request.POST:
+            conference_id = request.POST["conference"]
+            conference = get_object_or_404(Conference, id=conference_id)
+            conference.invite_link=invite_link
+            conference.Identifier=Identifier
+            conference.access_code=access_code
+            conference.instruction=instruction
+            conference.save()
+            message = "ConferenceEdited"
+        else:   
+            conference = Conference(
+                name=name,
+                invite_link=invite_link,
+                access_code=access_code,
+                Identifier=Identifier,
+                instruction=instruction,
+                education_center=education_center
+            )
+            conference.save()
+            message = "ConferenceAdded"
     return HttpResponseRedirect(reverse('ed_center_dashboard', args=(education_center.id, message)))
 
 @login_required
