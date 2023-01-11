@@ -46,7 +46,7 @@ class TrainingCycle(models.Model):
     is_any_day = models.BooleanField("Любой день недели", default=False)
     days_of_week = models.CharField("Дни недели", max_length=20, null=True, blank=True)
     days_per_week = models.IntegerField("Дней в неделю", null=True, blank=True)
-    excluded_dates = models.CharField("Даты исключения", max_length=500, null=True, blank=True)
+    excluded_dates = models.CharField("Даты исключения", max_length=2500, null=True, blank=True)
 
     class Meta:
         verbose_name = "Цикл профпроб"

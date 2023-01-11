@@ -74,9 +74,9 @@ def school_profile(request, school_id):
                         attendance.save()
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
-    student = school.students.all()
-    students_count = len(student)
-    streams = TrainingStream.objects.filter(students__in=student)
+    students = school.students.all()
+    students_count = len(students)
+    streams = TrainingStream.objects.filter(students__in=students)
     two_weeks = datetime.today() + timedelta(14)
     tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks).order_by('date', 'start_time')
 
@@ -106,13 +106,27 @@ def grades_list(request, school_id):
 def grade(request, school_id, grade_id):
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
-
+    
     grade = get_object_or_404(Grade, id=grade_id)
     
     return render(request, "schools/grade.html",{
         "school": school,
         'contact': contact,
         "grade": grade,
+    })
+
+@login_required
+def school_tests_list(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    contact = get_object_or_404(SchoolContactPersone, school=school.id)
+
+    students = school.students.all()
+    tests = ProfTest.objects.filter(students__in=students).exclude(date=None).order_by('-date', '-start_time')
+
+    return render(request, "schools/tests_list.html",{
+        "school": school,
+        'contact': contact,
+        "tests": tests,
     })
 
 # Изменение данных школы/конт. лица

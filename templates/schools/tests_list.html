@@ -1,0 +1,42 @@
+{% extends "schools/school_layout.html" %}
+{% load static %}
+{% block title %}Мой Выбор | Пробы{% endblock %}
+
+{% block style %}
+        <link href="{% static 'schools/css/grade.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block dashboard %}
+    <div class="back-btn">
+        
+    </div>
+    <div class="students-list">
+        <h2>
+            Профпробы
+            <a href="{% url 'grades_list' school.id %}">
+                <button class="btn btn-primary btn-sm">Назад</button>
+            </a>
+        </h2>
+        <table class="table">
+            <tr> 
+                <th scope="col">ID пробы</th>
+                <th scope="col">Поток</th>
+                <th scope="col">Программа</th>
+                <th scope="col" class="nowrap">Центр обучения</th>
+                <th scope="col" class="nowrap">Дата и время</th>
+            </tr>
+            {% for test in tests %}
+                <tr>
+                    <td scope="row" class="nowrap test" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
+                    <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
+                    <td scope="row" class="nowrap">{{test.program}}</td>
+                    <td scope="row" class="nowrap">{{test.ed_center.short_name}}</td>
+                    <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
