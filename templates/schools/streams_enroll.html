@@ -37,7 +37,9 @@
                                                 <div class="form mb-3 child-step-hidden" id="form-disability">
                                                     <select class="selectpicker" title="Выберите учеников" data-width="100%" data-live-search="true" name="students" multiple>
                                                         {% for student in students %}
-                                                            <option value="{{student.id}}">{{student.user}}</option>
+                                                            {% if student not in stream.students.all %}
+                                                                <option value="{{student.id}}">{{student.user}}</option>
+                                                            {% endif %}
                                                         {% endfor %}
                                                     </select>
                                                 </div>

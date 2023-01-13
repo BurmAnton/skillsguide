@@ -4,6 +4,7 @@
           justify-content: center;
   background-color: #F2F2F2;
   color: #394959;
+  padding: 0 50px;
 }
 
 .body h2 {
@@ -13,7 +14,8 @@
 }
 
 .dashboard {
-  margin-left: 50px;
+  width: 1250px;
+  margin: auto;
   margin-top: 30px;
   margin-bottom: 25px;
 }

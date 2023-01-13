@@ -37,7 +37,11 @@
                     <td scope="row">{{student.user.email}}</td>
                     <td scope="row">{{student.user.phone_number}}</td>
                     {% if student.streams.all.count > 0 %}
-                        <td scope="row">поток №{{student.streams.all.0.id}}</td>
+                        <td scope="row">
+                            {% for stream in student.streams.all %}
+                               <div>поток №{{stream.id}}</div> 
+                            {% endfor %}
+                        </td>
                     {% else %}
                         <td scope="row">-</td>
                     {% endif %}
