@@ -11,4 +11,6 @@ urlpatterns = [
     path('stream/schedule/<int:stream_id>/', views.stream_schedule, name='stream_schedule'),
     path('create/cycle/', views.create_cycle, name='create_cycle'),
     path('student/profile/<int:user_id>/', views.student_profile, name='student_profile'),
+
+    path('cycles/add_students/', views.add_students, name='add_students'),
 ]

@@ -23,7 +23,7 @@ class TrainingCycleAdmin(admin.ModelAdmin):
         'city',
         'is_active'
     )
-    filter_horizontal = ('education_centers', 'programs', 'schools')
+    filter_horizontal = ('education_centers', 'programs', 'schools', 'students')
 
 @admin.register(TrainingStream)
 class TrainingStreamAdmin(admin.ModelAdmin):

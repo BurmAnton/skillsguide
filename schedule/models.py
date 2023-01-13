@@ -37,6 +37,7 @@ class TrainingCycle(models.Model):
     region = models.ForeignKey(Region, verbose_name="Регион", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
     city = models.ForeignKey(City, verbose_name="Населённый пункт", related_name="cycles", null=True, blank=True, on_delete=CASCADE)
     schools = models.ManyToManyField(School, verbose_name="Школы участники", related_name="cycles", blank=True)
+    students = models.ManyToManyField(SchoolStudent, verbose_name="Участники цикла", related_name="cycles", blank=True)
     students_limit = models.IntegerField("Лимит участников", null=False, blank=False)
     group_limit = models.IntegerField("Лимит для группы", null=False, blank=False)
 

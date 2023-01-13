@@ -88,6 +88,7 @@ def streams_enroll(request, school_id, grade_id):
         stream = get_object_or_404(TrainingStream, id=stream_id)
         students = request.POST.getlist("students")
         stream.students.add(*students)
+        stream.cycle.students.add(*students)
         stream.save()
         for student_id in students:
             student = get_object_or_404(SchoolStudent, id=student_id)

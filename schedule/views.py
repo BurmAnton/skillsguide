@@ -243,3 +243,6 @@ def fill_test(request):
                 attendance.save()
 
     return HttpResponseRedirect(reverse("login"))
+
+def add_students(request):
+    pass
