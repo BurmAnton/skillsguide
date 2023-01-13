@@ -50,7 +50,6 @@ class TerAdministration(models.Model):
         verbose_name_plural = "Тер. управления"
 
 
-
 class Address(models.Model):
     city = models.ForeignKey(
         City, 

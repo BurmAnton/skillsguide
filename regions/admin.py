@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedOnlyDropdownFilter, RelatedDropdownFilter
 
 from .models import Region, City, CityType, TerAdministration, Address
 
@@ -10,7 +11,17 @@ class RegionAdmin(admin.ModelAdmin):
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['city__name', 'street']
+    list_display = (
+        'city',
+        'street',
+        'building_number',
+        'floor',
+        'apartment'
+    )
+    list_filter = ( 
+        ('city', RelatedOnlyDropdownFilter),
+    )
 
 
 @admin.register(City)

@@ -245,4 +245,10 @@ def fill_test(request):
     return HttpResponseRedirect(reverse("login"))
 
 def add_students(request):
-    pass
+    return HttpResponseRedirect(reverse("login"))
+    cycles = TrainingCycle.objects.all()
+    for cycle in cycles:
+        for stream in cycle.streams.all():
+            cycle.students.add(*stream.students.all())
+        cycle.save()
+    return HttpResponseRedirect(reverse("login"))

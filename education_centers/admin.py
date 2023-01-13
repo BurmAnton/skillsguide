@@ -53,12 +53,37 @@ class EducationCenterAdmin(admin.ModelAdmin):
 
 @admin.register(Criterion)
 class CriterionAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name', 'skill_type', 'program__name']
+    list_display = [
+        'name',
+        'skill_type',
+        'program'
+    ]
+    list_filter = (
+        'skill_type',
+    )
 
 
 @admin.register(Workshop)
 class WorkshopAdmin(admin.ModelAdmin):
-    pass
+    search_fields = [
+        'education_center__name', 
+        'competence__name', 
+        'adress__street', 
+        'adress__city__name', 
+        'adress__building_number',
+        'adress__floor',
+        'adress__apartment'
+        ]
+    list_display = [
+        'education_center',
+        'competence',
+        'adress'
+    ]
+    list_filter = (
+        ('education_center', RelatedOnlyDropdownFilter),
+        ('competence', RelatedOnlyDropdownFilter),
+    )
 
 CriterionForm = select2_modelform(Criterion, attrs={'width': '400px'})
 
@@ -74,7 +99,7 @@ TrainingProgramForm = select2_modelform(TrainingProgram, attrs={'width': '400px'
 class TrainingProgramAdmin(admin.ModelAdmin):
     form = TrainingProgramForm
     inlines = [CriterionInline,]
-    search_fields = ['name']
+    search_fields = ['name', 'competence__name', 'education_center__name', 'education_center__short_name']
     readonly_fields = ['get_criteria',]
     list_display = [
         'name',
@@ -84,6 +109,11 @@ class TrainingProgramAdmin(admin.ModelAdmin):
         'status',
         'get_criteria'
     ]
+    list_filter = (
+        ('competence', RelatedOnlyDropdownFilter),
+        ('education_center', RelatedOnlyDropdownFilter),
+        'status',
+     )
     
     def get_criteria(self, program):
         criteria = len(program.criteria.all())
@@ -105,4 +135,9 @@ class TrainingProgramAdmin(admin.ModelAdmin):
 
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['user__first_name', 'user__middle_name', 'user__last_name', 'position', 'education_center']
+    list_display = [
+        'user',
+        'position',
+        'education_center'
+    ]

@@ -13,6 +13,7 @@ class TrainingBundleAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('fields_of_activity', 'competencies')
 
+
 @admin.register(TrainingCycle)
 class TrainingCycleAdmin(admin.ModelAdmin):
     list_display = (
@@ -25,13 +26,37 @@ class TrainingCycleAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('education_centers', 'programs', 'schools', 'students')
 
+
+TestForm = select2_modelform(ProfTest, attrs={'width': '400px'})
+
+class ProfTestInline(admin.TabularInline):
+    form = TestForm
+    model = ProfTest
+    fields = ['program', 'date', 'start_time']
+
+    def get_extra(self, request, obj=None, **kwargs):
+        extra = 0
+        if obj:
+            return extra
+        return extra
+
+
+TrainingStreamForm = select2_modelform(TrainingStream, attrs={'width': '400px'})
+
 @admin.register(TrainingStream)
 class TrainingStreamAdmin(admin.ModelAdmin):
-     list_display = (
+    form = TrainingStreamForm
+    inlines = [ProfTestInline,]
+    search_fields = ['cycle__name', 'id']
+    list_display = (
+        'id',
         'cycle',
-        'id'
-     )
-     filter_horizontal = ('students',)
+        'students_limit'
+    )
+    list_filter = (
+        ('cycle', RelatedOnlyDropdownFilter),
+    )
+    filter_horizontal = ('students',)
 
 @admin.register(ProfTest)
 class ProfTestAdmin(admin.ModelAdmin):
@@ -69,6 +94,7 @@ class AssessmentAdmin(admin.ModelAdmin):
 
     search_fields = ['test__program__name', 'criterion__name', 'student__user__first_name', 'student__user__last_name', 'student__user__middle_name']
     list_display = (
+        'test',
         'student',
         'criterion',
         'grade',

@@ -3,12 +3,15 @@ from django_admin_listfilter_dropdown.filters import DropdownFilter, ChoiceDropd
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 
+from easy_select2 import select2_modelform
+
 from .models import School, Grade, SchoolContactPersone, SchoolStudent
 
+GradeForm = select2_modelform(Grade, attrs={'width': '400px'})
 
 class GradeInLine(admin.TabularInline):
     model = Grade
-    #form = GradeForm
+    form = GradeForm
     ordering = ("grade",)
     fields = ['grade', 'grade_letter', 'is_graduated']
 
@@ -41,10 +44,39 @@ class SchoolAdmin(admin.ModelAdmin):
         return students_count
     get_students_count.short_description='Колво учеников'
 
-    
+
+StudentsForm = select2_modelform(SchoolStudent, attrs={'width': '400px'})
+
+class StudentsInLine(admin.TabularInline):
+    model = SchoolStudent
+    form = StudentsForm
+    ordering = ("grade",)
+    fields = ['user',]
+
+    def get_extra(self, request, obj=None, **kwargs):
+        extra = 0
+        if obj:
+            return extra
+        return extra
+
+GradeForm = select2_modelform(Grade, attrs={'width': '400px'})
+
 @admin.register(Grade)
-class SchoolClassAdmin(admin.ModelAdmin):
-    pass
+class GradeAdmin(admin.ModelAdmin):
+    form = GradeForm
+    inlines = [StudentsInLine,]
+    search_fields = ('school__name', 'grade', 'grade_letter')
+    list_display = ('school', 'grade', 'grade_letter', 'get_students_count', 'is_graduated')
+    list_filter = (
+        ('school', RelatedOnlyDropdownFilter),
+        ('grade', DropdownFilter),
+        ('grade_letter', DropdownFilter),
+    )
+
+    def get_students_count(self, grade):
+        students_count = len(grade.students.all())
+        return students_count
+    get_students_count.short_description='Колво учеников'
 
 @admin.register(SchoolContactPersone)
 class SchoolContactPersoneAdmin(admin.ModelAdmin):
@@ -53,6 +85,7 @@ class SchoolContactPersoneAdmin(admin.ModelAdmin):
 
 @admin.register(SchoolStudent)
 class SchoolStudentAdmin(admin.ModelAdmin):
+    search_fields = ('user__last_name', 'user__middle_name', 'user__first_name', 'school__name', 'school__inn')
     list_display = ('get_last_name', 'get_first_name', 'get_middle_name', 'get_email', 'school', 'get_grade')
     list_filter = (
         ('school', RelatedOnlyDropdownFilter),
