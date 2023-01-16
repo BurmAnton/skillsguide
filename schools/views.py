@@ -63,17 +63,63 @@ def grades_list(request, school_id):
         "grades": grades,
     })
 
+@csrf_exempt
 @login_required
 def grade(request, school_id, grade_id):
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
     grade = get_object_or_404(Grade, id=grade_id)
-    
+    message = ""
+    if request.method == "POST":
+        student_id = request.POST["student_id"]
+        student = get_object_or_404(SchoolStudent, id=student_id)
+        if 'cancel-stream' in request.POST:
+            stream_id = request.POST["stream_id"]
+            stream = get_object_or_404(TrainingStream, id=stream_id)
+
+            stream.students.remove(student)
+            stream.save()
+            stream.cycle.students.remove(student)
+            stream.cycle.save()
+            for test in stream.tests.all():
+                test.students.remove(student)
+                test.save()
+            assessment = Assessment.objects.filter(student=student, test__in=stream.tests.all())
+            assessment.delete()
+            attendance = Attendance.objects.filter(student=student, test__in=stream.tests.all())
+            attendance.delete()
+            message = "Success"
+        if 'change-student' in request.POST:
+            user = student.user
+            first_name = request.POST["first_name"]
+            middle_name = request.POST["middle_name"]
+            last_name = request.POST["last_name"]
+            email = request.POST["email"]
+            phone = request.POST["phone"]
+            user.first_name = first_name
+            user.middle_name = middle_name
+            user.last_name = last_name
+            user.email = email
+            user.phone = phone
+            user.save()
+            new_grade, new = Grade.objects.get_or_create(
+                school=school,
+                grade=int(request.POST["school_class"]),
+                grade_letter = request.POST["school_class_latter"].capitalize()
+            )
+            student.grade = new_grade
+            student.save()
+            if len(grade.students.all()) == 0:
+                grade.delete()
+                grade = new_grade
+            
+            message = "Success"
     return render(request, "schools/grade.html",{
         "school": school,
         'contact': contact,
-        "grade": grade
+        "grade": grade,
+        "message": message
     })
 
 @csrf_exempt

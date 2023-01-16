@@ -305,4 +305,14 @@ body {
   background-color: #394959 !important;
   border-color: #394959 !important;
 }
+
+.btn-outline-primary {
+  color: #394959 !important;
+  border-color: #394959 !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #394959 !important;
+  color: white !important;
+}
 /*# sourceMappingURL=layout.css.map */

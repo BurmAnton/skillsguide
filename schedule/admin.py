@@ -63,12 +63,14 @@ class ProfTestAdmin(admin.ModelAdmin):
     search_fields = ['program', 'trainer']
     list_filter = (
         ('program', RelatedOnlyDropdownFilter),
+        ('stream', RelatedOnlyDropdownFilter),
         ('ed_center', RelatedOnlyDropdownFilter),
         ('date', DropdownFilter), 
         ('start_time', DropdownFilter)
      )
     list_display = (
         'program',
+        'stream',
         'ed_center',
         'date',
         'start_time',
@@ -106,6 +108,7 @@ AttendanceForm = select2_modelform(Attendance, attrs={'width': '400px'})
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     form = AttendanceForm
+    search_fields = ['test__program__name', 'student__user__first_name', 'student__user__last_name', 'student__user__middle_name']
     list_filter = ( 
         ('test', RelatedOnlyDropdownFilter),
         'is_attend',

@@ -46,6 +46,13 @@
   text-align: left;
 }
 
+.students-list .last-name {
+  font-weight: 400 !important;
+  text-decoration: underline;
+  font-weight: 400;
+  cursor: pointer;
+}
+
 .students-list .enroll {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -53,5 +60,49 @@
   -webkit-box-pack: right;
       -ms-flex-pack: right;
           justify-content: right;
+}
+
+.student-modal .btn-delete, .student-modal .btn-save, .student-modal .btn-danger {
+  display: none;
+}
+
+.student-modal p {
+  font-family: var(--bs-font-sans-serif);
+  margin: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.student-modal .stream-hdr {
+  margin-bottom: 0;
+}
+
+.student-modal .modal-body {
+  padding-bottom: 5px;
+}
+
+.student-modal .modal-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.student-modal .modal-footer-default {
+  -webkit-box-pack: right !important;
+      -ms-flex-pack: right !important;
+          justify-content: right !important;
+}
+
+.student-modal .list-group-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 /*# sourceMappingURL=grade.css.map */
