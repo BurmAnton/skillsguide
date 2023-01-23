@@ -167,18 +167,55 @@
     <div class="header">
         <h2>Циклы профпроб</h2>
     </div>
-    <div class="cycles_list">
-
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for cycle in cycles %}
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{cycle.name}}</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Набор проб: <b>{{cycle.bundle}}</b></li>
-                        <li class="list-group-item">Лимит участников: <b>{{cycle.students_limit}}</b></li>
-                        <li class="list-group-item">Лимит на группу: <b>{{cycle.group_limit}}</b></li>
-                        <li class="list-group-item">Дата начала: <b>{{cycle.start_date}}</b></li>
-                    </ul>
+            <div class="modal fade edit-cycle-modal" id="EditCycleModal{{cycle.id}}" tabindex="-1" aria-labelledby="EditCycleModal{{cycle.id}}Label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="EditCycleModal{{cycle.id}}">Изменить "{{cycle}}"</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{% url 'create_cycle' %}" method="post">
+                            <div class="modal-body">
+                                <input style="display: none;" type="text" class="form-control" name="cycle" value="{{cycle.id}}" required>                            
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" name="name" placeholder="Название цикла" value="{{cycle.name}}" required>
+                                </div>
+                                <div class="input mb-3">
+                                    <label for="start_date" class="form-label">Дата начала</label>
+                                    <input type="date" class="form-control" name="start_date" placeholder="Дата начала" value={{cycle.start_date.isoformat}} aria-label="Дата" required>
+                                </div>
+                                <div class="input mb-3">
+                                    <label for="start_date" class="form-label">Дата окончания</label>
+                                    <input type="date" class="form-control" name="end_date" placeholder="Дата окончания" value="{{cycle.end_date.isoformat}}" aria-label="Дата" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="submit">
+                                    <input type="submit" name="edit-cycle" value="Сохранить" class="btn btn-primary">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{cycle.name}}</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Набор проб: <b>{{cycle.bundle}}</b></li>
+                            <li class="list-group-item">Лимит участников: <b>{{cycle.students_limit}}</b></li>
+                            <li class="list-group-item">Лимит на группу: <b>{{cycle.group_limit}}</b></li>
+                            <li class="list-group-item">Дата начала: <b>{{cycle.start_date}}</b></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditCycleModal{{cycle.id}}">Изменить</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}

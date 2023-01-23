@@ -79,105 +79,151 @@ def next_weekday(d, weekday):
 @csrf_exempt
 def create_cycle(request):
     if request.method == 'POST':
-        bundle_id = request.POST["bundle"]
-        bundle = TrainingBundle.objects.get(id=bundle_id)
-        name = request.POST["name"]
-        programs = []
-        education_centers = []
-        for competence in bundle.competencies.all():
-            programs_list = request.POST.getlist(f'{competence}_programs')
-            for program_id in programs_list:
-                program = TrainingProgram.objects.get(id=program_id)
-                programs.append(program)
-                education_centers.append(program.education_center)
-
         start_date = datetime.strptime(request.POST["start_date"],"%Y-%m-%d")
         end_date = datetime.strptime(request.POST["end_date"],"%Y-%m-%d")
-        try:
-            is_any_day = request.POST["is_any_day"]
-            is_any_day = True
-        except:
-            is_any_day = False
-        #Получаем массив дней исключений 
-        ex_dates = request.POST["dates"]
-        if "," in ex_dates:
-            excluded_dates = ex_dates.split(",")
-            excluded_dates = [datetime.strptime(x,"%d/%m/%y") for x in excluded_dates]
-        else:
-            excluded_dates = []
-        start_time = datetime.strptime(request.POST["start_time"], "%H:%M").time()
-        
-        group_limit = int(request.POST["group_limit"])
-        students_limit = int(request.POST["students_limit"])
-        city = request.POST["city"]
-        if city == 'Выберите город':
-            city = None
-        else:
-            city = City.objects.get(id=city)
-        cycle = TrainingCycle(
-            name=name,
-            bundle=bundle,
-            city=city,
-            students_limit=students_limit,
-            group_limit=group_limit,
-            start_date=start_date,
-            start_time=start_time,
-            end_date=end_date,
-            excluded_dates=excluded_dates,
-            is_any_day=is_any_day
-        )
-        cycle.save()
-        cycle.programs.add(*programs)
-        cycle.education_centers.add(*education_centers)
-        cycle.schools.add(*request.POST.getlist("schools"))
-        cycle.save()
-        if is_any_day == False:
-            cycle.days_of_week = request.POST.getlist("days_of_week")
-        else:
-            cycle.days_per_week = int(request.POST["days_per_week"])
-        cycle.save()
-
-        steams_count = math.ceil(students_limit / group_limit)
-        excluded_dates = cycle.excluded_dates
-        programs_count = len(cycle.programs.all())
-        for i in range(steams_count):
-            stream = TrainingStream(
-                cycle=cycle,
-                students_limit=group_limit,
+        if 'edit-cycle' in request.POST:
+            cycle_id = request.POST["cycle"]
+            name = request.POST["name"]
+            cycle = get_object_or_404(TrainingCycle, id=cycle_id)
+            cycle.name = name
+            cycle.save()
+            available_dates = AvailableDate.objects.filter(
+                stream__in=cycle.streams.all(), 
+                date__lt=start_date,
+                busy=False
             )
-            stream.save()
-
-            for program in cycle.programs.all():
-                test = ProfTest(
-                    ed_center=program.education_center,
-                    program=program,
-                    stream=stream,
-                    start_time=cycle.start_time
-                )
-                test.save()
-
-            available_dates = []
-            slot_date = cycle.start_date
-            if cycle.is_any_day == False:
-                days_of_week = list(map(int, cycle.days_of_week))
-                date_limit = programs_count + 2
+            available_dates.delete()
+            available_dates = AvailableDate.objects.filter(
+                stream__in=cycle.streams.all(), 
+                date__gt=end_date,
+                busy=False
+            )
+            available_dates.delete()
+            programs_count = len(cycle.programs.all())
+            excluded_dates = cycle.excluded_dates.split(", 0, 0),")
+            excluded_dates = [x+')]' for x in excluded_dates]
+            for stream in cycle.streams.all():
+                slot_date = start_date
+                if cycle.is_any_day == False:
+                    days_of_week = list(map(int, cycle.days_of_week))
+                    date_limit = programs_count + 2
+                else:
+                    days_of_week = [0, 1, 2, 3, 4]
+                    week_count = math.ceil(programs_count/cycle.days_per_week)+1
+                    date_limit = (week_count)*5 + len(excluded_dates)
+                while slot_date < end_date:
+                    for weekday in days_of_week:
+                        if slot_date not in excluded_dates and slot_date.weekday() in days_of_week:
+                            avaible_date, is_new = AvailableDate.objects.get_or_create(
+                                stream=stream, 
+                                date=slot_date,
+                                week_number=week_count
+                            )
+                            avaible_date.save()
+                        slot_date = slot_date + timedelta(1)
+                        if slot_date < end_date or slot_date.weekday() == 5:
+                            week_count -= 1
+                            break
+            cycle.start_date = start_date
+            cycle.end_date = end_date
+            cycle.save()
+        else:
+            bundle_id = request.POST["bundle"]
+            bundle = TrainingBundle.objects.get(id=bundle_id)
+            name = request.POST["name"]
+            programs = []
+            education_centers = []
+            for competence in bundle.competencies.all():
+                programs_list = request.POST.getlist(f'{competence}_programs')
+                for program_id in programs_list:
+                    program = TrainingProgram.objects.get(id=program_id)
+                    programs.append(program)
+                    education_centers.append(program.education_center)
+            try:
+                is_any_day = request.POST["is_any_day"]
+                is_any_day = True
+            except:
+                is_any_day = False
+            #Получаем массив дней исключений 
+            ex_dates = request.POST["dates"]
+            if "," in ex_dates:
+                excluded_dates = ex_dates.split(",")
+                excluded_dates = [datetime.strptime(x,"%d/%m/%y") for x in excluded_dates]
             else:
-                days_of_week = [0, 1, 2, 3, 4]
-                week_count = math.ceil(programs_count/cycle.days_per_week)+1
-                date_limit = (week_count)*5 + len(excluded_dates)
-            while slot_date < end_date:
-                for weekday in days_of_week:
-                    if slot_date not in excluded_dates and slot_date.weekday() in days_of_week:
-                        avaible_date = AvailableDate(
-                            stream=stream, 
-                            date=slot_date,
-                            week_number=week_count
-                        )
-                        avaible_date.save()
-                    slot_date = slot_date + timedelta(1)
-                    if slot_date < end_date or slot_date.weekday() == 5:
-                        week_count -= 1
-                        break
+                excluded_dates = []
+            start_time = datetime.strptime(request.POST["start_time"], "%H:%M").time()
+            
+            group_limit = int(request.POST["group_limit"])
+            students_limit = int(request.POST["students_limit"])
+            city = request.POST["city"]
+            if city == 'Выберите город':
+                city = None
+            else:
+                city = City.objects.get(id=city)
+            cycle = TrainingCycle(
+                name=name,
+                bundle=bundle,
+                city=city,
+                students_limit=students_limit,
+                group_limit=group_limit,
+                start_date=start_date,
+                start_time=start_time,
+                end_date=end_date,
+                excluded_dates=excluded_dates,
+                is_any_day=is_any_day
+            )
+            cycle.save()
+            cycle.programs.add(*programs)
+            cycle.education_centers.add(*education_centers)
+            cycle.schools.add(*request.POST.getlist("schools"))
+            cycle.save()
+            if is_any_day == False:
+                cycle.days_of_week = request.POST.getlist("days_of_week")
+            else:
+                cycle.days_per_week = int(request.POST["days_per_week"])
+            cycle.save()
+
+            steams_count = math.ceil(students_limit / group_limit)
+            excluded_dates = cycle.excluded_dates
+            programs_count = len(cycle.programs.all())
+            for i in range(steams_count):
+                stream = TrainingStream(
+                    cycle=cycle,
+                    students_limit=group_limit,
+                )
+                stream.save()
+
+                for program in cycle.programs.all():
+                    test = ProfTest(
+                        ed_center=program.education_center,
+                        program=program,
+                        stream=stream,
+                        start_time=cycle.start_time
+                    )
+                    test.save()
+
+                available_dates = []
+                slot_date = cycle.start_date
+                if cycle.is_any_day == False:
+                    days_of_week = list(map(int, cycle.days_of_week))
+                    date_limit = programs_count + 2
+                else:
+                    days_of_week = [0, 1, 2, 3, 4]
+                    week_count = math.ceil(programs_count/cycle.days_per_week)+1
+                    date_limit = (week_count)*5 + len(excluded_dates)
+                while slot_date < end_date:
+                    for weekday in days_of_week:
+                        if slot_date not in excluded_dates and slot_date.weekday() in days_of_week:
+                            avaible_date = AvailableDate(
+                                stream=stream, 
+                                date=slot_date,
+                                week_number=week_count
+                            )
+                            avaible_date.save()
+                        slot_date = slot_date + timedelta(1)
+                        if slot_date < end_date or slot_date.weekday() == 5:
+                            week_count -= 1
+                            break
 
         return HttpResponseRedirect(reverse("bundles_list")) 
     return HttpResponseRedirect(reverse("login")) 

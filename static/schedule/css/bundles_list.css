@@ -9,6 +9,10 @@
   padding: 20px 50px;
 }
 
+.body h2 {
+  margin-top: 15px;
+}
+
 .body .btn-primary {
   background-color: #394959 !important;
   border: 0;
@@ -40,8 +44,8 @@
 
 .body .cycles_list .card, .body .bundles_list .card {
   border-radius: 6px;
-  -webkit-box-shadow: 5px 4px 12px 1px;
-          box-shadow: 5px 4px 12px 1px;
+  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
+          box-shadow: 4px 4px 4px 0px #00000026;
 }
 
 .body .cycles_list .card, .body .cycles_list li, .body .bundles_list .card, .body .bundles_list li {
