@@ -194,6 +194,10 @@ def streams_enroll(request, school_id, grade_id):
                 attendance.save()
         message = "Success"
     cycles = TrainingCycle.objects.filter(schools=school)
+    streams = TrainingStream.objects.filter(cycle__in=cycles)
+    tests = ProfTest.objects.filter(stream__in=streams).exclude(date=None)
+    streams = TrainingStream.objects.filter(tests__in=tests)
+
     students = SchoolStudent.objects.filter(school=school)
 
     return render(request, "schools/streams_enroll.html",{
@@ -202,6 +206,7 @@ def streams_enroll(request, school_id, grade_id):
         "grade": grade,
         "students": students,
         "cycles": cycles,
+        "streams": streams,
         "message": message
     })
 

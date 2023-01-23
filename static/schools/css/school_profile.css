@@ -23,6 +23,10 @@
           box-shadow: 4px 4px 4px 0px #00000026;
 }
 
+.overview h2 {
+  text-align: center;
+}
+
 @media (max-width: 1050px) {
   .overview {
     max-width: calc(100vw - 40px);

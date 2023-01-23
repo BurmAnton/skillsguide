@@ -23,7 +23,7 @@
                 <h3>{{cycle.name}}</h3>
                 <div class="streams-list">
                     {% for stream in cycle.streams.all %}
-                        {% if stream.students.all.count < stream.students_limit %}
+                        {% if stream.students.all.count < stream.students_limit and stream in streams %}
                             <div class="modal fade stream-modal" id="StreamModal{{stream.id}}" tabindex="-1" aria-labelledby="StreamModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
