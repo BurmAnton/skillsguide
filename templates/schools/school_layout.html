@@ -8,33 +8,108 @@
 {% endblock %}
 
 {% block body %}
+    <div class="modal fade SchoolModal" id="SchoolModal" tabindex="-1" aria-labelledby="SchoolModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="SchoolModalLabel">Изменить данные школы</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'school_profile' school.id %}" method="post">
+                        <p>Школа</p>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="school_name" placeholder="Наименование учреждения" value="{{school.name}}" required>
+                            <label for="school_name">Наименование учреждения</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="inn" placeholder="ИНН" value="{{school.inn}}" required>
+                            <label for="inn">ИНН</label>
+                        </div>
+                        <p>Адрес</p>
+                        <div class="form-floating mb-3">
+                            <select class="selectpicker" data-width="100%" data-live-search="true" name="city" required>
+                                <option selected value="{{school.address.city.id}}">{{school.address.city.name}}</option>
+                                {% for city in cities %}
+                                    {% if city.id != school.address.city.id %}
+                                        <option value="{{city.id}}" data-school="{{city.id}}">{{city.name}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="street" placeholder="Адрес" value="{{school.address.street}}" required>
+                            <label for="street">Улица</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="building_number" placeholder="Адрес" value="{{school.address.building_number}}" required>
+                            <label for="building_number">Номер дома</label>
+                        </div>
+                        <p>Контактное лицо</p>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="last_name" placeholder="Фамилия" value="{{school.school_contact.user.last_name}}" required>
+                            <label for="Name">Фамилия</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="first_name" placeholder="Имя" value="{{school.school_contact.user.first_name}}" required>
+                            <label for="Name">Имя</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="middle_name" placeholder="Отчество" value="{{school.school_contact.user.middle_name}}" required>
+                            <label for="Name">Отчество</label>
+                        </div>
+                        <p>Контакты</p>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="phone_number" placeholder="Телефон" value="{{school.school_contact.user.phone_number}}" required>
+                            <label for="Name">Телефон</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="input" class="form-control" name="email" placeholder="Email" value="{{school.school_contact.user.email}}" required>
+                            <label for="Name">Email</label>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary" name="edit-school">Сохранить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class='side-menu'>
         <div class="card school_profile">
-            <div class="school-name">
-                <p>{{school}}</p>
-                <img class="edit-icon" src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
-            </div>
-            <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/address-icon.png' %}" alt="">{{school.address}}</p>
+            <h1>{{school}}</h1>
+            <p>Адрес: {{school.address}}</p>
             <div class="contact-data">
-                <p><img style="width: 26px;margin-bottom: 2px;margin-right: 3px;" src="{% static 'education_centers/img/contacts-icon.png' %}"alt="">{{contact.user.first_name}} {{contact.user.last_name}}</p>
-                <p><img style="width: 28px;margin-bottom: -1px;margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/email-icon.svg' %}" alt="">{{contact.user.email}}</p>
-                <p><img style="width: 27px;margin-bottom: 1px; margin-left: 10px;margin-right: 5px;" src="{% static 'education_centers/img/phone-icon.svg' %}" alt="">{{contact.user.phone_number}}</p>    
+                <h2>{{contact.user.first_name}} {{contact.user.last_name}}</h2>
+                <p><img class="contact-img" src="{% static 'schools/img/phone-icon.svg' %}" alt="">{{contact.user.phone_number}}</p>    
+                <p><img class="contact-img" src="{% static 'schools/img/email-icon.svg' %}" alt="">{{contact.user.email}}</p>
+            </div>
+            <div class="edit-icon" data-bs-toggle="modal" data-bs-target="#SchoolModal"> 
+                <img src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
             </div>
         </div>
         <div class="nav-menu">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'school_profile' school.id %}" aria-current="page">Профиль</a>
+                    <a class="nav-link active" href="{% url 'school_profile' school.id %}" aria-current="page">
+                        <img src="{% static 'schools/img/home-icon.svg' %}" alt="">
+                        Профиль
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'grades_list' school.id %}" aria-current="page">Классы</a>
+                    <a class="nav-link active" href="{% url 'grades_list' school.id %}" aria-current="page">
+                        <img src="{% static 'schools/img/students-icon.svg' %}" alt="">
+                        Классы
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'school_tests_list' school.id %}" aria-current="page">Расписание проб</a>
+                    <a class="nav-link active" href="{% url 'school_tests_list' school.id %}" aria-current="page">
+                        <img src="{% static 'schools/img/schedule-icon.svg' %}" alt="">
+                        Расписание проб
+                    </a>
                 </li>
-                <!--<li class="nav-item">
-                    <a class="nav-link active" href="{% url 'streams_list' school.id %}" aria-current="page">Профпробы</a>
-                </li>-->
             </ul>
         </div>
     </div>

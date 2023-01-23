@@ -36,4 +36,26 @@
   font-weight: 300 !important;
   text-align: left;
 }
+
+#table-wrapper {
+  position: relative;
+}
+
+@media (max-width: 1050px) {
+  #table-wrapper {
+    max-width: calc(100vw - 110px);
+  }
+}
+
+#table-scroll {
+  max-width: 1200px;
+  overflow: auto;
+  margin-top: 20px;
+}
+
+@media (max-width: 1050px) {
+  #table-scroll {
+    width: calc( 100vw - 110px);
+  }
+}
 /*# sourceMappingURL=tests_list.css.map */

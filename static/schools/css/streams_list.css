@@ -60,4 +60,27 @@ h2 {
   white-space: nowrap;
   text-align: center;
 }
+
+#table-wrapper {
+  position: relative;
+}
+
+@media (max-width: 540px) {
+  #table-wrapper {
+    max-width: calc(100vw - 110px);
+  }
+}
+
+#table-scroll {
+  max-width: 800px;
+  width: 56vw;
+  overflow: auto;
+  margin-top: 20px;
+}
+
+@media (max-width: 540px) {
+  #table-scroll {
+    width: calc( 100vw - 110px);
+  }
+}
 /*# sourceMappingURL=streams_list.css.map */

@@ -33,10 +33,40 @@ def school_profile(request, school_id):
             test = ProfTest.objects.get(id=test_id)
             test.students.remove(student)
             test.save()
+        if 'edit-school' in request.POST:
+            school_name = request.POST[f'school_name']
+            inn = request.POST[f'inn']
+            school.name = school_name
+            school.inn = inn
+            school_address = school.address
+            city_id = request.POST[f'city']
+            city = get_object_or_404(City, id=city_id)
+            street = request.POST[f'street']
+            building_number = request.POST[f'building_number']
+            school_address.city = city
+            school_address.street = street
+            school_address.building_number = building_number
+            user = school.school_contact.user
+            last_name = request.POST[f'last_name']
+            first_name = request.POST[f'first_name']
+            middle_name = request.POST[f'middle_name']
+            phone_number = request.POST[f'phone_number']
+            email = request.POST[f'email']
+            user.last_name = last_name.title()
+            user.first_name = first_name.title()
+            user.middle_name = middle_name.title()
+            user.phone_number = phone_number.replace(" ", "")
+            user.email = email
+            user.save()
+            school_address.save()
+            school.save()
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
     students = school.students.all()
     students_count = len(students)
+    enroled_students_count = len(students.exclude(cycles=None))
+    test_count = len(Attendance.objects.filter(student__in=students, is_attend=True))
+
     streams = TrainingStream.objects.filter(students__in=students)
     two_weeks = datetime.today() + timedelta(14)
     tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks).order_by('date', 'start_time')
@@ -45,6 +75,8 @@ def school_profile(request, school_id):
         "cities": City.objects.all(),
         "school": school,
         "students_count": students_count,
+        "enroled_students_count": enroled_students_count,
+        "test_count": test_count,
         'tests': tests,
         'contact': contact,
         "message": message

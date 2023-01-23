@@ -1,57 +1,83 @@
 .body
     justify-content: center
     background-color: #F2F2F2
-    color: #394959
-    h2 
-        font-size: 22px
-        text-align: center
-        margin-bottom: 1.5rem
     padding: 0 50px
+    @media (max-width: 1150px)
+        flex-direction: column
+        padding: 0 20px
 
 .dashboard
-    width: 1250px
-    margin: auto
     margin-top: 30px
     margin-bottom: 25px
 
 .side-menu
     display: flex
     flex-direction: column
+    flex-wrap: wrap
     row-gap: 25px
     margin-top: 30px
+    margin-right: 15px
+    @media (max-width: 1150px)
+        flex-direction: row
+        column-gap: 15px
+        margin: auto
+        margin-top: 30px
     >div
-        width: 400px
         height: fit-content
         margin: 0px
         background-color: white
         padding: 15px 15px 26px 20px
-        border-radius: 8px
+        border-radius: 12px
         box-shadow: 4px 4px 4px 0px #00000015 
+        width: 400px
+        height: auto
+        @media (max-width: 855px) 
+            width: calc( 100vw - 40px )
+            min-width: fit-content
         p
+            width: max-content
             margin-bottom: 5px
-        .school-name
+            font-style: normal
+            font-weight: 300
+            font-size: 16px
+            line-height: 16px
+    .school_profile
+        padding: 20px 24px
+        h2
+            margin-top: 8px
+        .contact-img
+            width: 20px !important
+            margin-right: 10px !important
+        .edit-icon
+            width: 100%
             display: flex
-            align-items: flex-start
-            justify-content: space-between
-            p
-                font-size: 20px
-                font-weight: 500
-                margin-top: 10px
-            .edit-icon
+            justify-content: flex-end
+            img
                 width: 30px
+                height: auto
                 padding: 2px
                 border-radius: 50px 
                 &:hover
                     background: #F2F2F2
-        .contact-data
-            margin-top: 10px
-            margin-left: 5px
-    .nav-menu a
-        color: #394959
-        text-decoration: underline
-        font-weight: 400
-        cursor: pointer
-        &:hover
-            color: #394959
-            text-decoration: none
+    .nav-menu
+        padding: 30px 40px
+        .nav-item
+            img
+                width: 24px
+                height: auto
+            a
+                display: flex
+                gap: 24px
+                padding-left: 0
+                color: #394959
+                text-decoration: none
+                cursor: pointer
+                font-family: 'Roboto', sans-serif
+                font-style: normal
+                font-weight: 300
+                font-size: 20px
+                line-height: 24px
+                &:hover
+                    color: #394959
+                    text-decoration: none
         

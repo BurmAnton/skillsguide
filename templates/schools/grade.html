@@ -26,116 +26,120 @@
                 Студент изменён успешно!
             </div>
         {% endif %}
-        <table class="table">
-            <tr> 
-                <th scope="col">Фамилия</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Отчество</th>
-                <th scope="col">Email</th>
-                <th scope="col">Телефон</th>
-                <th scope="col">Поток</th>
-            </tr>
-            {% for student in grade.students.all %}
-                <div class="modal fade student-modal" id="StudentModal{{student.id}}" tabindex="-1" aria-labelledby="StudentModalLabel{{student.id}}" aria-hidden="true">
-                    <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="StudentModalLabel{{student.id}}">Данные студента</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                    <div class="modal-body">
-                                        <form action="{% url 'grade' school.id grade.id %}" method="post">
-                                            <input style="display:none;" type="input" class="form-control" name="student_id" value={{student.id}} required>
-                                            <div class="form-floating mb-3">
-                                                <input type="input" class="form-control input-{{student.id}}" name="last_name" placeholder="Имя" value="{{student.user.last_name}}" required disabled>
-                                                <label for="Name">Фамилия</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="input" class="form-control input-{{student.id}}" name="first_name" placeholder="Имя" value="{{student.user.first_name}}" required disabled>
-                                                <label for="Name">Имя</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="input" class="form-control input-{{student.id}}" name="middle_name" placeholder="Имя" value="{{student.user.middle_name}}" disabled>
-                                                <label for="Name">Отчество</label>
-                                            </div>
-                                            <div class="form mb-3">
-                                                <div class="row g-3">
-                                                    <div class="col">
-                                                        <select class="form-select input-{{student.id}}" data-width="100%"  name="school_class" required disabled>
-                                                            <option value="{{student.grade.grade}}">{{student.grade.grade}}</option>
-                                                            <option value="6">6</option>
-                                                            <option value="7">7</option>
-                                                            <option value="8">8</option>
-                                                            <option value="9">9</option>
-                                                            <option value="10">10</option>
-                                                            <option value="11">11</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col">
-                                                        <input type="input" class="form-control input-{{student.id}}" data-width="100%" name="school_class_latter" value="{{student.grade.grade_letter}}" maxlength="2" onkeydown="return /[a/а-я]/i.test(event.key)" placeholder="Буква класса" required disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p>Контакты</p>
-                                            <div class="form-floating mb-3">
-                                                <input type="email" class="form-control input-{{student.id}}" name="email" placeholder="Email" value="{{student.user.email}}" required disabled>
-                                                <label for="email">email</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control input-{{student.id}}" name="phone" placeholder="Телефон" value="{{student.user.phone_number}}" maxlength=18 required disabled>
-                                                <label for="phone">Телефон</label>
-                                            </div>
-                                            <input style="display:none;" class="change-student-{{student.id}}" type="submit" name="change-student" class="btn" value="Сохранить">
-                                        <p class="stream-hdr">Потоки</p>
-                                        {% if student.streams.all.count == 0 %}
-                                            <p class="stream-hdr">Ученик пока не записан не на один поток.</p>
-                                        {% endif %}
-                                    </div>
-                                    <ul class="list-group list-group-flush">
-                                        {% for stream in student.streams.all %}
-                                            <li class="list-group-item">
-                                                №{{stream.id}} ({{stream.cycle}})
+        <div id="table-wrapper">
+            <div id="table-scroll">
+                <table class="table">
+                    <tr> 
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Отчество</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Телефон</th>
+                        <th scope="col">Поток</th>
+                    </tr>
+                    {% for student in grade.students.all %}
+                        <div class="modal fade student-modal" id="StudentModal{{student.id}}" tabindex="-1" aria-labelledby="StudentModalLabel{{student.id}}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="StudentModalLabel{{student.id}}">Данные студента</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                            <div class="modal-body">
                                                 <form action="{% url 'grade' school.id grade.id %}" method="post">
                                                     <input style="display:none;" type="input" class="form-control" name="student_id" value={{student.id}} required>
-                                                    <input style="display:none;" type="input" class="form-control" name="stream_id" value={{stream.id}} required>
-                                                    <button type="submit" name="cancel-stream" class="btn btn-sm btn-danger stream-{{student.id}}">Удалить</button>
-                                                </form>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                    <div class="modal-footer modal-footer-default">
-                                        <button type="button" class="btn btn-danger btn-delete btn-delete-{{student.id}}">Удалить</button>
-                                        <button type="button" class="btn btn-secondary btn-change btn-change-{{student.id}}" data-student="{{student.id}}">Изменить</button>
-                                        <div class="btn-save btn-save-{{student.id}}">
-                                            <button type="button" class="btn btn-outline-primary btn-change" data-student="{{student.id}}">Отменить</button>
-                                            <button name="change-student" class="btn btn-primary btn-submit" data-student="{{student.id}}">Сохранить</button>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="input" class="form-control input-{{student.id}}" name="last_name" placeholder="Имя" value="{{student.user.last_name}}" required disabled>
+                                                        <label for="Name">Фамилия</label>
+                                                    </div>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="input" class="form-control input-{{student.id}}" name="first_name" placeholder="Имя" value="{{student.user.first_name}}" required disabled>
+                                                        <label for="Name">Имя</label>
+                                                    </div>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="input" class="form-control input-{{student.id}}" name="middle_name" placeholder="Имя" value="{{student.user.middle_name}}" disabled>
+                                                        <label for="Name">Отчество</label>
+                                                    </div>
+                                                    <div class="form mb-3">
+                                                        <div class="row g-3">
+                                                            <div class="col">
+                                                                <select class="form-select input-{{student.id}}" data-width="100%"  name="school_class" required disabled>
+                                                                    <option value="{{student.grade.grade}}">{{student.grade.grade}}</option>
+                                                                    <option value="6">6</option>
+                                                                    <option value="7">7</option>
+                                                                    <option value="8">8</option>
+                                                                    <option value="9">9</option>
+                                                                    <option value="10">10</option>
+                                                                    <option value="11">11</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <input type="input" class="form-control input-{{student.id}}" data-width="100%" name="school_class_latter" value="{{student.grade.grade_letter}}" maxlength="2" onkeydown="return /[a/а-я]/i.test(event.key)" placeholder="Буква класса" required disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p>Контакты</p>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="email" class="form-control input-{{student.id}}" name="email" placeholder="Email" value="{{student.user.email}}" required disabled>
+                                                        <label for="email">email</label>
+                                                    </div>
+                                                    <div class="form-floating mb-3">
+                                                        <input type="text" class="form-control input-{{student.id}}" name="phone" placeholder="Телефон" value="{{student.user.phone_number}}" maxlength=18 required disabled>
+                                                        <label for="phone">Телефон</label>
+                                                    </div>
+                                                    <input style="display:none;" class="change-student-{{student.id}}" type="submit" name="change-student" class="btn" value="Сохранить">
+                                                <p class="stream-hdr">Потоки</p>
+                                                {% if student.streams.all.count == 0 %}
+                                                    <p class="stream-hdr">Ученик пока не записан не на один поток.</p>
+                                                {% endif %}
+                                            </div>
+                                            <ul class="list-group list-group-flush">
+                                                {% for stream in student.streams.all %}
+                                                    <li class="list-group-item">
+                                                        №{{stream.id}} ({{stream.cycle}})
+                                                        <form action="{% url 'grade' school.id grade.id %}" method="post">
+                                                            <input style="display:none;" type="input" class="form-control" name="student_id" value={{student.id}} required>
+                                                            <input style="display:none;" type="input" class="form-control" name="stream_id" value={{stream.id}} required>
+                                                            <button type="submit" name="cancel-stream" class="btn btn-sm btn-danger stream-{{student.id}}">Удалить</button>
+                                                        </form>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                            <div class="modal-footer modal-footer-default">
+                                                <button type="button" class="btn btn-danger btn-delete btn-delete-{{student.id}}">Удалить</button>
+                                                <button type="button" class="btn btn-secondary btn-change btn-change-{{student.id}}" data-student="{{student.id}}">Изменить</button>
+                                                <div class="btn-save btn-save-{{student.id}}">
+                                                    <button type="button" class="btn btn-outline-primary btn-change" data-student="{{student.id}}">Отменить</button>
+                                                    <button name="change-student" class="btn btn-primary btn-submit" data-student="{{student.id}}">Сохранить</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
-                </div>
-                <tr>
-                    <td scope="row" class="last-name" data-bs-toggle="modal" data-bs-target="#StudentModal{{student.id}}">
-                        {{student.user.last_name}}
-                    </td>
-                    <td scope="row">{{student.user.first_name}}</td>
-                    <td scope="row">{{student.user.middle_name}}</td>
-                    <td scope="row">{{student.user.email}}</td>
-                    <td scope="row">{{student.user.phone_number}}</td>
-                    {% if student.streams.all.count > 0 %}
-                        <td scope="row">
-                            {% for stream in student.streams.all %}
-                               <div>поток №{{stream.id}}</div> 
-                            {% endfor %}
-                        </td>
-                    {% else %}
-                        <td scope="row">-</td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </table>
+                        </div>
+                        <tr>
+                            <td scope="row" class="last-name" data-bs-toggle="modal" data-bs-target="#StudentModal{{student.id}}">
+                                {{student.user.last_name}}
+                            </td>
+                            <td scope="row">{{student.user.first_name}}</td>
+                            <td scope="row">{{student.user.middle_name}}</td>
+                            <td scope="row">{{student.user.email}}</td>
+                            <td scope="row">{{student.user.phone_number}}</td>
+                            {% if student.streams.all.count > 0 %}
+                                <td scope="row">
+                                    {% for stream in student.streams.all %}
+                                    <div>поток №{{stream.id}}</div> 
+                                    {% endfor %}
+                                </td>
+                            {% else %}
+                                <td scope="row">-</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
         <div class="enroll">
             <a href="{% url 'streams_enroll' school.id grade.id %}" class="btn btn-success">
                 Записать на пробы

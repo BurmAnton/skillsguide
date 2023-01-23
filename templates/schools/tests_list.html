@@ -12,23 +12,27 @@
 {% block dashboard %}
     <div class="tests-list">
         <h2>Профпробы</h2>
-        <table class="table">
-            <tr> 
-                <th scope="col">ID пробы</th>
-                <th scope="col">Поток</th>
-                <th scope="col">Программа</th>
-                <th scope="col" class="nowrap">Центр обучения</th>
-                <th scope="col" class="nowrap">Дата и время</th>
-            </tr>
-            {% for test in tests %}
-                <tr>
-                    <td scope="row" class="nowrap test" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
-                    <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
-                    <td scope="row" class="nowrap">{{test.program}}</td>
-                    <td scope="row" class="nowrap">{{test.ed_center.short_name}}</td>
-                    <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div id="table-wrapper">
+            <div id="table-scroll">
+                <table class="table">
+                    <tr> 
+                        <th scope="col">ID пробы</th>
+                        <th scope="col">Поток</th>
+                        <th scope="col">Программа</th>
+                        <th scope="col" class="nowrap">Центр обучения</th>
+                        <th scope="col" class="nowrap">Дата и время</th>
+                    </tr>
+                    {% for test in tests %}
+                        <tr>
+                            <td scope="row" class="nowrap test" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
+                            <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>
+                            <td scope="row" class="nowrap">{{test.program}}</td>
+                            <td scope="row" class="nowrap">{{test.ed_center.short_name}}</td>
+                            <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
