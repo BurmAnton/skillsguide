@@ -419,7 +419,7 @@ def workshops_list(request):
 def program_schedule(request, ed_center_id, program_id):
     ed_center = get_object_or_404(EducationCenter, id=ed_center_id)
     program = get_object_or_404(TrainingProgram, id=program_id)
-    tests = ProfTest.objects.filter(ed_center=ed_center, program=program)
+    tests = ProfTest.objects.filter(ed_center=ed_center, program=program).order_by('-date', '-start_time')
     message = ""
     if request.method == "POST":
         for test in tests:
