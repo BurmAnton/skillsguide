@@ -1,38 +1,87 @@
+h1 {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
 .grades-list {
+  min-width: 900px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  gap: 15px;
-  max-width: 900px;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  row-gap: 75px;
+  -webkit-column-gap: 35px;
+          column-gap: 35px;
 }
 
 .grades-list .grade-card {
-  width: 240px;
   background-color: white;
-  padding: 15px 35px;
-  border-radius: 8px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
-          box-shadow: 4px 4px 4px 0px #00000026;
-  text-align: center;
-  color: #394959;
-  text-decoration: none;
+  border-radius: 12px;
+  -webkit-box-shadow: 6.33862px 6.33862px 6.33862px rgba(0, 0, 0, 0.15);
+          box-shadow: 6.33862px 6.33862px 6.33862px rgba(0, 0, 0, 0.15);
+  width: 240px;
+  min-height: 240px;
+  padding: 20px 28px;
 }
 
-.grades-list .grade-card:hover {
+.grades-list .grade-card .grade {
+  text-align: center;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 64px;
+  line-height: 75px;
+}
+
+.grades-list .grade-card .letters-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 16px;
+}
+
+.grades-list .grade-card .letters-list .letter {
+  width: 50px;
+  height: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background: #F2F2F2;
+  -webkit-box-shadow: 1px 3px 6.33862px rgba(0, 0, 0, 0.15);
+          box-shadow: 1px 3px 6.33862px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  color: #394959;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.grades-list .grade-card .letters-list .letter:hover {
   color: white;
+  font-weight: 400;
   background-color: #394959;
   text-decoration: none;
 }
 
-.grades-list .grade-card .grade {
-  font-size: 20px;
+.grades-list .grade-card .letters-list .letter span {
+  margin: auto;
 }
 /*# sourceMappingURL=grades_list.css.map */

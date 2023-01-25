@@ -111,8 +111,10 @@ class SchoolStudentAdmin(admin.ModelAdmin):
     get_middle_name.admin_order_field = 'student__user__middle_name'
 
     def get_email(self, student):
+        student_url = reverse("student_profile", args=[student.user.id])
         email = student.user.email
-        return email
+        profile_link = f'<a href="{student_url}" target="_blank">{email}</a>'
+        return mark_safe(profile_link)
     get_email.short_description='Email'
     get_email.admin_order_field = 'student__user__email'
 

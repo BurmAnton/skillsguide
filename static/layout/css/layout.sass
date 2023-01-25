@@ -77,17 +77,14 @@ body
     min-height: 196px
     display: flex
     flex-wrap: wrap
-    justify-content: space-evenly
-    @media (max-width: 806px)
-        height: 240px
-        justify-content: left
-    @media (max-width: 672px)
-      height: 384px
-    @media (max-width: 415px)
-      height: 420px
+    justify-content: flex-start
+    column-gap: 20%
+    row-gap: 40px
+    @media (max-width: 945px)
+      height: fit-content
     box-sizing: border-box
     background: #394959
-    padding: 40px 10%
+    padding: 40px 15%
     color: #fff
     left: 0
     padding-bottom: 25px
@@ -117,41 +114,27 @@ body
         align-items: top
 
     .footer-contacts
+        >div
+            gap: 5px
         height: auto
         @media (max-width: 672px)
             padding-top: 20px
         .footer-address 
             align-items: top
             padding-bottom: 10px
-            .address-icon
-                width: 25px
-                height: 25px
-                padding-right: 3px
-                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='19' height='29' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M9.0415.8335c-4.9757 0-9 4.382-9 9.8 0 7.35 9 18.2 9 18.2s9-10.85 9-18.2c0-5.418-4.0243-9.8-9-9.8Zm0 13.3c-1.7743 0-3.2143-1.568-3.2143-3.5s1.44-3.5 3.2143-3.5c1.7743 0 3.2143 1.568 3.2143 3.5s-1.44 3.5-3.2143 3.5Z' fill='%23EB5757'/%3e%3c/svg%3e")
-                background-size: 16px  23px
-                background-repeat: no-repeat
-                background-position: center
+            .address-icon img
+                width: 15px
         .footer-phonenumber 
             align-items: center
             padding-bottom: 10px
-            .phone-icon
-                width: 25px
-                height: 17px
-                padding-right: 3px
-                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='22' height='23' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M4.4244 9.9539c1.76 3.6161 4.5956 6.5678 8.0545 8.4205l2.6889-2.8111c.33-.345.8189-.46 1.2466-.3066 1.3689.4727 2.8478.7283 4.3634.7283.6722 0 1.2222.575 1.2222 1.2778v4.4594C22 22.425 21.45 23 20.7778 23 9.3011 23 0 13.2761 0 1.2778 0 .575.55 0 1.2222 0H5.5c.6722 0 1.2222.575 1.2222 1.2778 0 1.5972.2445 3.1305.6967 4.5616.1344.4473.0366.9456-.3056 1.3034l-2.6889 2.811Z' fill='%23EB5757'/%3e%3c/svg%3e")
-                background-size: 16px  17px
-                background-repeat: no-repeat
-                background-position: center
+            .phone-icon img
+                width: 19px
+                height: 15px
         .footer-mail
             align-items: center
-            .mail-icon
-                width: 25px
-                height: 16px
-                padding-right: 3px
-                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='27' height='20' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M24 0H2.6667C1.2 0 .0133 1.125.0133 2.5L0 17.5C0 18.875 1.2 20 2.6667 20H24c1.4667 0 2.6667-1.125 2.6667-2.5v-15c0-1.375-1.2-2.5-2.6667-2.5Zm0 5-10.6667 6.25L2.6667 5V2.5l10.6666 6.25L24 2.5V5Z' fill='%23EB5757'/%3e%3c/svg%3e")
-                background-size: 21px  15px
-                background-repeat: no-repeat
-                background-position: center
+            .mail-icon img
+                width: 17px
+                height: 12px
 
     .footer-social
         @media (max-width: 806px)

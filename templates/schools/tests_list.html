@@ -1,6 +1,5 @@
 {% extends "schools/school_layout.html" %}
 {% load static %}
-{% block title %}Мой Выбор | Пробы{% endblock %}
 
 {% block style %}
         <link href="{% static 'schools/css/tests_list.css' %}" rel="stylesheet">
@@ -23,6 +22,57 @@
                         <th scope="col" class="nowrap">Дата и время</th>
                     </tr>
                     {% for test in tests %}
+                        <div class="modal fade TestModal" id="TestModal{{test.id}}" tabindex="-1" aria-labelledby="TestModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="TestLabel">{{test.program}} (Поток №{{test.stream.id}})</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><b>Центр обучения:</b> {{test.ed_center.short_name}}</p>
+                                        <p><b>Преподователь:</b> {{test.trainer}}</p>
+                                        <p><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</p>
+                                        {% if test.conference != None %}
+                                            <p>
+                                                <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
+                                                {% if test.conference != None %}
+                                                    <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
+                                                {% endif %}
+                                                {% if test.conference != None %}
+                                                    <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
+                                                {% endif %}
+                                                {% if test.conference != None %}
+                                                    <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
+                                                {% endif %}
+                                            </p>
+                                        {% elif test.workshop != None %}
+                                            <p>
+                                                <b>Адрес:</b> {{test.workshop.adress}}
+                                                <p>
+                                                    <b>Подсказка:</b> {{test.workshop.description}}
+                                                </p>
+                                            </p>
+                                        {% endif %}
+                                        <ul class="list-group">
+                                            <p><b>Участники:</b></p>
+                                            {% for student in test.students.all %}
+                                                {% if student.school == school %}
+                                                    <form action="{% url 'school_tests_list' school.id %}" method="post">
+                                                        <input style="display:none;" type="input" class="form-control" name="student_id"  value={{student.id}}  required>
+                                                        <input style="display:none;" type="input" class="form-control" name="test_id"  value={{test.id}}  required>
+                                                        <li class="list-group-item students-list-modal">
+                                                            {{student.user}}
+                                                            <button type="submit" class="btn btn-sm btn-danger" name="exclude-student">Исключить</button>
+                                                        </li>
+                                                    </form>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <tr>
                             <td scope="row" class="nowrap test" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.id}}</td>
                             <td scope="row" class="nowrap">Поток №{{test.stream.id}}</td>

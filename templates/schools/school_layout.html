@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 {% load admin_urls %}
-{% block title %}{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block head %}
     <link href="{% static 'schools/css/school_layout.css' %}" rel="stylesheet">
@@ -92,19 +92,31 @@
         </div>
         <div class="nav-menu">
             <ul class="nav flex-column">
+                {% if title == 'Мой Выбор | Личный кабинет' %}
+                <li class="nav-item nav-item-current">
+                {% else %}
                 <li class="nav-item">
+                {% endif %}
                     <a class="nav-link active" href="{% url 'school_profile' school.id %}" aria-current="page">
                         <img src="{% static 'schools/img/home-icon.svg' %}" alt="">
                         Профиль
                     </a>
                 </li>
+                {% if title == 'Мой Выбор | Классы' or title == 'Мой Выбор | Класс' or title == 'Мой Выбор | Запись' %}
+                <li class="nav-item nav-item-current">
+                {% else %}
                 <li class="nav-item">
+                {% endif %}
                     <a class="nav-link active" href="{% url 'grades_list' school.id %}" aria-current="page">
                         <img src="{% static 'schools/img/students-icon.svg' %}" alt="">
-                        Классы
+                        Ученики
                     </a>
                 </li>
+                {% if title == 'Мой Выбор | Расписание проб' %}
+                <li class="nav-item nav-item-current">
+                {% else %}
                 <li class="nav-item">
+                {% endif %}
                     <a class="nav-link active" href="{% url 'school_tests_list' school.id %}" aria-current="page">
                         <img src="{% static 'schools/img/schedule-icon.svg' %}" alt="">
                         Расписание проб

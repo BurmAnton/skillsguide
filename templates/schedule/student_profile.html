@@ -92,79 +92,148 @@
             </div>
         </div>
     </div>
-    <div class="section profile-section">
-        <div class="container-xxl">
-            <div class="row row-cols-3 g-3">
-                <div class="col-12 justify-content-center text-left">
-                    <div class="row row-cols-6 g-5">
-                        <div class="col-5">
-                            <div class="card card-profile border-dark">
-                                <h2 class="card-header border-dark">
-                                    Мой профиль
-                                </h2>
-                                <div class="card-body border-dark">
-                                    <h5>{{user.last_name}} {{user.first_name}} {{user.middle_name}}</h5>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item"><b>Email:</b> {{user.email}}</li>
-                                        <li class="list-group-item"><b>Номер телефона:</b> {{user.phone_number}}</li>
-                                        <li class="list-group-item"><b>Дата рождения:</b> {{user.birthday}}</li>
-                                        <li class="list-group-item"><b>Школа:</b> {{student.school.name}}</li>
-                                        <li class="list-group-item"><b>Класс:</b> {{student.grade.grade}}{{student.grade.grade_letter}}</li>
-                                    </ul>
-                                </div>
-                                <!--<div class="card-footer text-end border-dark">
-                                    <div class="d-grid gap-2 d-md-block">
-                                        <button type="button" class="btn btn-primary" id="Change_profile" data-bs-toggle="modal" data-bs-target="#ChangeProfileModal">
-                                            Изменить личные данные
-                                        </button>
-                                    </div>
-                                </div>-->
-                            </div>
-                        </div>
-                        <div class="col-7 shedule_list">
-                            <div class="header">Расписание (ближайщие 2 недели)</div>
-                            {% for test in tests %}
-                                <div class="card card-test">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{test.program}}</h5>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"><b>Центр обученимя:</b> {{test.ed_center.short_name}}</li>
-                                            {% if test.date == None %}
-                                                <li class="list-group-item"><b>Дата проведения:</b> -</li>
+    {% for test in passed_tests %}
+        <div class="modal fade TestModal" id="TestModal{{test.id}}" tabindex="-1" aria-labelledby="TestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="TestLabel">{{test.program}} (Поток №{{test.stream.id}})</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><b>Центр обучения:</b> {{test.ed_center.short_name}}</p>
+                        <p><b>Преподователь:</b> {{test.trainer}}</p>
+                        <p><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</p>
+                        <table class="table">
+                            <p><b>Ассессмент:</b></p>
+                            {% for assessment in test.assessment.all %}
+                                {% if assessment.student == student %}
+                                    <tr>
+                                        <td scope="row">{{assessment.criterion.name}}</td>
+                                        <td scope="row">
+                                            {{grade}}
+                                            {% if assessment.grade != None %}
+                                                {% if assessment.criterion.skill_type == 'SFT' %}
+                                                    {{assessment.grade}}/2
+                                                {% else %}
+                                                    {% if assessment.grade == 1 %} Да {% else %} Нет {% endif %}
+                                                {% endif %}
                                             {% else %}
-                                                <li class="list-group-item"><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</li>
+                                                -
                                             {% endif %}
-                                            {% if test.conference != None %}
-                                                <li class="list-group-item">
-                                                    <h5>Данные для подключения</h5>
-                                                    <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
-                                                    {% if test.conference != None %}
-                                                        <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
-                                                    {% endif %}
-                                                    {% if test.conference != None %}
-                                                        <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
-                                                    {% endif %}
-                                                    {% if test.conference != None %}
-                                                        <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
-                                                    {% endif %}
-                                                </li>
-                                            {% elif test.workshop != None %}
-                                                <li class="list-group-item">
-                                                    <b>Адрес:</b> {{test.workshop.adress}}
-                                                    <p>
-                                                        <b>Подсказка:</b> {{test.workshop.description}}
-                                                    </p>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
-                        </div>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
+    {% endfor %}
 
+    <div class='side-menu'>
+        <div class="card student_profile">
+            <h1>{{user.last_name}} {{user.first_name}}</h1>
+            <p><img class="contact-img" src="{% static 'schools/img/phone-icon.svg' %}" alt="">{{student.user.phone_number}}</p>    
+            <p><img class="contact-img" src="{% static 'schools/img/email-icon.svg' %}" alt="">{{student.user.email}}</p>
+            <div class="school-data">
+                <h2>{{student.school.name}} ({{student.grade.grade}}{{student.grade.grade_letter}})</h2>
+                <p>{{school.address.city}}</p>
+            </div>
+            <div class="edit-icon" data-bs-toggle="modal" data-bs-target="#SchoolModal"> 
+                <img src="{% static 'education_centers/img/edit-icon.svg' %}" alt="">
+            </div>
+        </div>
+    </div>
+    <div class='dashboard'>
+        <div class="dashboard-lists">
+            <div class="schedule-list">
+                <div class="schedule-list-header">
+                    <h1 style="margin: auto">Ближайщие профпробы</h1>
+                    <p>{{date_today|date:'d F Y'}} - {{date_two_weeks|date:'d F Y'}}</p>
+                </div>
+                {% if tests.all.count != 0 %}
+                    <div id="table-wrapper">
+                        <div id="table-scroll">
+                            <table class="table">
+                                <tr> 
+                                    <th scope="col">Профпроба</th>
+                                    <th scope="col" class="nowrap">Дата и время</th>
+                                    <th scope="col" class="nowrap">Центр обучения</th>
+                                    <th scope="col" class="nowrap">Адрес/конференция</th>
+                                </tr>
+                                {% for test in tests %}
+                                    <tr>
+                                        <td scope="row" class="nowrap" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.program}}</td>
+                                        <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                                        <td scope="row" class="nowrap">{{test.ed_center.short_name}}</td>
+                                        <td scope="row" class="">
+                                            {% if test.conference != None %}
+                                                <p>
+                                                    <b><a href="{{test.conference.invite_link}}">Ссылка на подключение</a></b>
+                                                    {% if test.conference != None and test.conference.Identifier != "" %}
+                                                        <br><b>Идентификатор:</b> {{test.conference.Identifier}}</a>
+                                                    {% endif %}
+                                                    {% if test.conference != None and test.conference.access_code != "" %}
+                                                        <br><b>Код доступа:</b> {{test.conference.access_code}}</a>
+                                                    {% endif %}
+                                                    {% if test.conference != None and test.conference.instruction != "" %}
+                                                        <br><b>Инструкция:</b> {{test.conference.instruction}}</a>
+                                                    {% endif %}
+                                                </p>
+                                            {% elif test.workshop != None %}
+                                                <p>
+                                                    <b>Адрес:</b> {{test.workshop.adress}}
+                                                    {% if test.workshop.description != "" %}
+                                                        <p><b>Подсказка:</b> {{test.workshop.description}}</p>
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-schedule">
+                        <p>Профпроб на ближайщие 2 недели не запланировано.</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="tests-list">
+                <div class="tests-list-header">
+                    <h1 style="margin: auto">Пройденые профпробы</h1>
+                </div>
+                {% if passed_tests.all.count != 0 %}
+                    <div id="table-wrapper">
+                        <div id="table-scroll">
+                            <table class="table">
+                                <tr> 
+                                    <th scope="col">Профпроба</th>
+                                    <th scope="col" class="nowrap">Дата и время</th>
+                                    <th scope="col" class="nowrap">Центр обучения</th>
+                                    <th scope="col" class="nowrap">Преподователь</th>
+                                </tr>
+                                {% for test in passed_tests %}
+                                    <tr>
+                                        <td scope="row" class="nowrap test" data-bs-toggle="modal" data-bs-target="#TestModal{{test.id}}">{{test.program}}</td>
+                                        <td scope="row" class="nowrap">{{test.start_time}} {{test.date|date:"d.m.y"}}г</td>
+                                        <td scope="row" class="nowrap">{{test.ed_center.short_name}}</td>
+                                        <td scope="row" class="">{{test.trainer}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-schedule">
+                        <p>Не пройдено ни одной пробы.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
 {% endblock %}

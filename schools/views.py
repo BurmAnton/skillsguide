@@ -23,6 +23,7 @@ from . import imports
 @csrf_exempt
 @login_required
 def school_profile(request, school_id):
+    title = "Мой Выбор | Личный кабинет"
     school = get_object_or_404(School, id=school_id)
     message = ""
     if request.method == "POST":
@@ -72,6 +73,7 @@ def school_profile(request, school_id):
     tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks).order_by('date', 'start_time')
 
     return render(request, "schools/school_profile.html",{
+        "title": title,
         "cities": City.objects.all(),
         "school": school,
         "students_count": students_count,
@@ -79,25 +81,34 @@ def school_profile(request, school_id):
         "test_count": test_count,
         'tests': tests,
         'contact': contact,
+        'date_today': datetime.today(),
+        'date_two_weeks': two_weeks,
         "message": message
     })
 
 @login_required
 def grades_list(request, school_id):
+    title = "Мой Выбор | Классы"
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
 
-    grades = Grade.objects.filter(school=school)
+    grades = Grade.objects.filter(school=school).order_by('grade', 'grade_letter')
+    grades_list = {}
+    for grade in range(6, 12):
+        if len(grades.filter(grade=grade)) != 0:
+            grades_list[grade] = grades.filter(grade=grade)
 
     return render(request, "schools/grades_list.html",{
+        "title": title,
         "school": school,
         'contact': contact,
-        "grades": grades,
+        "grades": grades_list,
     })
 
 @csrf_exempt
 @login_required
 def grade(request, school_id, grade_id):
+    title = "Мой Выбор | Класс"
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     
@@ -148,6 +159,7 @@ def grade(request, school_id, grade_id):
             
             message = "Success"
     return render(request, "schools/grade.html",{
+        "title": title,
         "school": school,
         'contact': contact,
         "grade": grade,
@@ -157,6 +169,7 @@ def grade(request, school_id, grade_id):
 @csrf_exempt
 @login_required
 def streams_enroll(request, school_id, grade_id):
+    title = "Мой Выбор | Запись"
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
     grade = get_object_or_404(Grade, id=grade_id)
@@ -201,6 +214,7 @@ def streams_enroll(request, school_id, grade_id):
     students = SchoolStudent.objects.filter(school=school)
 
     return render(request, "schools/streams_enroll.html",{
+        "title": title,
         "school": school,
         'contact': contact,
         "grade": grade,
@@ -210,15 +224,27 @@ def streams_enroll(request, school_id, grade_id):
         "message": message
     })
 
+@csrf_exempt
 @login_required
 def school_tests_list(request, school_id):
+    if request.method == "POST":
+        if 'exclude-student' in request.POST:
+            student_id = request.POST[f'student_id']
+            student = SchoolStudent.objects.get(id=student_id)
+            test_id = request.POST[f'test_id']
+            test = ProfTest.objects.get(id=test_id)
+            test.students.remove(student)
+            test.save()
+    title = "Мой Выбор | Расписание проб"
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
+
 
     students = school.students.all()
     tests = ProfTest.objects.filter(students__in=students).exclude(date=None).order_by('-date', '-start_time')
 
     return render(request, "schools/tests_list.html",{
+        "title": title,
         "school": school,
         'contact': contact,
         "tests": tests,
@@ -226,12 +252,14 @@ def school_tests_list(request, school_id):
 
 @login_required
 def streams_list(request, school_id):
+    title = 'Мой Выбор | Циклы'
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
 
     cycles = TrainingCycle.objects.filter(schools=school)
 
     return render(request, "schools/streams_list.html",{
+        "title": title,
         "school": school,
         'contact': contact,
         "cycles": cycles,

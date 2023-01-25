@@ -1,6 +1,5 @@
 {% extends "schools/school_layout.html" %}
 {% load static %}
-{% block title %}Мой Выбор | Классы{% endblock %}
 
 {% block style %}
         <link href="{% static 'schools/css/grades_list.css' %}" rel="stylesheet">
@@ -10,13 +9,17 @@
 {% endblock %}
 
 {% block dashboard %}
-    <h2>Список классов</h2>
+    <h1>Классы</h1>
     <div class="grades-list">
-        {% for grade in grades %}
-            <a class="grade-card" href="{% url 'grade' school.id grade.id %}">
-                <p class="grade">{{grade.grade}}{{grade.grade_letter}} класс</p>
-                <p>Учеников в классе: {{grade.students.all|length}}</p>
-            </a>
+        {% for grade, grade_letters in grades.items %}
+            <div class="grade-card card h-100">
+                <p class="grade">{{grade}}</p>
+                <div class="letters-list">
+                    {% for grade_letter in grade_letters %}
+                        <a class="letter" href="{% url 'grade' school.id grade_letter.id %}"><span>{{grade_letter.grade_letter}}</span></a>
+                    {% endfor %}
+                </div>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

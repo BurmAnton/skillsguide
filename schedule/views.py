@@ -26,20 +26,25 @@ def index(request):
 
 @login_required
 def student_profile(request, user_id):
-    user = request.user
+    user = get_object_or_404(User, id=user_id)
     student = get_object_or_404(SchoolStudent, user=user)
     school = student.school
 
     streams = TrainingStream.objects.filter(students=student)
     two_weeks = datetime.today() + timedelta(14)
-    tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks)
+    tests = ProfTest.objects.filter(stream__in=streams, date__gte=datetime.today(), date__lte=two_weeks).order_by('date', 'start_time')
+
+    passed_tests = ProfTest.objects.filter(stream__in=streams, date__lte=(datetime.today() - timedelta(1))).order_by('date', 'start_time')
 
     return render(request, "schedule/student_profile.html",{
         'page_name': 'Личный кабинет',
         'user': user,
         'student': student,
         'school': school,
-        'tests': tests
+        'tests': tests,
+        'passed_tests': passed_tests,
+        'date_today': datetime.today(),
+        'date_two_weeks': two_weeks
     })
 
 @login_required

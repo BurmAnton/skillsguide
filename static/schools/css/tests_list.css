@@ -37,6 +37,25 @@
   text-align: left;
 }
 
+.tests-list .test {
+  text-decoration: underline;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.modal .list-group-item {
+  color: #394959;
+}
+
+.students-list-modal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
 #table-wrapper {
   position: relative;
 }

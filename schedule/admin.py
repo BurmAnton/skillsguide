@@ -51,12 +51,19 @@ class TrainingStreamAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'cycle',
-        'students_limit'
+        'student_count'
     )
     list_filter = (
         ('cycle', RelatedOnlyDropdownFilter),
     )
+
+    def student_count(self, stream):
+        student_count = len(stream.students.all())
+        return f'{student_count}/{stream.students_limit}'
+    student_count.short_description='Участники'
+
     filter_horizontal = ('students',)
+    
 
 @admin.register(ProfTest)
 class ProfTestAdmin(admin.ModelAdmin):
@@ -74,9 +81,14 @@ class ProfTestAdmin(admin.ModelAdmin):
         'ed_center',
         'date',
         'start_time',
+        'student_count',
         'stream',
         'trainer'
     )
+    def student_count(self, test):
+        student_count = len(test.students.all())
+        return f'{student_count}/{test.stream.students_limit}'
+    student_count.short_description='Участники'
     filter_horizontal = ('students',)
 
 @admin.register(SchoolQuota)
