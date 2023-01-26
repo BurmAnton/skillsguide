@@ -134,7 +134,7 @@ class Trainer(models.Model):
     programs = models.ManyToManyField(TrainingProgram, verbose_name="Программы", related_name="trainers", blank=True)
 
     class Meta:
-        verbose_name = "Преподователь"
+        verbose_name = "Преподаватель"
         verbose_name_plural = "Преподователи"
 
     def __str__(self):

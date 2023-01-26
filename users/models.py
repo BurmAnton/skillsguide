@@ -31,7 +31,7 @@ class User(AbstractUser):
         ('ADLT', 'Взрослый'),
         ('RSC', 'Представитель школы'),
         ('REC', 'Представитель ЦО'),
-        ('INTS', 'Преподователь')
+        ('INTS', 'Преподаватель')
     )
     role = models.CharField(max_length=4, choices=ROLES, verbose_name='Роль', blank=True, null=True)
     city = models.ForeignKey(City, on_delete=CASCADE, null=True, related_name="residents", verbose_name="Нас. пункт проживания")

@@ -146,7 +146,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p><b>Преподователь:</b> {{test.trainer}}</p>
+                        <p><b>Преподаватель:</b> {{test.trainer}}</p>
                         {% if test.conference != None %}
                             <div>
                                 <b>Ссылка на подключение:</b> <a href="{{test.conference.invite_link}}">{{test.conference.invite_link}}</a>
@@ -553,14 +553,14 @@
     <div class="dashboard-lists">
         <div class="schedule-list">
             <div class="schedule-list-header">
-                <h2>Расписание (ближайщие 2 недели)</h2>
+                <h2>Расписание (ближайшие 2 недели)</h2>
             </div>
             <table class="table">
                 <thead>
                     <th class="schedule-name-th" scope="col">ID пробы</th>
                     <th scope="col">Поток</th>
                     <th scope="col">Программа</th>
-                    <th scope="col">Преподователь</th> 
+                    <th scope="col">Преподаватель</th> 
                     <th scope="col">Дата и время</th>
                 </thead>
                 <tbody>
@@ -585,7 +585,7 @@
             </div>
             {% if message == "userOk" %}
                 <div class="alert alert-success" role="alert">
-                    Преподователь добавлен успешно!
+                    Преподаватель добавлен успешно!
                 </div>
             {% elif message == "userDuplicate" %}
                 <div class="alert alert-danger" role="alert">

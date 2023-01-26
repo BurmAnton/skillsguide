@@ -241,7 +241,7 @@ def school_tests_list(request, school_id):
 
 
     students = school.students.all()
-    tests = ProfTest.objects.filter(students__in=students).exclude(date=None).order_by('-date', '-start_time')
+    tests = ProfTest.objects.filter(students__in=students).exclude(date=None).order_by('-date', '-start_time').distinct()
 
     return render(request, "schools/tests_list.html",{
         "title": title,

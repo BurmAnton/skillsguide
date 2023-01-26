@@ -102,7 +102,7 @@
                     </div>
                     <div class="modal-body">
                         <p><b>Центр обучения:</b> {{test.ed_center.short_name}}</p>
-                        <p><b>Преподователь:</b> {{test.trainer}}</p>
+                        <p><b>Преподаватель:</b> {{test.trainer}}</p>
                         <p><b>Дата и время проведения:</b> {{test.start_time}} {{test.date|date:"d.m.y"}}г</p>
                         <table class="table">
                             <p><b>Ассессмент:</b></p>
@@ -150,7 +150,7 @@
         <div class="dashboard-lists">
             <div class="schedule-list">
                 <div class="schedule-list-header">
-                    <h1 style="margin: auto">Ближайщие профпробы</h1>
+                    <h1 style="margin: auto">Ближайшие профпробы</h1>
                     <p>{{date_today|date:'d F Y'}} - {{date_two_weeks|date:'d F Y'}}</p>
                 </div>
                 {% if tests.all.count != 0 %}
@@ -198,7 +198,7 @@
                     </div>
                 {% else %}
                     <div class="empty-schedule">
-                        <p>Профпроб на ближайщие 2 недели не запланировано.</p>
+                        <p>Профпроб на ближайшие 2 недели не запланировано.</p>
                     </div>
                 {% endif %}
             </div>
@@ -214,7 +214,7 @@
                                     <th scope="col">Профпроба</th>
                                     <th scope="col" class="nowrap">Дата и время</th>
                                     <th scope="col" class="nowrap">Центр обучения</th>
-                                    <th scope="col" class="nowrap">Преподователь</th>
+                                    <th scope="col" class="nowrap">Преподаватель</th>
                                 </tr>
                                 {% for test in passed_tests %}
                                     <tr>
