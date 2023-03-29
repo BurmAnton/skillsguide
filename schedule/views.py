@@ -268,12 +268,12 @@ def fix_attendance(request):
 def fix_assessment(request):
     tests = ProfTest.objects.all()
     for test in tests:
-        for criterion in test.program.criteria.all():
-            for student in test.students.all():
+        for student in test.students.all():
+            for criterion in test.program.criteria.all():
                 assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
                 if len(assessments) > 1:
                     for assessment in assessments:
-                        if assessment.grade is None:
+                        if assessment.grade is None or assessment.grade == "":
                             assessment.delete()
                 assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
                 if len(assessments) == 0:
