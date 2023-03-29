@@ -1,39 +1,26 @@
 .body {
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   background-color: #F2F2F2;
   padding: 0 50px;
 }
 
 .side-menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: wrap;
   row-gap: 25px;
   margin-top: 30px;
   margin-right: 30px;
 }
-
 @media (max-width: 1150px) {
   .side-menu {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-column-gap: 15px;
-            column-gap: 15px;
+    flex-direction: row;
+    -moz-column-gap: 15px;
+         column-gap: 15px;
     margin: auto;
     margin-top: 30px;
   }
 }
-
 .side-menu .student_profile {
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -42,23 +29,20 @@
   background-color: white;
   padding: 15px 15px 26px 20px;
   border-radius: 12px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000015;
-          box-shadow: 4px 4px 4px 0px #00000015;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.0823529412);
   gap: 5px;
   width: 400px;
   height: auto;
   padding: 20px 24px;
 }
-
 @media (max-width: 855px) {
   .side-menu .student_profile {
-    width: calc( 100vw - 40px);
+    width: calc(100vw - 40px);
     min-width: -webkit-fit-content;
     min-width: -moz-fit-content;
     min-width: fit-content;
   }
 }
-
 .side-menu .student_profile p {
   width: -webkit-max-content;
   width: -moz-max-content;
@@ -69,64 +53,44 @@
   font-size: 16px;
   line-height: 16px;
 }
-
 .side-menu .student_profile h2 {
   margin-top: 8px;
 }
-
 .side-menu .student_profile .contact-img {
   width: 20px !important;
   margin-right: 10px !important;
 }
-
 .side-menu .student_profile .edit-icon {
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  justify-content: flex-end;
 }
-
 .side-menu .student_profile .edit-icon img {
   width: 30px;
   height: auto;
   padding: 2px;
   border-radius: 50px;
 }
-
 .side-menu .student_profile .edit-icon img:hover {
   background: #F2F2F2;
 }
 
 .dashboard-lists {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 25px;
   padding: 30px 0px;
 }
-
 .dashboard-lists h1 {
   text-align: center;
 }
-
 .dashboard-lists > div {
   background-color: white;
   padding: 25px 50px 10px 50px;
   border-radius: 12px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
-          box-shadow: 4px 4px 4px 0px #00000026;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
 }
-
 @media (max-width: 1250px) {
   .dashboard-lists > div {
     width: 100%;
@@ -135,7 +99,6 @@
     padding: 25px;
   }
 }
-
 .dashboard-lists > div .schedule-list-header p {
   text-align: center;
   margin-top: 16px;
@@ -144,7 +107,6 @@
   line-height: 23px;
   color: rgba(0, 0, 0, 0.8);
 }
-
 .dashboard-lists > div th {
   color: #394959;
   font-weight: 400 !important;
@@ -154,32 +116,26 @@
   border-top: 0;
   border-bottom: 2px solid #394959;
 }
-
 .dashboard-lists > div tr, .dashboard-lists > div td {
   text-align: left;
   color: #394959;
   font-weight: 300 !important;
   text-align: left;
 }
-
 .dashboard-lists > div tr p, .dashboard-lists > div td p {
   margin: 0;
 }
-
 .dashboard-lists > div tr .test, .dashboard-lists > div td .test {
   font-weight: 400 !important;
 }
-
 .dashboard-lists > div .nowrap {
   white-space: nowrap;
 }
-
 .dashboard-lists > div .test {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
 }
-
 .dashboard-lists > div .empty-schedule {
   margin: 130px;
   font-size: 18px;
@@ -189,7 +145,6 @@
 #table-wrapper {
   position: relative;
 }
-
 @media (max-width: 1150px) {
   #table-wrapper {
     max-width: calc(100vw - 110px);
@@ -202,10 +157,8 @@
   overflow: auto;
   margin-top: 16px;
 }
-
 @media (max-width: 1150px) {
   #table-scroll {
     width: calc(100vw - 110px);
   }
-}
-/*# sourceMappingURL=student_profile.css.map */
+}/*# sourceMappingURL=student_profile.css.map */

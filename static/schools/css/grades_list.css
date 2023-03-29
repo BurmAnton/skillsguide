@@ -5,83 +5,58 @@ h1 {
 
 .grades-list {
   min-width: 900px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  flex-wrap: wrap;
+  flex-direction: row;
   row-gap: 75px;
-  -webkit-column-gap: 35px;
-          column-gap: 35px;
+  -moz-column-gap: 35px;
+       column-gap: 35px;
 }
-
 .grades-list .grade-card {
   background-color: white;
   border-radius: 12px;
-  -webkit-box-shadow: 6.33862px 6.33862px 6.33862px rgba(0, 0, 0, 0.15);
-          box-shadow: 6.33862px 6.33862px 6.33862px rgba(0, 0, 0, 0.15);
+  box-shadow: 6.33862px 6.33862px 6.33862px rgba(0, 0, 0, 0.15);
   width: 240px;
   min-height: 240px;
   padding: 20px 28px;
 }
-
 .grades-list .grade-card .grade {
   text-align: center;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 300;
   font-size: 64px;
   line-height: 75px;
 }
-
 .grades-list .grade-card .letters-list {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
   gap: 16px;
 }
-
 .grades-list .grade-card .letters-list .letter {
   width: 50px;
   height: 50px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   background: #F2F2F2;
-  -webkit-box-shadow: 1px 3px 6.33862px rgba(0, 0, 0, 0.15);
-          box-shadow: 1px 3px 6.33862px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 3px 6.33862px rgba(0, 0, 0, 0.15);
   border-radius: 6px;
   text-align: center;
   text-decoration: none;
   color: #394959;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 300;
   font-size: 24px;
   line-height: 28px;
 }
-
 .grades-list .grade-card .letters-list .letter:hover {
   color: white;
   font-weight: 400;
   background-color: #394959;
   text-decoration: none;
 }
-
 .grades-list .grade-card .letters-list .letter span {
   margin: auto;
-}
-/*# sourceMappingURL=grades_list.css.map */
+}/*# sourceMappingURL=grades_list.css.map */

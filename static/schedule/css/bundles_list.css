@@ -1,72 +1,45 @@
 .body {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   padding: 20px 50px;
 }
-
 .body h2 {
   margin-top: 15px;
 }
-
 .body .btn-primary {
   background-color: #394959 !important;
   border: 0;
 }
-
 .body .header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
   font-size: 20px;
   margin-bottom: 25px;
   color: #394959;
 }
-
 .body .cycles_list, .body .bundles_list {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-pack: left;
-      -ms-flex-pack: left;
-          justify-content: left;
+  flex-wrap: wrap;
+  justify-content: left;
   gap: 25px 25px;
 }
-
 .body .cycles_list .card, .body .bundles_list .card {
   border-radius: 6px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
-          box-shadow: 4px 4px 4px 0px #00000026;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
 }
-
 .body .cycles_list .card, .body .cycles_list li, .body .bundles_list .card, .body .bundles_list li {
   color: #394959;
   font-size: 14px;
   min-width: 300px;
   max-width: 400px;
 }
-
 .body .cycles_list .card h5, .body .cycles_list li h5, .body .bundles_list .card h5, .body .bundles_list li h5 {
   font-weight: 600;
   font-size: 16px;
 }
-
 .body .cycles_list .card .card-footer, .body .cycles_list li .card-footer, .body .bundles_list .card .card-footer, .body .bundles_list li .card-footer {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .CycleAddStep2 {
@@ -85,8 +58,6 @@
   background-color: white;
   border: 1px solid #ced4da;
 }
-
 .modal .dropdown-toggle .placeholder {
   color: #6c757d;
-}
-/*# sourceMappingURL=bundles_list.css.map */
+}/*# sourceMappingURL=bundles_list.css.map */

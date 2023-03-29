@@ -7,36 +7,33 @@
   background-color: white;
   padding: 15px 35px;
   border-radius: 8px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000015;
-          box-shadow: 4px 4px 4px 0px #00000015;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.0823529412);
 }
-
 .tests-list h2 {
   margin-bottom: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
 }
-
 .tests-list th {
+  height: 38px;
   color: #394959;
-  font-weight: 500 !important;
-  text-align: left;
+  font-weight: 400 !important;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
   border-top: 0;
+  color: #000000;
+  border-bottom: 2px solid #394959;
 }
-
 .tests-list tr {
   color: #394959;
   font-weight: 300 !important;
-  text-align: left;
+  text-align: center;
 }
-
+.tests-list tr:last-child td {
+  border-bottom: 0;
+}
 .tests-list .test {
   text-decoration: underline;
   font-weight: 400;
@@ -48,18 +45,13 @@
 }
 
 .students-list-modal {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
 
 #table-wrapper {
   position: relative;
 }
-
 @media (max-width: 1050px) {
   #table-wrapper {
     max-width: calc(100vw - 110px);
@@ -71,10 +63,8 @@
   overflow: auto;
   margin-top: 20px;
 }
-
 @media (max-width: 1050px) {
   #table-scroll {
-    width: calc( 100vw - 110px);
+    width: calc(100vw - 110px);
   }
-}
-/*# sourceMappingURL=tests_list.css.map */
+}/*# sourceMappingURL=tests_list.css.map */

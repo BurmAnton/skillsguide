@@ -17,16 +17,22 @@ h2
 html
     height: 100%
     box-sizing: border-box
-  
+
 body
     position: relative
     min-height: 100%
     
-    
 .navbar
     min-height: 68px
     background-color: #394959 !important
-    padding: 5px 15%
+    padding: 5px 0px
+    .container-fluid
+        width: 1350px
+        padding: 0px 0px
+        @media (max-width: 1445px)
+            padding: 0px 23px
+        @media (max-width: 1150px)
+            width: 900px
     .nav-link
         vertical-align: middle
     a

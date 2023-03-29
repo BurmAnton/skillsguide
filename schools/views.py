@@ -227,18 +227,16 @@ def streams_enroll(request, school_id, grade_id):
 @csrf_exempt
 @login_required
 def school_tests_list(request, school_id):
-    if request.method == "POST":
-        if 'exclude-student' in request.POST:
-            student_id = request.POST[f'student_id']
-            student = SchoolStudent.objects.get(id=student_id)
-            test_id = request.POST[f'test_id']
-            test = ProfTest.objects.get(id=test_id)
-            test.students.remove(student)
-            test.save()
+    if request.method == "POST" and 'exclude-student' in request.POST:
+        student_id = request.POST[f'student_id']
+        student = SchoolStudent.objects.get(id=student_id)
+        test_id = request.POST[f'test_id']
+        test = ProfTest.objects.get(id=test_id)
+        test.students.remove(student)
+        test.save()
     title = "Мой Выбор | Расписание проб"
     school = get_object_or_404(School, id=school_id)
     contact = get_object_or_404(SchoolContactPersone, school=school.id)
-
 
     students = school.students.all()
     tests = ProfTest.objects.filter(students__in=students).exclude(date=None).order_by('-date', '-start_time').distinct()

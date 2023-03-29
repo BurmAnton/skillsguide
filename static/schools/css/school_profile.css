@@ -3,67 +3,52 @@
 }
 
 .students-list-modal {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
 
 .overview {
   width: 100%;
   max-width: calc(100vw - 100px);
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-column-gap: 50px;
-          column-gap: 50px;
+  justify-content: center;
+  flex-wrap: wrap;
+  -moz-column-gap: 50px;
+       column-gap: 50px;
 }
-
 .overview h2 {
   text-align: center;
 }
-
+@media (max-width: 1160px) {
+  .overview {
+    -moz-column-gap: 35px;
+         column-gap: 35px;
+  }
+}
 @media (max-width: 1050px) {
   .overview {
     max-width: calc(100vw - 40px);
   }
 }
-
 @media (max-width: 855px) {
   .overview {
-    -webkit-column-gap: 25px;
-            column-gap: 25px;
+    -moz-column-gap: 25px;
+         column-gap: 25px;
     row-gap: 15px;
   }
 }
-
 .overview .data-point {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  justify-content: center;
   width: 200px;
   height: 125px;
   padding: 22px 14px;
   border-radius: 12px;
   text-align: center;
   background: #FFFFFF;
-  -webkit-box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.15);
-          box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.15);
-  font-family: 'Roboto';
+  box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.15);
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 300;
   font-size: 16px;
@@ -71,14 +56,12 @@
   text-align: center;
   color: #000000;
 }
-
 @media (max-width: 855px) {
   .overview .data-point {
     min-width: 165px;
     width: 100%;
   }
 }
-
 .overview .data-point .sum {
   font-size: 40px;
   line-height: 47px;
@@ -86,32 +69,21 @@
 }
 
 .dashboard-lists {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 25px;
   padding: 30px 0px;
 }
-
 .dashboard-lists h1 {
   text-align: center;
 }
-
 .dashboard-lists > div {
   background-color: white;
   padding: 25px 50px 10px 50px;
   border-radius: 12px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
-          box-shadow: 4px 4px 4px 0px #00000026;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
 }
-
 @media (max-width: 1250px) {
   .dashboard-lists > div {
     width: 100%;
@@ -120,7 +92,6 @@
     padding: 25px;
   }
 }
-
 .dashboard-lists > div .schedule-list-header p {
   text-align: center;
   margin-top: 16px;
@@ -129,34 +100,31 @@
   line-height: 23px;
   color: rgba(0, 0, 0, 0.8);
 }
-
 .dashboard-lists > div th {
   color: #394959;
   font-weight: 400 !important;
   font-size: 16px;
-  line-height: 19px;
+  line-height: 20px;
   text-align: center;
   border-top: 0;
   border-bottom: 2px solid #394959;
 }
-
 .dashboard-lists > div tr {
-  height: 54px;
   color: #394959;
   font-weight: 300 !important;
   text-align: center;
 }
-
+.dashboard-lists > div tr:last-child td {
+  border-bottom: 0;
+}
 .dashboard-lists > div .nowrap {
   white-space: nowrap;
 }
-
 .dashboard-lists > div .test {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
 }
-
 .dashboard-lists > div .empty-schedule {
   margin: 130px;
   font-size: 18px;
@@ -166,7 +134,6 @@
 #table-wrapper {
   position: relative;
 }
-
 @media (max-width: 1150px) {
   #table-wrapper {
     max-width: calc(100vw - 110px);
@@ -179,10 +146,8 @@
   overflow: auto;
   margin-top: 16px;
 }
-
 @media (max-width: 1150px) {
   #table-scroll {
     width: calc(100vw - 110px);
   }
-}
-/*# sourceMappingURL=school_profile.css.map */
+}/*# sourceMappingURL=school_profile.css.map */

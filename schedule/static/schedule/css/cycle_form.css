@@ -1,23 +1,16 @@
 .form-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
-
 .form-container .cycle-form {
   margin-top: 5vh;
   margin-bottom: 5vh;
   width: 420px;
   background-color: #e9ecf7;
-  -webkit-box-shadow: 1px 0px 5px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 1px 0px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 0px 5px 2px rgba(0, 0, 0, 0.2);
   padding: 0px 40px;
   padding-bottom: 20px;
 }
-
 .form-container .cycle-form h2 {
   color: #293036;
   margin: auto;
@@ -25,21 +18,17 @@
   margin-bottom: 10px;
   text-align: center;
 }
-
 .form-container .cycle-form input[type=submit] {
   width: 100%;
   background-color: #426cf8 !important;
 }
-
 .form-container .cycle-form input[type=submit]:hover {
   background-color: #2e5efa !important;
 }
-
 .form-container .cycle-form input[type=date] {
   width: 100%;
 }
 
 .days {
   margin: 0;
-}
-/*# sourceMappingURL=cycle_form.css.map */
+}/*# sourceMappingURL=cycle_form.css.map */

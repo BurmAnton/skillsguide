@@ -7,65 +7,43 @@
   background-color: white;
   padding: 15px 35px;
   border-radius: 8px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
-          box-shadow: 4px 4px 4px 0px #00000026;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
 }
-
 .students-list .students-list-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .students-list h2 {
   margin-bottom: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
-
 .students-list th {
   color: #394959;
   font-weight: 500 !important;
   text-align: left;
   border-top: 0;
 }
-
 .students-list tr {
   color: #394959;
   font-weight: 300 !important;
   text-align: left;
 }
-
 .students-list .last-name {
   font-weight: 400 !important;
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
 }
-
 .students-list .enroll {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: right;
-      -ms-flex-pack: right;
-          justify-content: right;
+  justify-content: right;
 }
 
 .student-modal .btn-delete, .student-modal .btn-save, .student-modal .btn-danger {
   display: none;
 }
-
 .student-modal p {
   font-family: var(--bs-font-sans-serif);
   margin: 15px;
@@ -73,43 +51,27 @@
   font-weight: 500;
   text-align: center;
 }
-
 .student-modal .stream-hdr {
   margin-bottom: 0;
 }
-
 .student-modal .modal-body {
   padding-bottom: 5px;
 }
-
 .student-modal .modal-footer {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .student-modal .modal-footer-default {
-  -webkit-box-pack: right !important;
-      -ms-flex-pack: right !important;
-          justify-content: right !important;
+  justify-content: right !important;
 }
-
 .student-modal .list-group-item {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
 
 #table-wrapper {
   position: relative;
 }
-
 @media (max-width: 1050px) {
   #table-wrapper {
     max-width: calc(100vw - 110px);
@@ -121,10 +83,8 @@
   overflow: auto;
   margin-top: 20px;
 }
-
 @media (max-width: 1050px) {
   #table-scroll {
-    width: calc( 100vw - 110px);
+    width: calc(100vw - 110px);
   }
-}
-/*# sourceMappingURL=grade.css.map */
+}/*# sourceMappingURL=grade.css.map */

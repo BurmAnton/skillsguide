@@ -1,32 +1,21 @@
 body {
   background-color: #e9ecf7;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   padding-bottom: 68px;
 }
 
 .navbar .container {
   width: 250px;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
-
 .navbar .home-link {
   text-decoration: none;
 }
-
 .navbar .navbar-brand {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   margin: auto;
 }
-
 .navbar .navbar-brand p {
   margin: auto;
   margin-left: 10px;
@@ -36,33 +25,25 @@ body {
 .sign-card {
   margin: 15px 0;
   background-color: white;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   width: 40%;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   max-width: 600px;
   padding-top: 40px;
   padding-bottom: 50px;
   border: 1px solid #dddddd;
   color: #394959;
 }
-
 .sign-card .sign-form-container {
   margin: auto;
 }
-
 .sign-card .sign-form-container .sign-form {
   margin: 0;
 }
-
 .sign-card label {
   margin-bottom: 2px;
 }
-
 .sign-card .sign-button {
   width: 100%;
   height: 46px;
@@ -73,7 +54,6 @@ body {
   border: 0px;
   border-radius: 0.25rem;
 }
-
 .sign-card .reg-button, .sign-card .reg-button-end {
   margin-top: 10px;
   background-color: #4BB34B;
@@ -82,21 +62,17 @@ body {
   border: 0px;
   width: 100%;
 }
-
 .sign-card .reg-button {
   margin-top: 30px;
 }
-
 .sign-card a {
   color: #394959;
 }
-
 @media (max-width: 1300px) {
   .sign-card {
     width: 75%;
   }
 }
-
 @media (max-width: 500px) {
   .sign-card {
     width: 402px;
@@ -107,17 +83,15 @@ body {
   .sign-card input {
     height: 40px;
   }
-  .sign-card input[type="checkbox"] {
+  .sign-card input[type=checkbox] {
     height: 14px;
   }
 }
-
 @media (max-width: 374px) {
   .sign-card {
     width: 100%;
   }
 }
-
 .sign-card .pass-recovery {
   margin-bottom: 15px;
   font-size: 14px;
@@ -126,47 +100,38 @@ body {
   color: #394959;
   cursor: pointer;
 }
-
 .sign-card .pass-rec-form {
   margin: auto;
   width: 50%;
   min-width: 250px;
 }
-
 @media (max-width: 600px) {
   .sign-card .pass-rec-form {
     width: 90%;
   }
 }
-
 .sign-card .pass-rec-form {
   display: none;
 }
-
 .sign-card .pass-rec-form .btn-recovery-code {
   background-color: #587490;
   color: white;
 }
-
 .sign-card .pass-rec-form .step-title {
   text-align: center;
 }
-
 .sign-card .pass-rec-form .step-title p {
   margin-bottom: 5px;
 }
-
 .sign-card .pass-rec-form .alert-recovery {
   display: none;
 }
-
 .sign-card .pass-rec-form .alert-recovery .alert {
   width: 275px;
   text-align: center;
   padding: 8px 16px;
   font-size: 16px;
 }
-
 .sign-card .pass-rec-form .alert-recovery .alert p {
   margin: auto;
 }
@@ -185,43 +150,31 @@ body {
 }
 
 .reg-choice-form {
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
-
 @media (max-width: 600px) {
   .reg-choice-form {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 }
-
 .reg-choice-form .vertical_line {
-  border-left: 1px solid #00000050;
+  border-left: 1px solid rgba(0, 0, 0, 0.3137254902);
   height: 100%;
   margin: 0 10px;
 }
-
 @media (max-width: 600px) {
   .reg-choice-form .vertical_line {
-    border-top: 1px solid #00000050;
+    border-top: 1px solid rgba(0, 0, 0, 0.3137254902);
     height: 0;
     width: 90%;
     margin: 10px 0;
   }
 }
-
 .reg-choice-form .reg-option {
   width: 60%;
   text-align: center;
 }
-
 @media (max-width: 600px) {
   .reg-choice-form .reg-option {
     width: 95%;
@@ -237,44 +190,33 @@ body {
   width: 60%;
   margin: auto;
 }
-
 .reg-form form .child-step-row, .reg-form .reg-control .child-step-row {
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
-
 .reg-form form .child-step-row .row, .reg-form .reg-control .child-step-row .row {
   width: 100%;
 }
-
 .reg-form form .child-step-row .row .letter-col, .reg-form .reg-control .child-step-row .row .letter-col {
   padding: 0;
   padding-left: 5px;
 }
-
 .reg-form form .child-step-row .row .class-col, .reg-form .reg-control .child-step-row .row .class-col {
   padding: 0;
   padding-right: 5px;
 }
-
 .reg-form .bootstrap-select {
   border: 1px solid #ced4da;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
-
 .reg-form .bootstrap-select .dropdown-toggle {
   background-color: #fff;
 }
-
 .reg-form .bootstrap-select .filter-option {
   color: #000;
 }
-
 .reg-form .data-proc-agrement label {
   font-size: 12px;
 }
-
 .reg-form .btn-submit {
   text-align: center;
   margin-bottom: 15px;
@@ -283,5 +225,4 @@ body {
 /*footer */
 .wrap {
   position: absolute;
-}
-/*# sourceMappingURL=login.css.map */
+}/*# sourceMappingURL=login.css.map */

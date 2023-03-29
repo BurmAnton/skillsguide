@@ -9,12 +9,14 @@
         text-align: center
     width: 100%
     max-width: calc(100vw - 100px)
-    @media (max-width: 1050px)
-        max-width: calc(100vw - 40px)
     display: flex
     justify-content: center
     flex-wrap: wrap
     column-gap: 50px
+    @media (max-width: 1160px)
+        column-gap: 35px
+    @media (max-width: 1050px)
+        max-width: calc(100vw - 40px)
     @media (max-width: 855px) 
         column-gap: 25px
         row-gap: 15px
@@ -73,15 +75,16 @@
             color: #394959
             font-weight: 400 !important
             font-size: 16px
-            line-height: 19px
+            line-height: 20px
             text-align: center
             border-top: 0
             border-bottom: 2px solid #394959
         tr
-            height: 54px
             color: #394959
             font-weight: 300 !important
             text-align: center
+            &:last-child td
+                border-bottom: 0
         .nowrap
             white-space: nowrap
         .test

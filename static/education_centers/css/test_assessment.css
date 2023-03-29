@@ -1,47 +1,30 @@
 .dashboard-lists {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 15px;
   padding: 0px;
   margin-bottom: 15px;
 }
-
 .dashboard-lists .tests-list {
   width: 100%;
   max-width: 1400px;
   background-color: white;
   padding: 15px 35px;
   border-radius: 8px;
-  -webkit-box-shadow: 4px 4px 4px 0px #00000026;
-          box-shadow: 4px 4px 4px 0px #00000026;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1490196078);
 }
-
 .dashboard-lists .tests-list .tests-list-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
-
 .dashboard-lists .tests-list .tests-list-header h2 {
   margin-bottom: 10px;
 }
-
 .dashboard-lists .tests-list .tests-list-header .btn {
   width: 200px;
   height: 30px;
 }
-
 .dashboard-lists .tests-list th {
   color: #394959;
   font-size: 14px;
@@ -49,23 +32,15 @@
   text-align: center;
   border-top: 0;
 }
-
 .dashboard-lists .tests-list td, .dashboard-lists .tests-list input {
   font-size: 14px;
 }
-
 .dashboard-lists .tests-list .tests-cell {
   text-decoration: underline;
   font-weight: 400;
   cursor: pointer;
 }
-
 .dashboard-lists .tests-list .save-assessment {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: right;
-      -ms-flex-pack: right;
-          justify-content: right;
-}
-/*# sourceMappingURL=test_assessment.css.map */
+  justify-content: right;
+}/*# sourceMappingURL=test_assessment.css.map */
