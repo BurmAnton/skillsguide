@@ -408,7 +408,11 @@ def export_students(request):
         ws.cell(row=row, column=5, value=student.user.email)
         ws.cell(row=row, column=6, value=student.user.phone_number)
         ws.cell(row=row, column=7, value=str(student.school))
-        ws.cell(row=row, column=8, value=str(student.grade))
+        ws.cell(
+            row=row, 
+            column=8, 
+            value=f'{student.grade.grade}{student.grade.grade_letter}'
+        )
         row += 1
     wb.template = False
     response = HttpResponse(
