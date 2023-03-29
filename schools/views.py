@@ -4,12 +4,16 @@ import string
 
 from email import message
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
-from schedule.models import Assessment, Attendance, ProfTest, TrainingCycle, TrainingStream
+from schedule.models import Assessment, Attendance, ProfTest, TrainingCycle, \
+                            TrainingStream
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
+from django.utils.encoding import escape_uri_path
 
 from users.models import User
 from regions.models import City, TerAdministration, Address
@@ -379,3 +383,39 @@ def import_schools(request):
     return render(request, 'schools/import_schools.html', {
         'form' : ImportDataForm()
     })
+
+def export_students(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Участники проб"
+    ws.cell(row=1, column=1, value="Имя")
+    ws.cell(row=1, column=2, value="Отчество")
+    ws.cell(row=1, column=3, value="Фамилия")
+    ws.cell(row=1, column=4, value="Дата рождения")
+    ws.cell(row=1, column=5, value="Email")
+    ws.cell(row=1, column=6, value="Телефон")
+    ws.cell(row=1, column=7, value="Школа")
+    ws.cell(row=1, column=8, value="Класс")
+    attendancies = Attendance.objects.filter(is_attend=True)
+    students = SchoolStudent.objects.filter(
+        attendance__in=attendancies).distinct()
+    row = 2
+    for student in students:
+        ws.cell(row=row, column=1, value=student.user.first_name)
+        ws.cell(row=row, column=2, value=student.user.middle_name)
+        ws.cell(row=row, column=3, value=student.user.last_name)
+        ws.cell(row=row, column=4, value=student.user.birthday)
+        ws.cell(row=row, column=5, value=student.user.email)
+        ws.cell(row=row, column=6, value=student.user.phone_number)
+        ws.cell(row=row, column=7, value=str(student.school))
+        ws.cell(row=row, column=8, value=str(student.grade))
+        row += 1
+    wb.template = False
+    response = HttpResponse(
+        content=save_virtual_workbook(wb), 
+        content_type='application/vnd.openxmlformats-\
+        officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = "attachment; filename=" + \
+        escape_uri_path(f'Студенты {datetime.now().strftime("%d/%m/%y")}.xlsx')
+    return response

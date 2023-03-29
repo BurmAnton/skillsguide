@@ -11,5 +11,6 @@ urlpatterns = [
     path('profile/<int:school_id>/tests/', views.school_tests_list, name='school_tests_list'),
     path('profile/<int:school_id>/streams/', views.streams_list, name='streams_list'),
     path('add/', views.add_school, name='add_school'),
-    path('import/', views.import_schools, name='import_schools')
+    path('import/', views.import_schools, name='import_schools'),
+    path('export/students', views.export_students, name='export_students')
 ]
