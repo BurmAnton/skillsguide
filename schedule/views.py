@@ -256,6 +256,10 @@ def fix_attendance(request):
                 for assessment in assessments:
                     if assessment.is_attend == False:
                         assessment.delete()
+                if len(assessments) > 1:
+                    for assessment in assessments:
+                        if len(assessments) > 1:
+                            assessment.delete()
             assessments = Attendance.objects.filter(test=test, student=student)
             if len(assessments) == 0:
                 assessment = Attendance(
