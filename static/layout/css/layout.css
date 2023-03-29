@@ -64,7 +64,8 @@ body {
   margin: auto;
 }
 .navbar .logout .logout-img img {
-  width: 30px;
+  width: 23px;
+  height: 27px;
 }
 .navbar .logout p {
   margin: 0;
@@ -121,7 +122,6 @@ body {
 }
 @media (max-width: 945px) {
   .wrap {
-    height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
   }

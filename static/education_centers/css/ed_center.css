@@ -1,7 +1,6 @@
 .overview {
   margin: auto;
   background-color: white;
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 15px 35px;
@@ -123,7 +122,6 @@
 }
 
 #editCenterModal .modal-content {
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   color: #394959;

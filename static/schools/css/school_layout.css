@@ -35,7 +35,6 @@
   }
 }
 .side-menu > div {
-  height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   margin: 0px;
@@ -49,13 +48,11 @@
 @media (max-width: 855px) {
   .side-menu > div {
     width: calc(100vw - 40px);
-    min-width: -webkit-fit-content;
     min-width: -moz-fit-content;
     min-width: fit-content;
   }
 }
 .side-menu > div p {
-  width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
   margin-bottom: 5px;

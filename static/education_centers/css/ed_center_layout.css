@@ -30,7 +30,6 @@
   padding: 15px 15px 26px 20px;
   border-radius: 8px;
   box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.0823529412);
-  height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
 }
