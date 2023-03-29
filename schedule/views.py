@@ -256,11 +256,31 @@ def fix_attendance(request):
                 for assessment in assessments:
                     if assessment.is_attend == False:
                         assessment.delete()
-                assessments = Attendance.objects.filter(test=test, student=student)
+            assessments = Attendance.objects.filter(test=test, student=student)
+            if len(assessments) == 0:
+                assessment = Attendance(
+                    test=test, 
+                    student=student
+                )
+                assessment.save()
+    return HttpResponseRedirect(reverse("login"))
+
+def fix_assessment(request):
+    tests = ProfTest.objects.all()
+    for test in tests:
+        for criterion in test.program.criteria:
+            for student in test.students.all():
+                assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
+                if len(assessments) > 1:
+                    for assessment in assessments:
+                        if assessment.grade is None:
+                            assessment.delete()
+                assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
                 if len(assessments) == 0:
-                    assessment = Attendance(
+                    assessment = Assessment(
                         test=test, 
-                        student=student
+                        student=student,
+                        criterion=criterion
                     )
                     assessment.save()
     return HttpResponseRedirect(reverse("login"))
