@@ -273,7 +273,21 @@ def fix_assessment(request):
                 assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
                 if len(assessments) > 1:
                     for assessment in assessments:
-                        if assessment.grade is None or assessment.grade == "":
+                        if assessment.grade not in [0,1,2]:
+                            assessment.delete()
+                assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
+                if len(assessments) == 0:
+                    assessment = Assessment(
+                        test=test, 
+                        student=student,
+                        criterion=criterion
+                    )
+                    assessment.save()
+            for criterion in test.program.soft_criteria.all():
+                assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
+                if len(assessments) > 1:
+                    for assessment in assessments:
+                        if assessment.grade not in [0,1,2]:
                             assessment.delete()
                 assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
                 if len(assessments) == 0:
