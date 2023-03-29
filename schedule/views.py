@@ -268,7 +268,7 @@ def fix_attendance(request):
 def fix_assessment(request):
     tests = ProfTest.objects.all()
     for test in tests:
-        for criterion in test.program.criteria:
+        for criterion in test.program.criteria.all():
             for student in test.students.all():
                 assessments = Assessment.objects.filter(test=test, student=student, criterion=criterion)
                 if len(assessments) > 1:
