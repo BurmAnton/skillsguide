@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from requests import post
 import education_centers
+from education_centers import export
 
 from education_centers.models import Competence, Criterion, EducationCenter, TrainingProgram, Workshop, Trainer
 from schedule.models import Assessment, Attendance, AvailableDate, Conference, ProfTest, Training, TrainingCycle, TrainingStream
@@ -393,6 +394,9 @@ def import_programs(request):
     return render(request, "education_centers/import.html",{
         'form': form
     })
+
+def export_programs(request):
+    return export.programs()
 
 @login_required
 def trainers_list(request):
